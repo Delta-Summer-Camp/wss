@@ -37,40 +37,40 @@ function create() {
     text.color = '#000000';
 
     wallDebug = initDebug();
-    boxDebug = initDebug(1); 
+    boxDebug = initDebug(); 
 }
 
 function update() {
     if (game.isKeyDown('W') || game.isKeyDown('UP')) {
         pos.y -= currentSpd;
-        while (lab[Math.floor(pos.y)][Math.floor(pos.x)] == 1) {
+        while (lab[Math.floor(pos.y)][Math.floor(pos.x)] == 1 || lab[Math.floor(pos.y)][Math.ceil(pos.x)] == 1) {
             pos.y += 0.1;
         }
-        wallDebug.log(lab[Math.floor(pos.y)][Math.floor(pos.x)] == 1, "1");
+        wallDebug.log(pos.x, pos.y, lab[Math.floor(pos.y)][Math.floor(pos.x)] == 1, "1");
         pos.y = Math.floor(pos.y * 10) / 10;
     }
     if (game.isKeyDown('S') || game.isKeyDown('DOWN')) {
         pos.y += currentSpd;
-        while (lab[Math.floor(pos.y)][Math.floor(pos.x)] == 1) {
+        while (lab[Math.ceil(pos.y)][Math.ceil(pos.x)] == 1 || lab[Math.ceil(pos.y)][Math.floor(pos.x)] == 1) {
             pos.y -= 0.1;
         }
-        wallDebug.log(lab[Math.floor(pos.y)][Math.floor(pos.x - 0.1)] == 1, "2");
-        pos.y = Math.floor(pos.y * 10) / 10;
+        wallDebug.log(pos.x, pos.y, lab[Math.ceil(pos.y)][Math.ceil(pos.x)] == 1, "2");
+        pos.y = Math.ceil(pos.y * 10) / 10;
     }
     if (game.isKeyDown('D') || game.isKeyDown('RIGHT')) {
         pos.x += currentSpd;
-        while (lab[Math.floor(pos.y)][Math.floor(pos.x)] == 1) {
+        while (lab[Math.ceil(pos.y)][Math.ceil(pos.x)] == 1 || lab[Math.floor(pos.y)][Math.ceil(pos.x)] == 1) {
             pos.x -= 0.1;
         }
-        wallDebug.log(lab[Math.floor(pos.y)][Math.floor(pos.x)] == 1, "3");
-        pos.x = Math.floor(pos.x * 10) / 10;
+        wallDebug.log(pos.x, pos.y, lab[Math.ceil(pos.y)][Math.floor(pos.x)] == 1, "3");
+        pos.x = Math.ceil(pos.x * 10) / 10;
     }
     if (game.isKeyDown('A') || game.isKeyDown('LEFT')) {
         pos.x -= currentSpd;
-        while (lab[Math.floor(pos.y)][Math.floor(pos.x)] == 1) {
+        while (lab[Math.floor(pos.y)][Math.floor(pos.x)] == 1 || lab[Math.ceil(pos.y)][Math.floor(pos.x)] == 1) {
             pos.x += 0.1;
         }
-        wallDebug.log(lab[Math.floor(pos.y)][Math.floor(pos.x)] == 1, "4");
+        wallDebug.log(pos.x, pos.y, lab[Math.floor(pos.y)][Math.floor(pos.x)] == 1, "4");
         pos.x = Math.floor(pos.x * 10) / 10;
     }
     text.text = 'X: ' + pos.x + '\nY: ' + pos.y;
