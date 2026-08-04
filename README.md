@@ -14,7 +14,9 @@ String username
 
 Bool isHunter и onHold
 
-или
+и
+
+в начале игры
 
 ```json
 {x:-1, y:-1, isHunter:true, username:"", playerId:3, onHold:false}
