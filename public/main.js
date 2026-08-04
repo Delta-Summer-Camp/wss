@@ -1,4 +1,4 @@
-let currentSize = { width: document.documentElement.clientWidth, height: document.documentElement.clientHeight };
+let currentSize = {width: document.documentElement.clientWidth, height: document.documentElement.clientHeight };
 
 let game = new ScratchGame(currentSize.width, currentSize.height);
 game.preload = preload;
