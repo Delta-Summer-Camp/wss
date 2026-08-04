@@ -3,9 +3,12 @@
 На ws.onmessage массив с данными:
 
 ```json
-[{x:1,y:1,isHunter:false,username:"Dima",onHold:"false"},{x:10,y:17,isHunter:true,username:"IamSmiley",onHold:"true"}]
+{x:1,y:1,isHunter:false,username:"Dima",id:"1",onHold:"false"}
 ```
-Int: x и y 
+```json
+{x:10,y:17,isHunter:true,username:"IamSmiley",id:"2",onHold:"true"}
+```
+Int: x, y и id(целое болше 0)
 
 String username
 
