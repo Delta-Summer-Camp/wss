@@ -33,7 +33,7 @@
 {x:14, y:1, username:"mMeneske", playerId:3}
 ```
 
-Int: x, y и playerId(все целоые болше 0)
+Int: x, y и playerId(все болше 0 а playerId ещё и целое)
 
 String username
 
