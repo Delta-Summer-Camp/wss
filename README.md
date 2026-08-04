@@ -1,5 +1,7 @@
 # Просьбы
 
+на ws.onmessage массив с данными:
+
 ```json
 [{x:1,y:1,isHunter:false,username:"Dima",onHold:"false"},{x:10,y:17,isHunter:true,username:"IamSmiley",onHold:"true"}]
 ```
