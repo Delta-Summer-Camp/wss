@@ -89,7 +89,7 @@ function create() {
 
     wallDebug = initDebug();
     boxDebug = initDebug();
-    timeTest = initDebug(1);
+    timeTest = initDebug();
 }
 
 function update() {
@@ -189,12 +189,18 @@ function lag_test() {
 
     timeTest.log("Tick took: " + late_time + " ms");
     tick_time[tick_time.length] = late_time;
-
     tick_avg = 0;
-    for(let i = tick_time.length - 5000; i < tick_time.length; ++i){
-        tick_avg += tick_time[i];
+    if (tick_time.length > 5000) {
+        for(let i = tick_time.length - 5000; i < tick_time.length; ++i){
+            tick_avg += tick_time[i];
+        }
+        tick_avg /= 5000;
+    } else {
+        for(let i = 1; i < tick_time.length; ++i){
+            tick_avg += tick_time[i];
+        }
+        tick_avg /= tick_time.length - 1;
     }
-    tick_avg /= 5000;
     tps = Math.round(1000 / tick_avg);
 
     last_time = time;
