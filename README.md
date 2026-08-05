@@ -1,6 +1,14 @@
 # Просьбы
 
-На ws.onmessage массив с данными:
+## В начале игры на ws.onmessage массив с данными
+
+```json
+{isHunter:false, username:"mMeneske", playerId:3}
+```
+
+и
+
+## На ws.onmessage данные:
 
 ```json
 {x:1, y:1, isHunter:false, username:"Dima", playerId:1, onHold:false}
@@ -8,19 +16,28 @@
 ```json
 {x:10, y:17, isHunter:true, username:"IamSmiley", playerId:2, onHold:true}
 ```
-Int: x, y и playerId(все целоые болше 0)
+```json
+{isHunter:false, username:"mMeneske"}
+```
+
+
+## В начале игры мы вам на ws.send:
+
+```json
+{x:14, y:1, username:"mMeneske"}
+```
+
+## На ws.send данные:
+
+```json
+{x:14, y:1, username:"mMeneske", playerId:3}
+```
+
+Int: x, y и playerId(все болше 0 а playerId ещё и целое)
 
 String username
 
 Bool isHunter и onHold
-
-и
-
-в начале игры
-
-```json
-{x:-1, y:-1, isHunter:true, username:"", playerId:3, onHold:false}
-```
 
 # Внутреняя информация
 
