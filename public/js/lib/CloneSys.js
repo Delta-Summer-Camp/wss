@@ -9,7 +9,7 @@ class Scratchclone {
     #hiddenClones;
 
 
-    constructor(key, x, y){
+    constructor(x, y, key){
         this.clones = [game.createSprite(x, y, key)];
         this.#amountOfClones = 1;
         this.#currentId = 1;
@@ -17,7 +17,7 @@ class Scratchclone {
 
     createClones(amount,base){
         for(let i = this.#currentId; i < this.#currentId + amount; ++i){
-            this.clones[i] = game.createSprite(this.clones[base].key, this.clones[base].x, this.clones[base].y);
+            this.clones[i] = game.createSprite(this.clones[base].x, this.clones[base].y, this.clones[base].key);
             this.clones[i].direction = this.clones[base].direction;
             this.clones[i].size = this.clones[base].size;
             this.clones[i].costume = this.clones[base].costume;
@@ -199,7 +199,7 @@ class ScratchPlane {
 }
 
 function initClones(x, y, key) {
-    return new Scratchclone(key, x, y);
+    return new Scratchclone(x, y, key);
 }
 
 function initPlane(coardsX, coardsY, offsetX, offsetY, lengthX, lengthY, key){

@@ -1,3 +1,26 @@
+let player;
+let text;
+let lab_boxes;
+
+const currentSpd = 0.3;
+const gameScale = 20;
+let pos = { x: 2, y: 2};
+let currentUser = {isHunter:true, username:"YOU"};
+let otherUsers = [
+    {x:22, y:2, isHunter: false, username:"IamSmiley", playerId:1, onHold:false},
+    {x:64, y:30, isHunter: true, username:"IamBob", playerId:2, onHold:false},
+    {x:40, y:38, isHunter: false, username:"nono", playerId:3, onHold:false}
+];
+
+
+let lab;
+async function loadFile() {
+    const response = await fetch("../assets/lab.json");
+    lab = await response.json();  
+}
+loadFile();
+
+
 let currentSize = { width: document.documentElement.clientWidth, height: document.documentElement.clientHeight };
 
 let game = new ScratchGame(currentSize.width, currentSize.height);
@@ -10,25 +33,8 @@ function preload() {
     game.loadSpritesheet('player', 'assets/ballz.png', 200, 200);
 }
 
-
-let player;
-let text;
-let lab_boxes;
-
-const currentSpd = 0.3;
-const gameScale = 20;
-let pos = { x: 2, y: 2};
-
-let lab;
-async function loadGameData() {
-    const response = await fetch("../assets/lab.json");
-    lab = await response.json();
-}
-loadGameData();
-
-
 function create() {
-    game.setBackgroundColor(0xFFFFFF);
+    game.setBackgroundColor(0x00FFFF);
 
     player = game.createSprite(currentSize.width / 2, currentSize.height / 2, 'player');
     player.visible = true;
@@ -36,15 +42,33 @@ function create() {
 
     lab_boxes = initPlane(-10000, -10000, 40, 40, lab[0].length, lab.length, "box");
 
+    otherPlayers = initClones(-100, -1000, 'player');
+    otherPlayers.clones[0].visible = false;
+    otherPlayers.clones[0].size = gameScale / 200;
+
     text = this.createText(currentSize.width / 2, 20, "");
     text.color = '#000000';
 
     wallDebug = initDebug();
     boxDebug = initDebug();
     timeTest = initDebug();
+    costumeDebug = initDebug();
 }
 
 function update() {
+    playerUpdates();
+
+    lab_boxes.runAll(positionboxes);
+
+    otherPlayers.createClones(otherUsers.length - otherPlayers.amount() + 1, 0);
+    otherPlayers.runAll(positionclones);
+
+    lag_test();
+
+    text.text = 'X: ' + pos.x + '\nY: ' + pos.y + '\nTPS: ' + tps;
+}
+
+function playerUpdates() {
     if (isPlaying) {
         if (game.isKeyDown('W') || game.isKeyDown('UP')) {
             pos.y -= currentSpd;
@@ -79,12 +103,14 @@ function update() {
             pos.x = Math.floor(pos.x * 10) / 10;
         }
     }
-    text.text = 'X: ' + pos.x + '\nY: ' + pos.y + '\nTPS: ' + tps;
 
-
-    lab_boxes.runAll(positionboxes);
-
-    lag_test();
+    if (currentUser.isHunter){
+        player.costume = 0;
+        costumeDebug.log("c0");
+    } else {
+        player.costume = 1;
+        costumeDebug.log("c1");
+    }
 }
 
 function positionboxes(planeX, planeY) {
@@ -96,6 +122,21 @@ function positionboxes(planeX, planeY) {
         lab_boxes.plane[planeX][planeY].visible = true;
     }
     lab_boxes.plane[planeX][planeY].size = gameScale / 10;
+}
+
+function positionclones(clone) {
+    if (clone != 0) {
+        otherPlayers.clones[clone].x = player.x - (pos.x - otherUsers[clone - 1].x) * gameScale
+        otherPlayers.clones[clone].y = player.y - (pos.y - otherUsers[clone - 1].y) * gameScale
+        if (otherUsers[clone - 1].isHunter){
+            otherPlayers.clones[clone].costume = 0;
+            costumeDebug.log("c0");
+        } else {
+            otherPlayers.clones[clone].costume = 1;
+            costumeDebug.log("c1");
+        }
+        otherPlayers.clones[clone].visible = true;
+    }
 }
 
 let last_time = 0;
