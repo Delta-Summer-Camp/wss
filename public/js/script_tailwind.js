@@ -1,3 +1,5 @@
+let isPlaying = false;
+
 const registration = document.getElementById('registration');
 const login = document.getElementById('login');
 const playScreen = document.getElementById('start-screen');
