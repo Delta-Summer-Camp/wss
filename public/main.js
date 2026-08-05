@@ -164,10 +164,10 @@ function lag_test(){
     tick_time[tick_time.length] = late_time;
 
     tick_avg = 0;
-    for(let i = 1; i < tick_time.length; ++i){
+    for(let i = tick_time.length - 5000; i < tick_time.length; ++i){
         tick_avg += tick_time[i];
     }
-    tick_avg /= tick_time.length;
+    tick_avg /= 5000;
     tps = Math.round(1000 / tick_avg);
 
     last_time = time;
