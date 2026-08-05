@@ -15,6 +15,7 @@ function register() {
 
 function startScreen() {
     login.classList.add('hidden');
+    registration.classList.add('hidden');
     playScreen.classList.remove('hidden');
 }
 
