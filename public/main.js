@@ -201,7 +201,7 @@ function lag_test() {
         }
         tick_avg /= tick_time.length - 1;
     }
-    tps = Math.round(1000 / tick_avg);
+    tps = Math.floor(1000 / tick_avg);
 
     last_time = time;
 }
