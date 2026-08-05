@@ -14,7 +14,7 @@
 {x:1, y:1, isHunter:false, username:"Dima", playerId:1, onHold:false}
 ```
 ```json
-{x:10, y:17, isHunter:true, username:"IamSmiley", playerId:2, onHold:true}
+{x:10, y:17, isHunter:true, inAnimation: true, username:"IamSmiley", playerId:2, onHold:true}
 ```
 ```json
 {isHunter:false, username:"mMeneske"}
@@ -37,7 +37,7 @@ Int: x, y и playerId(все болше 0 а playerId ещё и целое)
 
 String username
 
-Bool isHunter и onHold
+Bool isHunter, inAnimation и onHold
 
 # Внутреняя информация
 
