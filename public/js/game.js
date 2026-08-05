@@ -19,14 +19,12 @@ const currentSpd = 0.3;
 const gameScale = 20;
 let pos = { x: 2, y: 2};
 
-async function loadLab() {
-  const response = await fetch("../assets/lab.json");
-  const lab = await response.json();
-
-  console.log(lab);
+let lab;
+async function loadGameData() {
+    const response = await fetch("../assets/lab.json");
+    lab = await response.json();
 }
-
-loadLab();
+loadGameData();
 
 
 function create() {
