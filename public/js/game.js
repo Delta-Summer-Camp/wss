@@ -7,9 +7,9 @@ const gameScale = 15;
 let pos = {x: 2, y: 2};
 let currentUser = {isHunter:true, username:"YOU"};
 let otherUsers = [
-    {x:22, y:2, isHunter: false, username:"IamSmiley", playerId:1, onHold:false},
-    {x:64, y:30, isHunter: true, username:"IamBob", playerId:2, onHold:false},
-    {x:40, y:38, isHunter: false, username:"nono", playerId:3, onHold:false}
+    {x:22, y:2, isHunter: false, username:"TheAvreageBot", playerId:1, onHold:false},
+    {x:64, y:30, isHunter: true, username:"mMeneske", playerId:2, onHold:false},
+    {x:40, y:38, isHunter: false, username:"10x Engineer", playerId:3, onHold:false}
 ];
 
 
