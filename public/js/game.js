@@ -10,7 +10,7 @@ const gameScale = 50;
 const nickSize = 20;
 const nickDist = 50;
 let pos = {x:49, y:48};
-let currentUser = {isHunter:true, username:"YOU"};
+let currentUser = {isHunter:false, username:"YOU"};
 let otherUsers = [
     {x:22, y:2, isHunter: false, username:"TheAvreageBot", playerId:1, onHold:true},
     {x:64, y:30, isHunter: true, username:"mMeneske", playerId:2, onHold:true},
@@ -39,7 +39,7 @@ function preload() {
 
 function create() {
     game.setBackgroundColor(0x00FFFF);
-
+    
     player = game.createSprite(currentSize.width / 2, currentSize.height / 2, 'player');
     player.visible = true;
     player.size = gameScale / 200;
@@ -54,11 +54,11 @@ function create() {
     text.color = '#000000';
     
     let playerStatSize = 50;
-    playerStatus = this.createText(currentSize.width / 2, 20, `${(currentUser.isHunter)? "Status: Hunter" : "Status: not a hunter"}`);
+    playerStatus = this.createText(currentSize.width / 2, 20, "");
     playerStatus.color = '#FF0000';
     playerStatus.size = playerStatSize;
 
-    playerNickname = this.createText(player.x, player.y - nickDist, currentUser.username);
+    playerNickname = this.createText(currentSize.width / 2, currentSize.height / 2 - nickDist, currentUser.username);
     playerNickname.size = nickSize;
     playerNickname.color = '#FF0000';
 
@@ -77,8 +77,10 @@ function update() {
 
     lag_test();
 
+    player.x = player.x;
+
     text.text = 'X: ' + pos.x + '\nY: ' + pos.y + '\nTPS: ' + tps;
-    playerStatus.text = `${(currentUser.isHunter)? "Status: Hunter" : "Status: not a hunter"}`;
+    playerStatus.text = `${(currentUser.isHunter)? "Status: Hunter" : "Status: Runner"}`;
 }
 
 function playerUpdates() {
