@@ -51,7 +51,7 @@ function create() {
     text.color = '#000000';
     
     playerStatus = this.createText(200, 20, `${(currentUser.isHunter)? "Status: Hunter" : "Status: not a hunter"}`);
-    playerStatus.color = '#000000'
+    playerStatus.color = '#FF0000'
     wallDebug = initDebug();
     boxDebug = initDebug();
     timeTest = initDebug();
