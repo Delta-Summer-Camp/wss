@@ -3,6 +3,7 @@ let text;
 let lab_boxes;
 
 const currentSpd = 0.3;
+
 const gameScale = 15;
 let pos = {x:49, y:48};
 let currentUser = {isHunter:true, username:"YOU"};
@@ -48,13 +49,14 @@ function create() {
 
     text = this.createText(currentSize.width / 2, 20, "");
     text.color = '#000000';
-
+    
+    playerStatus = this.createText(200, 20, `${(currentUser.isHunter)? "Status: Hunter" : "Status: not a hunter"}`);
+    playerStatus.color = '#000000'
     wallDebug = initDebug();
     boxDebug = initDebug();
     timeTest = initDebug();
     costumeDebug = initDebug();
 }
-
 function update() {
     playerUpdates();
 
