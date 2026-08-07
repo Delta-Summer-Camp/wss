@@ -10,15 +10,95 @@
     <script src="js/lib/ScratchGame.js"></script>
 
     <style type="text/css">
+        /* Remove default margins so the Phaser canvas fills the screen cleanly */
         body {
             margin: 0;
+            overflow: hidden; 
+        }
+
+        /* --- PAUSE MENU CSS --- */
+        #pause-menu {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 100; 
+            
+            /* Visual styling */
+            background-color: rgba(0, 0, 0, 0.85); 
+            color: white;
+            padding: 40px;
+            border-radius: 12px;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            
+            /* Flexbox to organize the buttons */
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-width: 250px; /* Added so the 100% width buttons look good */
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* --- NEW BUTTON CSS --- */
+        .btn {
+            width: 100%;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1.125rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-submit {
+            background-color: #4f46e5; /* indigo-600 */
+            padding: 0.75rem 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Hover effect to utilize your transition property */
+        .btn-submit:hover {
+            background-color: #4338ca; /* slightly darker indigo */
+            transform: translateY(-2px); /* slight lift effect */
+        }
+        
+        .btn-submit:active {
+            transform: translateY(0); /* pushes back down on click */
         }
     </style>
 </head>
 
 <body>
+    
+    <div id="pause-menu" class="hidden">
+        <h2 style="margin-top: 0;">Game Paused</h2>
+        <button class="btn btn-submit" onclick="toggleMenu()">Resume</button>
+        <button class="btn btn-submit" onclick="alert('Settings clicked!')">Settings</button>
+        <a href="index.html"><button class="btn btn-submit">Exit</button></a>
+    </div>
+
     <script src="js/game.js"></script>
 
+    <script>
+        const pauseMenu = document.getElementById('pause-menu');
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                toggleMenu();
+            }
+        });
+
+        function toggleMenu() {
+            pauseMenu.classList.toggle('hidden');
+        }
+    </script>
 </body>
 
 </html>
