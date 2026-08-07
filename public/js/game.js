@@ -68,6 +68,7 @@ function update() {
     lag_test();
 
     text.text = 'X: ' + pos.x + '\nY: ' + pos.y + '\nTPS: ' + tps;
+    playerStatus.text = `${(currentUser.isHunter)? "Status: Hunter" : "Status: not a hunter"}`;
 }
 
 function playerUpdates() {
