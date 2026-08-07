@@ -3,12 +3,12 @@ let text;
 let lab_boxes;
 
 const currentSpd = 0.3;
-const gameScale = 3;
+const gameScale = 15;
 let pos = {x:49, y:48};
 let currentUser = {isHunter:true, username:"YOU"};
 let otherUsers = [
-    {x:22, y:2, isHunter: false, username:"TheAvreageBot", playerId:1, onHold:false},
-    {x:64, y:30, isHunter: true, username:"mMeneske", playerId:2, onHold:false},
+    {x:22, y:2, isHunter: false, username:"TheAvreageBot", playerId:1, onHold:true},
+    {x:64, y:30, isHunter: true, username:"mMeneske", playerId:2, onHold:true},
     {x:40, y:38, isHunter: false, username:"10x Engineer", playerId:3, onHold:false}
 ];
 
@@ -127,11 +127,11 @@ function positionclones(clone) {
         otherPlayers.clones[clone].x = player.x - (pos.x - otherUsers[clone - 1].x) * gameScale
         otherPlayers.clones[clone].y = player.y - (pos.y - otherUsers[clone - 1].y) * gameScale
         if (otherUsers[clone - 1].isHunter){
-            otherPlayers.clones[clone].costume = 0;
-            costumeDebug.log("c0");
+            otherPlayers.clones[clone].costume = 0 + otherUsers[clone - 1].onHold * 2;
+            costumeDebug.log("c" + otherPlayers.clones[clone].costume);
         } else {
-            otherPlayers.clones[clone].costume = 1;
-            costumeDebug.log("c1");
+            otherPlayers.clones[clone].costume = 1 + otherUsers[clone - 1].onHold * 2;
+            costumeDebug.log("c" + otherPlayers.clones[clone].costume);
         }
         otherPlayers.clones[clone].visible = true;
     }
