@@ -3,8 +3,8 @@ let text;
 let lab_boxes;
 
 const currentSpd = 0.3;
-const gameScale = 20;
-let pos = { x: 2, y: 2};
+const gameScale = 15;
+let pos = {x: 2, y: 2};
 let currentUser = {isHunter:true, username:"YOU"};
 let otherUsers = [
     {x:22, y:2, isHunter: false, username:"IamSmiley", playerId:1, onHold:false},
