@@ -3,8 +3,8 @@ let text;
 let lab_boxes;
 
 const currentSpd = 0.3;
-const gameScale = 15;
-let pos = {x: 2, y: 2};
+const gameScale = 3;
+let pos = {x:49, y:48};
 let currentUser = {isHunter:true, username:"YOU"};
 let otherUsers = [
     {x:22, y:2, isHunter: false, username:"TheAvreageBot", playerId:1, onHold:false},
@@ -69,39 +69,37 @@ function update() {
 }
 
 function playerUpdates() {
-    if (isPlaying) {
-        if (game.isKeyDown('W') || game.isKeyDown('UP')) {
-            pos.y -= currentSpd;
-            while (lab[Math.round(pos.y/2)][Math.round(pos.x/2)] == 1) {
-                pos.y += 0.1;
-            }
-            wallDebug.log(pos.x, pos.y, lab[Math.round(pos.y/2)][Math.round(pos.x/2)] == 1, "1");
-            pos.y = Math.floor(pos.y * 10) / 10;
+    if (game.isKeyDown('W') || game.isKeyDown('UP')) {
+        pos.y -= currentSpd;
+        while (lab[Math.round(pos.y/2)][Math.round(pos.x/2)] == 1) {
+            pos.y += 0.1;
         }
-        if (game.isKeyDown('S') || game.isKeyDown('DOWN')) {
-            pos.y += currentSpd;
-            while (lab[Math.round(pos.y/2)][Math.round(pos.x/2)] == 1) {
-                pos.y -= 0.1;
-            }
-            wallDebug.log(pos.x, pos.y, lab[Math.round(pos.y/2)][Math.round(pos.x/2)] == 1, "2");
-            pos.y = Math.floor(pos.y * 10) / 10;
+        wallDebug.log(pos.x, pos.y, lab[Math.round(pos.y/2)][Math.round(pos.x/2)] == 1, "1");
+        pos.y = Math.floor(pos.y * 10) / 10;
+    }
+    if (game.isKeyDown('S') || game.isKeyDown('DOWN')) {
+        pos.y += currentSpd;
+        while (lab[Math.round(pos.y/2)][Math.round(pos.x/2)] == 1) {
+            pos.y -= 0.1;
         }
-        if (game.isKeyDown('D') || game.isKeyDown('RIGHT')) {
-            pos.x += currentSpd;
-            while (lab[Math.round(pos.y/2)][Math.round(pos.x/2)] == 1) {
-                pos.x -= 0.1;
-            }
-            wallDebug.log(pos.x, pos.y, lab[Math.round(pos.y/2)][Math.round(pos.x/2)] == 1, "3");
-            pos.x = Math.floor(pos.x * 10) / 10;
+        wallDebug.log(pos.x, pos.y, lab[Math.round(pos.y/2)][Math.round(pos.x/2)] == 1, "2");
+        pos.y = Math.floor(pos.y * 10) / 10;
+    }
+    if (game.isKeyDown('D') || game.isKeyDown('RIGHT')) {
+        pos.x += currentSpd;
+        while (lab[Math.round(pos.y/2)][Math.round(pos.x/2)] == 1) {
+            pos.x -= 0.1;
         }
-        if (game.isKeyDown('A') || game.isKeyDown('LEFT')) {
-            pos.x -= currentSpd;
-            while (lab[Math.round(pos.y/2)][Math.round(pos.x/2)] == 1) {
-                pos.x += 0.1;
-            }
-            wallDebug.log(pos.x, pos.y, lab[Math.round(pos.y/2)][Math.round(pos.x/2)] == 1, "4");
-            pos.x = Math.floor(pos.x * 10) / 10;
+        wallDebug.log(pos.x, pos.y, lab[Math.round(pos.y/2)][Math.round(pos.x/2)] == 1, "3");
+        pos.x = Math.floor(pos.x * 10) / 10;
+    }
+    if (game.isKeyDown('A') || game.isKeyDown('LEFT')) {
+        pos.x -= currentSpd;
+        while (lab[Math.round(pos.y/2)][Math.round(pos.x/2)] == 1) {
+            pos.x += 0.1;
         }
+        wallDebug.log(pos.x, pos.y, lab[Math.round(pos.y/2)][Math.round(pos.x/2)] == 1, "4");
+        pos.x = Math.floor(pos.x * 10) / 10;
     }
 
     if (currentUser.isHunter){
