@@ -1,10 +1,14 @@
 let player;
 let text;
 let lab_boxes;
+let playerStatus;
+let playerNicnames;
+let otherNicknames = [];
 
-const currentSpd = 0.3;
-
-const gameScale = 15;
+const currentSpd = 0.2;
+const gameScale = 50;
+const nickSize = 20;
+const nickDist = 50;
 let pos = {x:49, y:48};
 let currentUser = {isHunter:true, username:"YOU"};
 let otherUsers = [
@@ -12,7 +16,6 @@ let otherUsers = [
     {x:64, y:30, isHunter: true, username:"mMeneske", playerId:2, onHold:true},
     {x:40, y:38, isHunter: false, username:"10x Engineer", playerId:3, onHold:false}
 ];
-
 
 let lab;
 async function loadFile() {
@@ -22,7 +25,7 @@ async function loadFile() {
 loadFile();
 
 
-let currentSize = { width: document.documentElement.clientWidth, height: document.documentElement.clientHeight };
+let currentSize = {width:document.documentElement.clientWidth, height:document.documentElement.clientHeight};
 
 let game = new ScratchGame(currentSize.width, currentSize.height);
 game.preload = preload;
@@ -47,11 +50,18 @@ function create() {
     otherPlayers.clones[0].visible = false;
     otherPlayers.clones[0].size = gameScale / 200;
 
-    text = this.createText(currentSize.width / 2, 20, "");
+    text = this.createText(200, 20, "");
     text.color = '#000000';
     
-    playerStatus = this.createText(200, 20, `${(currentUser.isHunter)? "Status: Hunter" : "Status: not a hunter"}`);
-    playerStatus.color = '#FF0000'
+    let playerStatSize = 50;
+    playerStatus = this.createText(currentSize.width / 2, 20, `${(currentUser.isHunter)? "Status: Hunter" : "Status: not a hunter"}`);
+    playerStatus.color = '#FF0000';
+    playerStatus.size = playerStatSize;
+
+    playerNickname = this.createText(player.x, player.y - nickDist, currentUser.username);
+    playerNickname.size = nickSize;
+    playerNickname.color = '#FF0000';
+
     wallDebug = initDebug();
     boxDebug = initDebug();
     timeTest = initDebug();
