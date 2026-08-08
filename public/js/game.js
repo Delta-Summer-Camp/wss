@@ -9,6 +9,7 @@ const currentSpd = 0.2;
 const gameScale = 50;
 const nickSize = 20;
 const nickDist = 50;
+const renderDesync = {x:0.55, y:0.55};
 let pos = {x:49, y:48};
 let currentUser = {isHunter:false, username:"YOU"};
 let otherUsers = [
@@ -86,35 +87,35 @@ function update() {
 function playerUpdates() {
     if (game.isKeyDown('W') || game.isKeyDown('UP')) {
         pos.y -= currentSpd;
-        while (lab[Math.round(pos.y/2)][Math.round(pos.x/2)] == 1) {
+        while (lab[Math.floor(pos.y/2)][Math.floor(pos.x/2)] == 1 || lab[Math.floor(pos.y/2)][Math.floor(pos.x/2 + 0.4)] == 1) {
             pos.y += 0.1;
         }
-        wallDebug.log(pos.x, pos.y, lab[Math.round(pos.y/2)][Math.round(pos.x/2)] == 1, "1");
-        pos.y = Math.floor(pos.y * 10) / 10;
+        wallDebug.log(pos.x, pos.y, lab[Math.floor(pos.y/2)][Math.floor(pos.x/2)] == 1, "1");
+        //pos.y = Math.floor(pos.y * 10) / 10;
     }
     if (game.isKeyDown('S') || game.isKeyDown('DOWN')) {
         pos.y += currentSpd;
-        while (lab[Math.round(pos.y/2)][Math.round(pos.x/2)] == 1) {
+        while (lab[Math.floor(pos.y/2 + 0.4)][Math.floor(pos.x/2)] == 1 || lab[Math.floor(pos.y/2 + 0.4)][Math.floor(pos.x/2 + 0.4)]) {
             pos.y -= 0.1;
         }
-        wallDebug.log(pos.x, pos.y, lab[Math.round(pos.y/2)][Math.round(pos.x/2)] == 1, "2");
-        pos.y = Math.floor(pos.y * 10) / 10;
+        wallDebug.log(pos.x, pos.y, lab[Math.floor(pos.y/2)][Math.floor(pos.x/2)] == 1, "2");
+        //pos.y = Math.floor(pos.y * 10) / 10;
     }
     if (game.isKeyDown('D') || game.isKeyDown('RIGHT')) {
         pos.x += currentSpd;
-        while (lab[Math.round(pos.y/2)][Math.round(pos.x/2)] == 1) {
+        while (lab[Math.floor(pos.y/2)][Math.floor(pos.x/2 + 0.4)] == 1 || lab[Math.floor(pos.y/2 + 0.4)][Math.floor(pos.x/2 + 0.4)]) {
             pos.x -= 0.1;
         }
-        wallDebug.log(pos.x, pos.y, lab[Math.round(pos.y/2)][Math.round(pos.x/2)] == 1, "3");
-        pos.x = Math.floor(pos.x * 10) / 10;
+        wallDebug.log(pos.x, pos.y, lab[Math.floor(pos.y/2)][Math.floor(pos.x/2)] == 1, "3");
+        //pos.x = Math.floor(pos.x * 10) / 10;
     }
     if (game.isKeyDown('A') || game.isKeyDown('LEFT')) {
         pos.x -= currentSpd;
-        while (lab[Math.round(pos.y/2)][Math.round(pos.x/2)] == 1) {
+        while (lab[Math.floor(pos.y/2)][Math.floor(pos.x/2)] == 1 || lab[Math.floor(pos.y/2 + 0.4)][Math.floor(pos.x/2)]) {
             pos.x += 0.1;
         }
-        wallDebug.log(pos.x, pos.y, lab[Math.round(pos.y/2)][Math.round(pos.x/2)] == 1, "4");
-        pos.x = Math.floor(pos.x * 10) / 10;
+        wallDebug.log(pos.x, pos.y, lab[Math.floor(pos.y/2)][Math.floor(pos.x/2)] == 1, "4");
+        //pos.x = Math.floor(pos.x * 10) / 10;
     }
 
     if (currentUser.isHunter){
@@ -127,8 +128,8 @@ function playerUpdates() {
 }
 
 function positionboxes(planeX, planeY) {
-    lab_boxes.plane[planeX][planeY].x = player.x - pos.x * gameScale + planeX * gameScale * 2;
-    lab_boxes.plane[planeX][planeY].y = player.y - pos.y * gameScale + planeY * gameScale * 2;
+    lab_boxes.plane[planeX][planeY].x = player.x - pos.x * gameScale + planeX * gameScale * 2 + renderDesync.x * gameScale;
+    lab_boxes.plane[planeX][planeY].y = player.y - pos.y * gameScale + planeY * gameScale * 2 + renderDesync.y * gameScale;
     if (lab[planeY][planeX] == 0) {
         lab_boxes.plane[planeX][planeY].visible = false;
     } else if (lab[planeY][planeX] == 0) {
@@ -139,8 +140,8 @@ function positionboxes(planeX, planeY) {
 
 function positionclones(clone) {
     if (clone != 0) {
-        otherPlayers.clones[clone].x = player.x - (pos.x - otherUsers[clone - 1].x) * gameScale
-        otherPlayers.clones[clone].y = player.y - (pos.y - otherUsers[clone - 1].y) * gameScale
+        otherPlayers.clones[clone].x = player.x - (pos.x - otherUsers[clone - 1].x) * gameScale + renderDesync.x * gameScale;
+        otherPlayers.clones[clone].y = player.y - (pos.y - otherUsers[clone - 1].y) * gameScale + renderDesync.y * gameScale;
         if (otherUsers[clone - 1].isHunter){
             otherPlayers.clones[clone].costume = 0;
             costumeDebug.log("c0");
