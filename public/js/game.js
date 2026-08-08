@@ -9,7 +9,7 @@ const currentSpd = 0.2;
 const gameScale = 50;
 const nickSize = 20;
 const nickDist = 50;
-const renderDesync = {x:0.55, y:0.55};
+const renderDesync = {x:0, y:0};
 let pos = {x:49, y:48};
 let currentUser = {isHunter:false, username:"YOU"};
 let otherUsers = [
@@ -52,14 +52,18 @@ function create() {
     otherPlayers.clones[0].size = gameScale / 200;
 
     text = this.createText(200, 20, "");
+    text.font = 'Arial bold';
     text.color = '#000000';
+    text.size = 20;
     
     let playerStatSize = 50;
     playerStatus = this.createText(currentSize.width / 2, 20, "");
+    playerStatus.font = 'Arial bold';
     playerStatus.color = '#FF0000';
     playerStatus.size = playerStatSize;
 
     playerNickname = this.createText(currentSize.width / 2, currentSize.height / 2 - nickDist, currentUser.username);
+    playerNickname.font = 'Arial bold';
     playerNickname.size = nickSize;
     playerNickname.color = '#FF0000';
 
@@ -88,34 +92,38 @@ function playerUpdates() {
     if (game.isKeyDown('W') || game.isKeyDown('UP')) {
         pos.y -= currentSpd;
         while (lab[Math.floor(pos.y/2)][Math.floor(pos.x/2)] == 1 || lab[Math.floor(pos.y/2)][Math.floor(pos.x/2 + 0.4)] == 1) {
+            pos.y = Math.floor(pos.y * 10) / 10;
             pos.y += 0.1;
         }
         wallDebug.log(pos.x, pos.y, lab[Math.floor(pos.y/2)][Math.floor(pos.x/2)] == 1, "1");
-        //pos.y = Math.floor(pos.y * 10) / 10;
+        pos.y = Math.floor(pos.y * 10) / 10;
     }
     if (game.isKeyDown('S') || game.isKeyDown('DOWN')) {
         pos.y += currentSpd;
-        while (lab[Math.floor(pos.y/2 + 0.4)][Math.floor(pos.x/2)] == 1 || lab[Math.floor(pos.y/2 + 0.4)][Math.floor(pos.x/2 + 0.4)]) {
+        while (lab[Math.floor(pos.y/2)][Math.floor(pos.x/2)] == 1 || lab[Math.floor(pos.y/2)][Math.floor(pos.x/2)]) {
+            pos.y = Math.floor(pos.y * 10) / 10;
             pos.y -= 0.1;
         }
         wallDebug.log(pos.x, pos.y, lab[Math.floor(pos.y/2)][Math.floor(pos.x/2)] == 1, "2");
-        //pos.y = Math.floor(pos.y * 10) / 10;
+        pos.y = Math.floor(pos.y * 10) / 10;
     }
     if (game.isKeyDown('D') || game.isKeyDown('RIGHT')) {
         pos.x += currentSpd;
-        while (lab[Math.floor(pos.y/2)][Math.floor(pos.x/2 + 0.4)] == 1 || lab[Math.floor(pos.y/2 + 0.4)][Math.floor(pos.x/2 + 0.4)]) {
+        while (lab[Math.floor(pos.y/2)][Math.floor(pos.x/2)] == 1 || lab[Math.floor(pos.y/2)][Math.floor(pos.x/2 + 0.4)]) {
+            pos.x = Math.floor(pos.x * 10) / 10;
             pos.x -= 0.1;
         }
         wallDebug.log(pos.x, pos.y, lab[Math.floor(pos.y/2)][Math.floor(pos.x/2)] == 1, "3");
-        //pos.x = Math.floor(pos.x * 10) / 10;
+        pos.x = Math.floor(pos.x * 10) / 10;
     }
     if (game.isKeyDown('A') || game.isKeyDown('LEFT')) {
         pos.x -= currentSpd;
         while (lab[Math.floor(pos.y/2)][Math.floor(pos.x/2)] == 1 || lab[Math.floor(pos.y/2 + 0.4)][Math.floor(pos.x/2)]) {
+            pos.x = Math.floor(pos.x * 10) / 10;
             pos.x += 0.1;
         }
         wallDebug.log(pos.x, pos.y, lab[Math.floor(pos.y/2)][Math.floor(pos.x/2)] == 1, "4");
-        //pos.x = Math.floor(pos.x * 10) / 10;
+        pos.x = Math.floor(pos.x * 10) / 10;
     }
 
     if (currentUser.isHunter){
