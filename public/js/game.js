@@ -9,7 +9,7 @@ const currentSpd = 0.2;
 const gameScale = 50;
 const nickSize = 20;
 const nickDist = 50;
-const renderDesync = {x:0, y:0};
+const renderDesync = {x:0.5, y:0.5};
 let pos = {x:49, y:48};
 let currentUser = {isHunter:false, username:"YOU"};
 let otherUsers = [
@@ -91,7 +91,7 @@ function update() {
 function playerUpdates() {
     if (game.isKeyDown('W') || game.isKeyDown('UP')) {
         pos.y -= currentSpd;
-        while (lab[Math.floor(pos.y/2)][Math.floor(pos.x/2)] == 1 || lab[Math.floor(pos.y/2)][Math.floor(pos.x/2 + 0.4)] == 1) {
+        while (lab[Math.floor(pos.y/2)][Math.floor(pos.x/2)] == 1 || lab[Math.floor(pos.y/2)][Math.floor(pos.x/2 + 0.49)] == 1) {
             pos.y = Math.floor(pos.y * 10) / 10;
             pos.y += 0.1;
         }
@@ -100,7 +100,7 @@ function playerUpdates() {
     }
     if (game.isKeyDown('S') || game.isKeyDown('DOWN')) {
         pos.y += currentSpd;
-        while (lab[Math.floor(pos.y/2)][Math.floor(pos.x/2)] == 1 || lab[Math.floor(pos.y/2)][Math.floor(pos.x/2)]) {
+        while (lab[Math.floor(pos.y/2 + 0.49)][Math.floor(pos.x/2)] == 1 || lab[Math.floor(pos.y/2 + 0.49)][Math.floor(pos.x/2  + 0.49)]) {
             pos.y = Math.floor(pos.y * 10) / 10;
             pos.y -= 0.1;
         }
@@ -109,7 +109,7 @@ function playerUpdates() {
     }
     if (game.isKeyDown('D') || game.isKeyDown('RIGHT')) {
         pos.x += currentSpd;
-        while (lab[Math.floor(pos.y/2)][Math.floor(pos.x/2)] == 1 || lab[Math.floor(pos.y/2)][Math.floor(pos.x/2 + 0.4)]) {
+        while (lab[Math.floor(pos.y/2)][Math.floor(pos.x/2 + 0.49)] == 1 || lab[Math.floor(pos.y/2 + 0.49)][Math.floor(pos.x/2 + 0.49)]) {
             pos.x = Math.floor(pos.x * 10) / 10;
             pos.x -= 0.1;
         }
@@ -118,7 +118,7 @@ function playerUpdates() {
     }
     if (game.isKeyDown('A') || game.isKeyDown('LEFT')) {
         pos.x -= currentSpd;
-        while (lab[Math.floor(pos.y/2)][Math.floor(pos.x/2)] == 1 || lab[Math.floor(pos.y/2 + 0.4)][Math.floor(pos.x/2)]) {
+        while (lab[Math.floor(pos.y/2)][Math.floor(pos.x/2)] == 1 || lab[Math.floor(pos.y/2 + 0.49)][Math.floor(pos.x/2)]) {
             pos.x = Math.floor(pos.x * 10) / 10;
             pos.x += 0.1;
         }
