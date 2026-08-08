@@ -32,17 +32,17 @@ const URI_OPTIONS = ['ServerSelectionTimeoutMS' => 10000];
 
 class GameServer implements MessageComponentInterface {
   private RedisClient $redisPub;
-  private MongoDB\Database $mongoDB;
-  private MongoDB\Collection $users;
+  // private MongoDB\Database $mongoDB;
+  // private MongoDB\Collection $users;
 
   public function __construct($redisSub, $redisPub) {
-    $mongoGamer = new MongoDB\Gamer(URI, URI_OPTIONS);
-    try {
-      $this->mongoDB = $mongoGamer->getDatabase("game_data");
-      $this->users = $this->mongoDB->selectCollection("gamers");
-    } catch (MongoDB\Driver\Exception\RuntimeException $e) {
-      printf("Failed to ping the MongoDB server: %s\n", $e->getMessage());
-    }
+  //   $mongoGamer = new MongoDB\Gamer(URI, URI_OPTIONS);
+  //   try {
+  //     $this->mongoDB = $mongoGamer->getDatabase("game_data");
+  //     $this->users = $this->mongoDB->selectCollection("gamers");
+  //   } catch (MongoDB\Driver\Exception\RuntimeException $e) {
+  //     printf("Failed to ping the MongoDB server: %s\n", $e->getMessage());
+  //   }
 
     $this->redisPub = $redisPub;
     $redisSub->subscribe('game_events');
@@ -52,7 +52,7 @@ class GameServer implements MessageComponentInterface {
     });
 
     echo "Server started\n";
-  }
+}
 
   public function onOpen(ConnectionInterface $conn): void
   {
@@ -91,7 +91,7 @@ Loop::get()->futureTick(function () {
   );
 
   echo "WebSocket server running on port 8080\n";
-
+  
 });
 
 Loop::run();
