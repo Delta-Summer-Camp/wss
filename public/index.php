@@ -33,7 +33,7 @@ $mongoDB = $mongoClient->getDatabase("game_data");
 #$chat = $mongoDB->selectCollection("chat_messages");
 
 #$messages = $chat->find(
-#[],
+# [],
 #        [
 #                'sort' => ['_id' => -1],
 #                'limit' => 20
@@ -62,24 +62,11 @@ $mongoDB = $mongoClient->getDatabase("game_data");
 
 <body>
 
-<h1>Global Chat</h1>
+<?php
 
-<div id="chat">
+var_dump($redis);
 
-    <?php foreach ($messages as $message): ?>
-
-        <div class="message">
-            #            <b>
-                <?= htmlspecialchars($message['username']) ?>
-            </b>:
-
-            <?= htmlspecialchars($message['message']) ?>
-
-        </div>
-
-    <?php endforeach; ?>
-
-</div>
+?>
 
 </body>
 
