@@ -41,48 +41,46 @@ $mongoDB = $mongoClient->getDatabase("game_data");
 #);
 
 #?>
-
 #<html lang="en">
 
-#<head>
+<head>
 
-#    <title>Global Chat</title>
+    <title>Global Chat</title>
 
-#    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-#    <script src="https://code.jquery.com/jquery-3.7.1.js"
-#            integrity="sha256-eKhayi8LEQwp4NKx+CfCh+3qOVUtJn3QNZ0TciWLP4="
-#            crossorigin="anonymous">
-#    </script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKx+CfCh+3qOVUtJn3QNZ0TciWLP4="
+            crossorigin="anonymous">
+    </script>
 
-#    <script src="js/main.js"></script>
+    <script src="js/main.js"></script>
 
-#    <link href="css/main.css" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
 
-#</head>
+</head>
 
-#<body>
+<body>
 
-#<h1>Global Chat</h1>
+<h1>Global Chat</h1>
 
-#<div id="chat">
+<div id="chat">
 
-#    <?php foreach ($messages as $message): ?>
+    <?php foreach ($messages as $message): ?>
 
-#        <div class="message">
+        <div class="message">
+            #            <b>
+                <?= htmlspecialchars($message['username']) ?>
+            </b>:
 
-#            <b>
-#                <?= htmlspecialchars($message['username']) ?>
-#            </b>:
+            <?= htmlspecialchars($message['message']) ?>
 
- #           <?= htmlspecialchars($message['message']) ?>
+        </div>
 
-  #      </div>
+    <?php endforeach; ?>
 
-   # <?php endforeach; ?>
+</div>
 
-#</div>
+</body>
 
-#</body>
-
-#</html>
+</html>
