@@ -4,6 +4,7 @@ let lab_boxes;
 let playerStatus;
 let playerNicnames;
 let otherNicknames = [];
+let BgColor = 0x00FFFF;
 
 const currentSpd = 0.2;
 const gameScale = 50;
@@ -39,7 +40,7 @@ function preload() {
 }
 
 function create() {
-    game.setBackgroundColor(0x00FFFF);
+    game.setBackgroundColor(BgColor);
     
     player = game.createSprite(currentSize.width / 2, currentSize.height / 2, 'player');
     player.visible = true;
