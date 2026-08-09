@@ -4,6 +4,7 @@ let lab_boxes;
 let playerStatus;
 let playerNicnames;
 let otherNicknames = [];
+let BgColor = 0x00FFFF;
 
 let allowMovment = true;
 const debugEnabled = false;
@@ -42,7 +43,7 @@ function preload() {
 }
 
 function create() {
-    game.setBackgroundColor(0x00FFFF);
+    game.setBackgroundColor(BgColor);
     
     player = game.createSprite(currentSize.width / 2, currentSize.height / 2, 'player');
     player.visible = true;
