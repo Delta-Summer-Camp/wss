@@ -91,38 +91,34 @@ function update() {
 function playerUpdates() {
     if (game.isKeyDown('W') || game.isKeyDown('UP')) {
         pos.y -= currentSpd;
-        while (lab[Math.floor(pos.y/2)][Math.floor(pos.x/2)] == 1 || lab[Math.floor(pos.y/2)][Math.floor(pos.x/2 + 0.49)] == 1) {
-            pos.y = Math.floor(pos.y * 10) / 10;
+        while (lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1 || lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1) {
             pos.y += 0.1;
         }
-        wallDebug.log(pos.x, pos.y, lab[Math.floor(pos.y/2)][Math.floor(pos.x/2)] == 1, "1");
+        wallDebug.log(lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1, "1");
         pos.y = Math.floor(pos.y * 10) / 10;
     }
     if (game.isKeyDown('S') || game.isKeyDown('DOWN')) {
         pos.y += currentSpd;
-        while (lab[Math.floor(pos.y/2 + 0.49)][Math.floor(pos.x/2)] == 1 || lab[Math.floor(pos.y/2 + 0.49)][Math.floor(pos.x/2  + 0.49)]) {
-            pos.y = Math.floor(pos.y * 10) / 10;
+        while (lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1 || lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1) {
             pos.y -= 0.1;
         }
-        wallDebug.log(pos.x, pos.y, lab[Math.floor(pos.y/2)][Math.floor(pos.x/2)] == 1, "2");
+        wallDebug.log(lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1, "2");
         pos.y = Math.floor(pos.y * 10) / 10;
     }
     if (game.isKeyDown('D') || game.isKeyDown('RIGHT')) {
         pos.x += currentSpd;
-        while (lab[Math.floor(pos.y/2)][Math.floor(pos.x/2 + 0.49)] == 1 || lab[Math.floor(pos.y/2 + 0.49)][Math.floor(pos.x/2 + 0.49)]) {
-            pos.x = Math.floor(pos.x * 10) / 10;
+        while (lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1 || lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1) {
             pos.x -= 0.1;
         }
-        wallDebug.log(pos.x, pos.y, lab[Math.floor(pos.y/2)][Math.floor(pos.x/2)] == 1, "3");
+        wallDebug.log(lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1, "3");
         pos.x = Math.floor(pos.x * 10) / 10;
     }
     if (game.isKeyDown('A') || game.isKeyDown('LEFT')) {
         pos.x -= currentSpd;
-        while (lab[Math.floor(pos.y/2)][Math.floor(pos.x/2)] == 1 || lab[Math.floor(pos.y/2 + 0.49)][Math.floor(pos.x/2)]) {
-            pos.x = Math.floor(pos.x * 10) / 10;
+        while (lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1 || lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1) {
             pos.x += 0.1;
         }
-        wallDebug.log(pos.x, pos.y, lab[Math.floor(pos.y/2)][Math.floor(pos.x/2)] == 1, "4");
+        wallDebug.log(lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1, "4");
         pos.x = Math.floor(pos.x * 10) / 10;
     }
 
