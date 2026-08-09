@@ -14,13 +14,6 @@ const gameScale = 50;
 const nickSize = 20;
 const nickDist = 40;
 const renderDesync = {x:0.5, y:0.5};
-let pos = {x:49.5, y:48.5};
-let currentUser = {isHunter:false, username:"YOU"};
-let otherUsers = [
-    {x:22, y:2, isHunter: false, username:"TheAvreageBot", playerId:1, onHold:true},
-    {x:64, y:30, isHunter: true, username:"mMeneske", playerId:2, onHold:true},
-    {x:40, y:38, isHunter: true, username:"10x Engineer", playerId:3, onHold:false}
-];
 
 let lab;
 async function loadFile() {
@@ -84,7 +77,7 @@ function update() {
 
     lab_boxes.runAll(positionboxes);
 
-    otherPlayers.createClones(otherUsers.length - otherPlayers.amount() + 1, 0);
+    otherPlayers.createClones(otherUsers.length - otherPlayers.amount(), 0);
     otherPlayers.runAll(positionclones);
     otherPlayers.runAll(positionnicks);
 
@@ -153,31 +146,33 @@ function positionboxes(planeX, planeY) {
 }
 
 function positionclones(clone) {
-    if (clone != 0) {
-        otherPlayers.clones[clone].x = player.x - (pos.x - otherUsers[clone - 1].x) * gameScale + renderDesync.x * gameScale;
-        otherPlayers.clones[clone].y = player.y - (pos.y - otherUsers[clone - 1].y) * gameScale + renderDesync.y * gameScale;
-        if (otherUsers[clone - 1].isHunter){
+    if (otherUsers[clone].username !== undefined) {
+        otherPlayers.clones[clone].x = player.x - (pos.x - otherUsers[clone].x) * gameScale + renderDesync.x * gameScale;
+        otherPlayers.clones[clone].y = player.y - (pos.y - otherUsers[clone].y) * gameScale + renderDesync.y * gameScale;
+        if (otherUsers[clone].isHunter){
             otherPlayers.clones[clone].costume = 0;
             costumeDebug.log("c0");
         } else {
-            otherPlayers.clones[clone].costume = 1 + otherUsers[clone - 1].onHold * 2;
+            otherPlayers.clones[clone].costume = 1 + otherUsers[clone].onHold * 2;
             costumeDebug.log("c" + otherPlayers.clones[clone].costume);
         }
         otherPlayers.clones[clone].visible = true;
+    } else {
+        otherPlayers.clones[clone].x = -10000;
+        otherPlayers.clones[clone].y = -10000;
+        otherPlayers.clones[clone].visible = false;
     }
 }
 
 function positionnicks(clone) {
-    if (clone != 0 && otherNicknames[clone] != undefined) {
+    if (otherNicknames[clone] != undefined) {
         otherNicknames[clone].destroy()
     }
-    if (clone != 0) {
-        otherNicknames[clone] = game.createText(otherPlayers.clones[clone].x, otherPlayers.clones[clone].y - nickDist, otherUsers[clone - 1].username);
-        otherNicknames[clone].makeXYCentred();
-        otherNicknames[clone].font = 'Arial bold';
-        otherNicknames[clone].size = nickSize;
-        otherNicknames[clone].color = '#FF0000';
-    }
+    otherNicknames[clone] = game.createText(otherPlayers.clones[clone].x, otherPlayers.clones[clone].y - nickDist, otherUsers[clone].username);
+    otherNicknames[clone].makeXYCentred();
+    otherNicknames[clone].font = 'Arial bold';
+    otherNicknames[clone].size = nickSize;
+    otherNicknames[clone].color = '#FF0000';
 }
 
 let last_time = 0;

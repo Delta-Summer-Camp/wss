@@ -1,11 +1,3 @@
-// Function to take the "initObject" from our database and assign the user the predefined isHunter
-
-const userValidation = (initObject) => {
-    if (initObject.username === currentUser.username) {
-        currentUser.isHunter = initObject.isHunter;
-    }
-}
-
 // DOM MANIPULATION
 
 //Definitions

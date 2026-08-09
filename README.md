@@ -1,13 +1,5 @@
 # Просьбы
 
-## В начале игры на ws.onmessage массив с данными
-
-```json
-{isHunter:false, username:"mMeneske", playerId:3}
-```
-
-и
-
 ## На ws.onmessage данные:
 
 ```json
@@ -17,7 +9,13 @@
 {x:10, y:17, isHunter:true, username:"IamSmiley", playerId:2, onHold:true}
 ```
 ```json
-{isHunter:false, username:"mMeneske"}
+{x:49.5, y:48.5, isHunter:false, username:"mMeneske", playerId:4}
+```
+
+### При отключении игрока
+
+```json
+{username: undefined, playerId:1}
 ```
 
 
