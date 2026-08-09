@@ -3,3 +3,17 @@ const userValidation = (initObject) => {
         currentUser.isHunter = initObject.isHunter;
     }
 }
+
+
+
+const pauseMenu = document.getElementById('pause-menu');
+
+document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') {
+        toggleMenu();
+    }
+});
+
+const toggleMenu = () => {
+    pauseMenu.classList.toggle('hidden');
+}
