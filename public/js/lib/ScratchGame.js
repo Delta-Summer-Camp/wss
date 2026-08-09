@@ -1,4 +1,4 @@
-//ScratchGame v0.26.8a
+//ScratchGame v1.27.0
 //Credits: Mperv, mMeneske
 
 class ScratchGame {
@@ -79,6 +79,12 @@ class ScratchGame {
 
     createText(x, y, text) {
         return new ScratchText(this, x, y, text);
+    }
+
+    forceBackgroundBack(){
+        if (this.#backgroundImage) {
+            this.createdGame.children.sendToBack(this.#backgroundImage);
+        }
     }
 
     #keys = {};
@@ -305,6 +311,15 @@ class ScratchSprite {
 
         return (pixel === null) ? 0 : pixel;
     }
+
+    sendToBack(){
+        this.#createdGame.children.sendToBack(this.#sprite);
+        this.#scratchGame.forceBackgroundBack();        
+    }
+
+    bringToFront(){
+        this.#createdGame.children.bringToTop(this.#sprite);
+    }
 }
 
 class ScratchText {
@@ -379,5 +394,18 @@ class ScratchText {
 
     set text(value) {
         this.#text.text = value;
+    }
+
+    makeXYCentred(){
+        this.#text.setOrigin(0.5, 0.5);
+    }
+
+    sendToBack(){
+        this.#createdGame.children.sendToBack(this.#text);
+        this.#scratchGame.forceBackgroundBack();
+    }
+
+    bringToFront(){
+        this.#createdGame.children.bringToTop(this.#text);
     }
 }

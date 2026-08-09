@@ -6,12 +6,15 @@ let playerNicnames;
 let otherNicknames = [];
 let BgColor = 0x00FFFF;
 
+let allowMovment = true;
+const debugEnabled = false;
+
 const currentSpd = 0.2;
 const gameScale = 50;
 const nickSize = 20;
-const nickDist = 50;
+const nickDist = 40;
 const renderDesync = {x:0.5, y:0.5};
-let pos = {x:49, y:48};
+let pos = {x:49.5, y:48.5};
 let currentUser = {isHunter:false, username:"YOU"};
 let otherUsers = [
     {x:22, y:2, isHunter: false, username:"TheAvreageBot", playerId:1, onHold:true},
@@ -52,26 +55,29 @@ function create() {
     otherPlayers.clones[0].visible = false;
     otherPlayers.clones[0].size = gameScale / 200;
 
-    text = this.createText(200, 20, "");
+    text = this.createText(200, 50, "");
+    text.makeXYCentred();
     text.font = 'Arial bold';
     text.color = '#000000';
     text.size = 20;
+    text.visible = debugEnabled;
     
-    let playerStatSize = 50;
-    playerStatus = this.createText(currentSize.width / 2, 20, "");
+    playerStatus = this.createText(currentSize.width / 2, 30, "");
+    playerStatus.makeXYCentred();
     playerStatus.font = 'Arial bold';
     playerStatus.color = '#FF0000';
-    playerStatus.size = playerStatSize;
+    playerStatus.size = 50;
 
     playerNickname = this.createText(currentSize.width / 2, currentSize.height / 2 - nickDist, currentUser.username);
+    playerNickname.makeXYCentred();
     playerNickname.font = 'Arial bold';
     playerNickname.size = nickSize;
     playerNickname.color = '#FF0000';
 
-    wallDebug = initDebug();
-    boxDebug = initDebug();
-    timeTest = initDebug();
-    costumeDebug = initDebug(0);
+    wallDebug = initDebug(debugEnabled,debugEnabled,debugEnabled,debugEnabled);
+    boxDebug = initDebug(debugEnabled,debugEnabled,debugEnabled,debugEnabled);
+    timeTest = initDebug(debugEnabled,debugEnabled,debugEnabled,debugEnabled);
+    costumeDebug = initDebug(debugEnabled,debugEnabled,debugEnabled,debugEnabled);
 }
 function update() {
     playerUpdates();
@@ -80,6 +86,7 @@ function update() {
 
     otherPlayers.createClones(otherUsers.length - otherPlayers.amount() + 1, 0);
     otherPlayers.runAll(positionclones);
+    otherPlayers.runAll(positionnicks);
 
     lag_test();
 
@@ -90,41 +97,39 @@ function update() {
 }
 
 function playerUpdates() {
-    if (game.isKeyDown('W') || game.isKeyDown('UP')) {
-        pos.y -= currentSpd;
-        while (lab[Math.floor(pos.y/2)][Math.floor(pos.x/2)] == 1 || lab[Math.floor(pos.y/2)][Math.floor(pos.x/2 + 0.49)] == 1) {
-            pos.y = Math.floor(pos.y * 10) / 10;
-            pos.y += 0.1;
+    if(allowMovment){
+        if (game.isKeyDown('W') || game.isKeyDown('UP')) {
+            pos.y -= currentSpd;
+            while (lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1 || lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1) {
+                pos.y += 0.01;
+            }
+            wallDebug.log(lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1, "1");
+            pos.y = Math.floor(pos.y * 100) / 100;
         }
-        wallDebug.log(pos.x, pos.y, lab[Math.floor(pos.y/2)][Math.floor(pos.x/2)] == 1, "1");
-        pos.y = Math.floor(pos.y * 10) / 10;
-    }
-    if (game.isKeyDown('S') || game.isKeyDown('DOWN')) {
-        pos.y += currentSpd;
-        while (lab[Math.floor(pos.y/2 + 0.49)][Math.floor(pos.x/2)] == 1 || lab[Math.floor(pos.y/2 + 0.49)][Math.floor(pos.x/2  + 0.49)]) {
-            pos.y = Math.floor(pos.y * 10) / 10;
-            pos.y -= 0.1;
+        if (game.isKeyDown('S') || game.isKeyDown('DOWN')) {
+            pos.y += currentSpd;
+            while (lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1 || lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1) {
+                pos.y -= 0.01;
+            }
+            wallDebug.log(lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1, "2");
+            pos.y = Math.floor(pos.y * 100) / 100;
         }
-        wallDebug.log(pos.x, pos.y, lab[Math.floor(pos.y/2)][Math.floor(pos.x/2)] == 1, "2");
-        pos.y = Math.floor(pos.y * 10) / 10;
-    }
-    if (game.isKeyDown('D') || game.isKeyDown('RIGHT')) {
-        pos.x += currentSpd;
-        while (lab[Math.floor(pos.y/2)][Math.floor(pos.x/2 + 0.49)] == 1 || lab[Math.floor(pos.y/2 + 0.49)][Math.floor(pos.x/2 + 0.49)]) {
-            pos.x = Math.floor(pos.x * 10) / 10;
-            pos.x -= 0.1;
+        if (game.isKeyDown('D') || game.isKeyDown('RIGHT')) {
+            pos.x += currentSpd;
+            while (lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1 || lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1) {
+                pos.x -= 0.01;
+            }
+            wallDebug.log(lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1, "3");
+            pos.x = Math.floor(pos.x * 100) / 100;
         }
-        wallDebug.log(pos.x, pos.y, lab[Math.floor(pos.y/2)][Math.floor(pos.x/2)] == 1, "3");
-        pos.x = Math.floor(pos.x * 10) / 10;
-    }
-    if (game.isKeyDown('A') || game.isKeyDown('LEFT')) {
-        pos.x -= currentSpd;
-        while (lab[Math.floor(pos.y/2)][Math.floor(pos.x/2)] == 1 || lab[Math.floor(pos.y/2 + 0.49)][Math.floor(pos.x/2)]) {
-            pos.x = Math.floor(pos.x * 10) / 10;
-            pos.x += 0.1;
+        if (game.isKeyDown('A') || game.isKeyDown('LEFT')) {
+            pos.x -= currentSpd;
+            while (lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1 || lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1) {
+                pos.x += 0.01;
+            }
+            wallDebug.log(lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1, "4");
+            pos.x = Math.floor(pos.x * 100) / 100;
         }
-        wallDebug.log(pos.x, pos.y, lab[Math.floor(pos.y/2)][Math.floor(pos.x/2)] == 1, "4");
-        pos.x = Math.floor(pos.x * 10) / 10;
     }
 
     if (currentUser.isHunter){
@@ -159,6 +164,19 @@ function positionclones(clone) {
             costumeDebug.log("c" + otherPlayers.clones[clone].costume);
         }
         otherPlayers.clones[clone].visible = true;
+    }
+}
+
+function positionnicks(clone) {
+    if (clone != 0 && otherNicknames[clone] != undefined) {
+        otherNicknames[clone].destroy()
+    }
+    if (clone != 0) {
+        otherNicknames[clone] = game.createText(otherPlayers.clones[clone].x, otherPlayers.clones[clone].y - nickDist, otherUsers[clone - 1].username);
+        otherNicknames[clone].makeXYCentred();
+        otherNicknames[clone].font = 'Arial bold';
+        otherNicknames[clone].size = nickSize;
+        otherNicknames[clone].color = '#FF0000';
     }
 }
 
