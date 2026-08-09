@@ -40,9 +40,9 @@ function prepareData() {
     return {x:pos.x, y:pos.y, username:currentUser.username, playerId: undefined};
 }
 
-//Checks if the current connection is valid when opening /game.html
-function isConnectionValid(){
-
+//Removes the player from /game.html(.php) if they are not connected to the server
+function onDisconnect(){
+    window.location.href = "/";
 }
 
 //Test data
