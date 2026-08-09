@@ -24,7 +24,7 @@ document.addEventListener('keydown', function (event) {
 
     if (event.key === 'Escape' && !(settingsActive)) {
         toggleMenu();
-    } else {
+    } else if (event.key === 'Escape') {
         deactivateSettings();
     }
 });
@@ -43,7 +43,7 @@ function activateSettings() {
 function deactivateSettings() {
     settingsActive = false;
     console.log(settingsActive);
-    settings.classList.toggle('hidden');
+    settings.classList.add('hidden');
 }
 
 
@@ -62,6 +62,6 @@ colorInput.addEventListener('input', function (event) {
 colorInput.addEventListener('keydown', function (event) { 
     if (event.key === "Enter") {
        setBgColor(); 
-       activateSettings();
+       deactivateSettings();
     }
 })
