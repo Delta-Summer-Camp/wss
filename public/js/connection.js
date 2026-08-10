@@ -10,9 +10,10 @@ function arrangeData(inputDataObject) {
             currentUser.playerId = inputDataObject.playerId;
             pos.x = inputDataObject.x;
             pos.y = inputDataObject.y;
+            otherUsers[inputDataObject.playerId] = {username: undefined};
         } else {
             if (inputDataObject.username === undefined){
-                otherUsers[inputDataObject.playerId] = {username: undefined}
+                otherUsers[inputDataObject.playerId] = {username: undefined};
             } else {
                 otherUsers[inputDataObject.playerId] = inputDataObject;
             }
@@ -24,6 +25,7 @@ function arrangeData(inputDataObject) {
                 currentUser.playerId = inputDataObject[i].playerId;
                 pos.x = inputDataObject[i].x;
                 pos.y = inputDataObject[i].y;
+                otherUsers[inputDataObject[i].playerId] = {username: undefined}
             } else {
                 if (inputDataObject[i].username === undefined){
                     otherUsers[inputDataObject[i].playerId] = {username: undefined}
