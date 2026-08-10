@@ -4,16 +4,22 @@ let lab_boxes;
 let playerStatus;
 let playerNicnames;
 let otherNicknames = [];
-let BgColor = 0x00FFFF;
+let lastServerUpdate;
+let lastTickMoment;
 
+let phoneMovment = true;
+let mouseMovment = false;
 let allowMovment = true;
 const debugEnabled = false;
 
-const currentSpd = 0.2;
+let BgColor = 0x00FFFF;
+const serverUpdateFrequency = 0.05;
+const currentSpd = 0.15;
 const gameScale = 50;
 const nickSize = 20;
 const nickDist = 40;
 const renderDesync = {x:0.5, y:0.5};
+let mouse = {x:0, y:0};
 
 let lab;
 async function loadFile() {
@@ -66,6 +72,7 @@ function create() {
     playerNickname.font = 'Arial bold';
     playerNickname.size = nickSize;
     playerNickname.color = '#FF0000';
+    playerNickname.bringToFront();
 
     wallDebug = initDebug(debugEnabled,debugEnabled,debugEnabled,debugEnabled);
     boxDebug = initDebug(debugEnabled,debugEnabled,debugEnabled,debugEnabled);
@@ -73,6 +80,9 @@ function create() {
     costumeDebug = initDebug(debugEnabled,debugEnabled,debugEnabled,debugEnabled);
 }
 function update() {
+    lag_test();
+
+    mouseUpdates();
     playerUpdates();
 
     lab_boxes.runAll(positionboxes);
@@ -81,47 +91,77 @@ function update() {
     otherPlayers.runAll(positionclones);
     otherPlayers.runAll(positionnicks);
 
-    lag_test();
-
-    player.x = player.x;
-
     text.text = 'X: ' + pos.x + '\nY: ' + pos.y + '\nTPS: ' + tps;
     playerStatus.text = `${(currentUser.isHunter)? "Status: Hunter" : "Status: Runner"}`;
 }
 
+function mouseUpdates() {
+    if (game.isMouseDown() && phoneMovment && allowMovment) {
+        mouse.x = game.mouseX / gameScale - player.x / gameScale + pos.x;
+        mouse.y = game.mouseY / gameScale - player.y / gameScale + pos.y;
+        mouseMovment = true;
+    }
+}
+
 function playerUpdates() {
     if(allowMovment){
-        if (game.isKeyDown('W') || game.isKeyDown('UP')) {
+        let hasMoved = false;
+        if (game.isKeyDown('W') || game.isKeyDown('UP') || (pos.y - mouse.y > 0 && mouseMovment)) {
             pos.y -= currentSpd;
             while (lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1 || lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1) {
                 pos.y += 0.01;
             }
             wallDebug.log(lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1, "1");
             pos.y = Math.floor(pos.y * 100) / 100;
+            hasMoved = true;
         }
-        if (game.isKeyDown('S') || game.isKeyDown('DOWN')) {
+        if (game.isKeyDown('S') || game.isKeyDown('DOWN')  || (pos.y - mouse.y < 0 && mouseMovment)) {
             pos.y += currentSpd;
             while (lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1 || lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1) {
                 pos.y -= 0.01;
             }
             wallDebug.log(lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1, "2");
             pos.y = Math.floor(pos.y * 100) / 100;
+            hasMoved = true;
         }
-        if (game.isKeyDown('D') || game.isKeyDown('RIGHT')) {
+        if (game.isKeyDown('D') || game.isKeyDown('RIGHT')  || (pos.x - mouse.x < 0 && mouseMovment)) {
             pos.x += currentSpd;
             while (lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1 || lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1) {
                 pos.x -= 0.01;
             }
             wallDebug.log(lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1, "3");
             pos.x = Math.floor(pos.x * 100) / 100;
+            hasMoved = true;
         }
-        if (game.isKeyDown('A') || game.isKeyDown('LEFT')) {
+        if (game.isKeyDown('A') || game.isKeyDown('LEFT')  || (pos.x - mouse.x > 0 && mouseMovment)) {
             pos.x -= currentSpd;
             while (lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1 || lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1) {
                 pos.x += 0.01;
             }
             wallDebug.log(lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1, "4");
             pos.x = Math.floor(pos.x * 100) / 100;
+            hasMoved = true;
+        }
+
+        if(pos.x < mouse.x + currentSpd && pos.x > mouse.x - currentSpd && pos.y < mouse.y + currentSpd && pos.y > mouse.y - currentSpd) {
+            mouseMovment = false;
+        }
+
+        if(hasMoved) {
+            const time = new Date;
+            if(time.getTime() - lastServerUpdate > serverUpdateFrequency * 1000){
+                sendData();
+                lastServerUpdate = time.getTime();
+            }
+            lastTickMoment = true;
+        } else {
+            const time = new Date;
+            lastServerUpdate = time.getTime();
+            if(lastTickMoment){
+                sendData();
+            }
+            lastTickMoment = false;
+
         }
     }
 
@@ -132,6 +172,7 @@ function playerUpdates() {
         player.costume = 1;
         costumeDebug.log("c1");
     }
+    player.bringToFront();
 }
 
 function positionboxes(planeX, planeY) {

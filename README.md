@@ -48,4 +48,4 @@ python -m http.server 8080
 npx http-server . -p 8080
 ```
 Then join on:
-http://localhost:8080/public/
+http://localhost:8080/

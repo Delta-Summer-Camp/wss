@@ -36,8 +36,10 @@ function arrangeData(inputDataObject) {
 }
 
 //Output gets sent to ws.send
-function prepareData() {
-    return {x:pos.x, y:pos.y, username:currentUser.username, playerId: undefined};
+function sendData() {
+    outputData = {x:pos.x, y:pos.y, username:currentUser.username, playerId: currentUser.playerId};
+    console.log(outputData);
+    // transmit output data via vss
 }
 
 //Removes the player from /game.html(.php) if they are not connected to the server
