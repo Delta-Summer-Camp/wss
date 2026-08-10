@@ -13,7 +13,7 @@ use React\EventLoop\Loop;
 use React\Socket\SocketServer;
 
 // connection data
-class Client {
+class Gamer {
   private ConnectionInterface $conn;
   public function __construct(ConnectionInterface $conn)
   {
@@ -32,17 +32,17 @@ const URI_OPTIONS = ['ServerSelectionTimeoutMS' => 10000];
 
 class GameServer implements MessageComponentInterface {
   private RedisClient $redisPub;
-  // private MongoDB\Database $mongoDB;
-  // private MongoDB\Collection $users;
+  private MongoDB\Database $mongoDB;
+  private MongoDB\Collection $users;
 
   public function __construct($redisSub, $redisPub) {
-  //   $mongoGamer = new MongoDB\Gamer(URI, URI_OPTIONS);
-  //   try {
-  //     $this->mongoDB = $mongoGamer->getDatabase("game_data");
-  //     $this->users = $this->mongoDB->selectCollection("gamers");
-  //   } catch (MongoDB\Driver\Exception\RuntimeException $e) {
-  //     printf("Failed to ping the MongoDB server: %s\n", $e->getMessage());
-  //   }
+    // $mongoGamer = new MongoDB\Gamer(URI, URI_OPTIONS);
+    // try {
+    //   $this->mongoDB = $mongoGamer->getDatabase("game_data");
+    //   $this->users = $this->mongoDB->selectCollection("gamers");
+    // } catch (MongoDB\Driver\Exception\RuntimeException $e) {
+    //   printf("Failed to ping the MongoDB server: %s\n", $e->getMessage());
+    // }
 
     $this->redisPub = $redisPub;
     $redisSub->subscribe('game_events');
@@ -56,15 +56,17 @@ class GameServer implements MessageComponentInterface {
 
   public function onOpen(ConnectionInterface $conn): void
   {
-    $client = new Client($conn);
+    $gamer = new Gamer($conn);
+
+    echo "connection opened";
   }
 
   public function onMessage(ConnectionInterface $from, $msg): void {
-    // ToDo
+    echo var_dump($msg);
   }
 
   public function onClose(ConnectionInterface $conn): void {
-    // ToDo
+    echo "connection closed";
   }
 
   public function onError(ConnectionInterface $conn, \Exception $e): void {
