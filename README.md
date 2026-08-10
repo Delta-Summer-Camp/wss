@@ -15,17 +15,17 @@
 ### При отключении игрока
 
 ```json
-{username: undefined, playerId:1}
+{username:undefined, playerId:1}
 ```
 
 
 ## В начале игры мы вам на ws.send:
 
 ```json
-{x:14, y:1, username:"mMeneske"}
+{x:14, y:1, username:"mMeneske", playerId:undefined}
 ```
 
-## На ws.send данные:
+## На ws.send далее:
 
 ```json
 {x:14, y:1, username:"mMeneske", playerId:3}
