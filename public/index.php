@@ -14,11 +14,42 @@ $redis->publish($channel, json_encode($event));
 
 $uri = 'mongodb://127.0.0.1:27017';
 $uriOptions = ['ServerSelectionTimeoutMS' => 10000];
-$mongoClient = new MongoDB\Client($uri, $uriOptions);
-$mongoDB = $mongoClient->getDatabase("game_data");
-$chat = $mongoDB->selectCollection("/*ToDo*/");
-// ToDo
-// $messages = $chat->find([], ['sort' => ['_id' => -1]]);
+
+try {
+    $mongoClient = new MongoDB\Client($uri, $uriOptions);
+
+    $mongoDB = $mongoClient->getDatabase("game_data");
+
+    // Select/create users collection
+    $users = $mongoDB->selectCollection("users");
+
+    // Create a test user
+    $newUser = [
+            'username' => 'Ian',
+            'email' => 'ianiliev111@gmail.com',
+            'score' => 0,
+            'created_at' => new MongoDB\BSON\UTCDateTime()
+    ];
+
+    // Insert user
+    $result = $users->insertOne($newUser);
+
+    echo "MongoDB connection works!<br>";
+    echo "User added with ID: " . $result->getInsertedId() . "<br>";
+
+    // Get the user we just created
+    $user = $users->findOne([
+            '_id' => $result->getInsertedId()
+    ]);
+
+    echo "<pre>";
+    print_r($user);
+    echo "</pre>";
+
+} catch (Exception $e) {
+    echo "MongoDB error: " . $e->getMessage();
+}
+
 ?>
 <html lang="en">
 <head>
