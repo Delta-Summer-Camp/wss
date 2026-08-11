@@ -6,8 +6,11 @@ let playerNicnames;
 let otherNicknames = [];
 let lastServerUpdate;
 let lastTickMoment;
+let frezeTime;
+let currentDate = new Date;
 
-let phoneMovment = true;
+let lastHunter = false;
+let phoneMode = true;
 let mouseMovment = false;
 let allowMovment = true;
 const debugEnabled = false;
@@ -18,6 +21,7 @@ const serverUpdateFrequency = 0.05;
 const currentSpd = 0.15;
 const nickSize = 20;
 const nickDist = 40;
+const frezeLength = 5;
 const renderDesync = {x:0.5, y:0.5};
 let currentScreenStartPos = {x:0, y:0};
 let mouse = {x:0, y:0};
@@ -81,6 +85,8 @@ function create() {
     costumeDebug = initDebug(debugEnabled,debugEnabled,debugEnabled,debugEnabled);
 }
 function update() {
+    currentDate = new Date;
+    time = currentDate.getTime();
     lag_test();
 
     mouseUpdates();
@@ -97,7 +103,7 @@ function update() {
 }
 
 function mouseUpdates() {
-    if (game.isMouseDown() && phoneMovment && allowMovment) {
+    if (game.isMouseDown() && phoneMode && allowMovment) {
         mouse.x = game.mouseX / gameScale - player.x / gameScale + pos.x;
         mouse.y = game.mouseY / gameScale - player.y / gameScale + pos.y;
         mouseMovment = true;
@@ -105,7 +111,20 @@ function mouseUpdates() {
 }
 
 function playerUpdates() {
-    if(allowMovment){
+    let freezeMovment = false;
+
+    if(lastHunter == false && currentUser.isHunter == true){
+        frezeTime = time + frezeLength * 1000;
+        console.log("yes");
+    }
+    if(frezeTime > time) {
+        freezeMovment = true;
+        mouseMovment = false;
+    }
+    lastHunter = currentUser.isHunter;
+
+
+    if(allowMovment && !freezeMovment){
         let hasMoved = false;
         let overrideAutoMovement = game.isKeyDown('W') || game.isKeyDown('A') || game.isKeyDown('S') || game.isKeyDown('D') || game.isKeyDown('UP') || game.isKeyDown('LEFT') || game.isKeyDown('DOWN') || game.isKeyDown('RIGHT');
         if (game.isKeyDown('W') || game.isKeyDown('UP') || (pos.y - mouse.y > 0 && mouseMovment && !overrideAutoMovement)) {
@@ -150,15 +169,13 @@ function playerUpdates() {
         }
 
         if(hasMoved) {
-            const time = new Date;
-            if(time.getTime() - lastServerUpdate > serverUpdateFrequency * 1000){
+            if(time - lastServerUpdate > serverUpdateFrequency * 1000){
                 sendData();
-                lastServerUpdate = time.getTime();
+                lastServerUpdate = time;
             }
             lastTickMoment = true;
         } else {
-            const time = new Date;
-            lastServerUpdate = time.getTime();
+            lastServerUpdate = time;
             if(lastTickMoment){
                 sendData();
             }
@@ -232,8 +249,6 @@ let tick_avg = 0;
 let tps = 0;
 
 function lag_test() {
-    const d = new Date();
-    let time = d.getTime();
     let late_time = time - last_time;
 
     timeTest.log("Tick took: " + late_time + " ms");
