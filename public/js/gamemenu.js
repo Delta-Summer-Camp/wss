@@ -23,12 +23,16 @@ document.addEventListener('keydown', function (event) {
 
 function toggleMenu() {
     pauseMenu.classList.toggle('hidden');
+    if(!(pauseMenu.classList.contains('hidden'))) {
+        allowMovment =false;
+    }
 
 }
 
 function activateSettings() {
     toggleMenu();
     settingsActive = true;
+    allowMovment = false;
     console.log(settingsActive);
     settings.classList.toggle('hidden');
 }
