@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <?php
 
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
 
 $redis = new Redis();
 $redis->connect('127.0.0.1', 6379);
@@ -18,7 +18,7 @@ $uriOptions = ['ServerSelectionTimeoutMS' => 10000];
 try {
     $mongoClient = new MongoDB\Client($uri, $uriOptions);
 
-    $mongoDB = $mongoClient->getDatabase("game_data");
+    $mongoDB = $mongoClient->selectDatabase("game_data");
 
     // Select/create users collection
     $users = $mongoDB->selectCollection("users");
