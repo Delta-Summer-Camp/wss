@@ -20,7 +20,7 @@ const debugEnabled = false;
 let BgColor = 0x00FFFF;
 const gameScale = 50;
 const serverUpdateFrequency = 0.05;
-const currentSpd = 0.15;
+const defaultSpd = 0.15;
 const nickSize = 20;
 const nickDist = 40;
 const frezeLength = 5;
@@ -130,14 +130,15 @@ function playerUpdates() {
         let hasMoved = false;
         let overrideAutoMovement = game.isKeyDown('W') || game.isKeyDown('A') || game.isKeyDown('S') || game.isKeyDown('D') || game.isKeyDown('UP') || game.isKeyDown('LEFT') || game.isKeyDown('DOWN') || game.isKeyDown('RIGHT');
         if (game.isKeyDown('W') || game.isKeyDown('UP') || (pos.y - mouse.y > 0 && mouseMovment && !overrideAutoMovement)) {
-            if(currentSpd / lagConsequence < 2){
-                pos.y -= currentSpd / lagConsequence;
+            if(defaultSpd / lagConsequence < 2){
+                pos.y -= defaultSpd / lagConsequence;
                 pos.y = Math.floor(pos.y * 100) / 100;
                 while (lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1 || lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1) {
                     pos.y += 0.01;
+                    console.log(defaultSpd / lagConsequence);
                 }
             } else {
-                for(let i = 0; i < currentSpd / lagConsequence; i += 0.01){
+                for(let i = 0; i < defaultSpd / lagConsequence; i += 0.01){
                     pos.y -= 0.01;
                     if (lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1 || lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1) {
                         pos.y += 0.01;
@@ -149,14 +150,14 @@ function playerUpdates() {
             hasMoved = true;
         }
         if (game.isKeyDown('S') || game.isKeyDown('DOWN')  || (pos.y - mouse.y < 0 && mouseMovment && !overrideAutoMovement)) {
-            if(currentSpd / lagConsequence < 2){
-                pos.y += currentSpd / lagConsequence;
-                pos.y = Math.floor(pos.y * 100) / 100;
+            if(defaultSpd / lagConsequence < 2){
+                pos.y += defaultSpd / lagConsequence;
+                pos.y = Math.ceil(pos.y * 100) / 100;
                 while (lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1 || lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1) {
                     pos.y -= 0.01;
                 }
             } else {
-                for(let i = 0; i < currentSpd / lagConsequence; i += 0.01){
+                for(let i = 0; i < defaultSpd / lagConsequence; i += 0.01){
                     pos.y += 0.01;
                     if (lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1 || lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1) {
                         pos.y -= 0.01;
@@ -168,14 +169,14 @@ function playerUpdates() {
             hasMoved = true;
         }
         if (game.isKeyDown('D') || game.isKeyDown('RIGHT')  || (pos.x - mouse.x < 0 && mouseMovment && !overrideAutoMovement)) {
-            if(currentSpd / lagConsequence < 2){
-                pos.x += currentSpd / lagConsequence;
-                pos.x = Math.floor(pos.x * 100) / 100;
+            if(defaultSpd / lagConsequence < 2){
+                pos.x += defaultSpd / lagConsequence;
+                pos.x = Math.ceil(pos.x * 100) / 100;
                 while (lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1 || lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1) {
                     pos.x -= 0.01;
                 }
             } else {
-                for(let i = 0; i < currentSpd / lagConsequence; i += 0.01){
+                for(let i = 0; i < defaultSpd / lagConsequence; i += 0.01){
                     pos.x += 0.01;
                     if (lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1 || lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1) {
                         pos.x -= 0.01;
@@ -183,18 +184,18 @@ function playerUpdates() {
                 }
             }
             wallDebug.log(lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1, "3");
-            pos.x = Math.floor(pos.x * 100) / 100;
+            pos.x = Math.ceil(pos.x * 100) / 100;
             hasMoved = true;
         }
         if (game.isKeyDown('A') || game.isKeyDown('LEFT')  || (pos.x - mouse.x > 0 && mouseMovment && !overrideAutoMovement)) {
-            if(currentSpd / lagConsequence < 2){
-                pos.x -= currentSpd / lagConsequence;
+            if(defaultSpd / lagConsequence < 2){
+                pos.x -= defaultSpd / lagConsequence;
                 pos.x = Math.floor(pos.x * 100) / 100;
                 while (lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1 || lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1) {
                     pos.x += 0.01;
                 }
             } else {
-                for(let i = 0; i < currentSpd / lagConsequence; i += 0.01){
+                for(let i = 0; i < defaultSpd / lagConsequence; i += 0.01){
                     pos.x -= 0.01;
                     if (lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1 || lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1) {
                         pos.x += 0.01;
@@ -206,7 +207,7 @@ function playerUpdates() {
             hasMoved = true;
         }
 
-        if(pos.x < mouse.x + currentSpd && pos.x > mouse.x - currentSpd && pos.y < mouse.y + currentSpd && pos.y > mouse.y - currentSpd) {
+        if(pos.x < mouse.x + defaultSpd && pos.x > mouse.x - defaultSpd && pos.y < mouse.y + defaultSpd && pos.y > mouse.y - defaultSpd) {
             mouseMovment = false;
         }
 
