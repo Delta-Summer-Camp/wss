@@ -43,6 +43,7 @@ function deactivateSettings() {
     settingsActive = false;
     console.log(settingsActive);
     settings.classList.add('hidden');
+    allowMovment = true;
 }
 
 
