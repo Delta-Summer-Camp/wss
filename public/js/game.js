@@ -7,6 +7,8 @@ let otherNicknames = [];
 let lastServerUpdate;
 let lastTickMoment;
 let frezeTime;
+let tick_length;
+let lagConsequence;
 let currentDate = new Date;
 
 let lastHunter = false;
@@ -128,36 +130,76 @@ function playerUpdates() {
         let hasMoved = false;
         let overrideAutoMovement = game.isKeyDown('W') || game.isKeyDown('A') || game.isKeyDown('S') || game.isKeyDown('D') || game.isKeyDown('UP') || game.isKeyDown('LEFT') || game.isKeyDown('DOWN') || game.isKeyDown('RIGHT');
         if (game.isKeyDown('W') || game.isKeyDown('UP') || (pos.y - mouse.y > 0 && mouseMovment && !overrideAutoMovement)) {
-            pos.y -= currentSpd;
-            while (lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1 || lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1) {
-                pos.y += 0.01;
+            if(currentSpd / lagConsequence < 2){
+                pos.y -= currentSpd / lagConsequence;
+                pos.y = Math.floor(pos.y * 100) / 100;
+                while (lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1 || lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1) {
+                    pos.y += 0.01;
+                }
+            } else {
+                for(let i = 0; i < currentSpd / lagConsequence; i += 0.01){
+                    pos.y -= 0.01;
+                    if (lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1 || lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1) {
+                        pos.y += 0.01;
+                    }
+                }
             }
             wallDebug.log(lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1, "1");
             pos.y = Math.floor(pos.y * 100) / 100;
             hasMoved = true;
         }
         if (game.isKeyDown('S') || game.isKeyDown('DOWN')  || (pos.y - mouse.y < 0 && mouseMovment && !overrideAutoMovement)) {
-            pos.y += currentSpd;
-            while (lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1 || lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1) {
-                pos.y -= 0.01;
+            if(currentSpd / lagConsequence < 2){
+                pos.y += currentSpd / lagConsequence;
+                pos.y = Math.floor(pos.y * 100) / 100;
+                while (lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1 || lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1) {
+                    pos.y -= 0.01;
+                }
+            } else {
+                for(let i = 0; i < currentSpd / lagConsequence; i += 0.01){
+                    pos.y += 0.01;
+                    if (lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1 || lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1) {
+                        pos.y -= 0.01;
+                    }
+                }
             }
             wallDebug.log(lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1, "2");
             pos.y = Math.floor(pos.y * 100) / 100;
             hasMoved = true;
         }
         if (game.isKeyDown('D') || game.isKeyDown('RIGHT')  || (pos.x - mouse.x < 0 && mouseMovment && !overrideAutoMovement)) {
-            pos.x += currentSpd;
-            while (lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1 || lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1) {
-                pos.x -= 0.01;
+            if(currentSpd / lagConsequence < 2){
+                pos.x += currentSpd / lagConsequence;
+                pos.x = Math.floor(pos.x * 100) / 100;
+                while (lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1 || lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1) {
+                    pos.x -= 0.01;
+                }
+            } else {
+                for(let i = 0; i < currentSpd / lagConsequence; i += 0.01){
+                    pos.x += 0.01;
+                    if (lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1 || lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1) {
+                        pos.x -= 0.01;
+                    }
+                }
             }
             wallDebug.log(lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1, "3");
             pos.x = Math.floor(pos.x * 100) / 100;
             hasMoved = true;
         }
         if (game.isKeyDown('A') || game.isKeyDown('LEFT')  || (pos.x - mouse.x > 0 && mouseMovment && !overrideAutoMovement)) {
-            pos.x -= currentSpd;
-            while (lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1 || lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1) {
-                pos.x += 0.01;
+            if(currentSpd / lagConsequence < 2){
+                pos.x -= currentSpd / lagConsequence;
+                pos.x = Math.floor(pos.x * 100) / 100;
+                while (lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1 || lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1) {
+                    pos.x += 0.01;
+                }
+            } else {
+                for(let i = 0; i < currentSpd / lagConsequence; i += 0.01){
+                    pos.x -= 0.01;
+                    if (lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1 || lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1) {
+                        pos.x += 0.01;
+                    }
+                }
             }
             wallDebug.log(lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1, "4");
             pos.x = Math.floor(pos.x * 100) / 100;
@@ -249,10 +291,10 @@ let tick_avg = 0;
 let tps = 0;
 
 function lag_test() {
-    let late_time = time - last_time;
+    tick_length = time - last_time;
 
-    timeTest.log("Tick took: " + late_time + " ms");
-    tick_time[tick_time.length] = late_time;
+    timeTest.log("Tick took: " + tick_length + " ms");
+    tick_time[tick_time.length] = tick_length;
     tick_avg = 0;
     if (tick_time.length > 5000) {
         for(let i = tick_time.length - 5000; i < tick_time.length; ++i){
@@ -268,4 +310,6 @@ function lag_test() {
     tps = Math.floor(1000 / tick_avg);
 
     last_time = time;
+
+    lagConsequence = 100 / tick_length / 6;
 }
