@@ -144,7 +144,7 @@ function playerUpdates() {
             hasMoved = true;
         }
 
-        if(pos.x < mouse.x + currentSpd / 2 && pos.x > mouse.x - currentSpd / 2 && pos.y < mouse.y + currentSpd / 2 && pos.y > mouse.y - currentSpd / 2) {
+        if(pos.x < mouse.x + currentSpd && pos.x > mouse.x - currentSpd && pos.y < mouse.y + currentSpd && pos.y > mouse.y - currentSpd) {
             mouseMovment = false;
         }
 
