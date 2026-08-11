@@ -19,6 +19,7 @@ const gameScale = 50;
 const nickSize = 20;
 const nickDist = 40;
 const renderDesync = {x:0.5, y:0.5};
+let currentScreenStartPos = {x:0, y:0};
 let mouse = {x:0, y:0};
 
 let lab;
@@ -48,7 +49,7 @@ function create() {
     player.visible = true;
     player.size = gameScale / 200;
 
-    lab_boxes = initPlane(-10000, -10000, 40, 40, lab[0].length, lab.length, "box");
+    lab_boxes = initPlane(-10000, -10000, 40, 40, Math.ceil(currentSize.width / 2 / gameScale) + 2, Math.ceil(currentSize.height / 2 / gameScale) + 3, "box");
 
     otherPlayers = initClones(-100, -1000, 'player');
     otherPlayers.clones[0].visible = false;
@@ -164,6 +165,7 @@ function playerUpdates() {
             lastTickMoment = false;
 
         }
+
     }
 
     if (currentUser.isHunter){
@@ -174,17 +176,22 @@ function playerUpdates() {
         costumeDebug.log("c1");
     }
     player.bringToFront();
+
+    currentScreenStartPos.x = Math.floor(pos.x / 2 - lab_boxes.plane.length / 2);
+    currentScreenStartPos.y = Math.floor(pos.y / 2 - lab_boxes.plane[0].length / 2);
 }
 
-function positionboxes(planeX, planeY) {
-    lab_boxes.plane[planeX][planeY].x = player.x - pos.x * gameScale + planeX * gameScale * 2 + renderDesync.x * gameScale;
-    lab_boxes.plane[planeX][planeY].y = player.y - pos.y * gameScale + planeY * gameScale * 2 + renderDesync.y * gameScale;
+function positionboxes(currentX, currentY) {
+    let planeX = currentX + currentScreenStartPos.x;
+    let planeY = currentY + currentScreenStartPos.y;
+    lab_boxes.plane[currentX][currentY].x = player.x - pos.x * gameScale + planeX * gameScale * 2 + renderDesync.x * gameScale;
+    lab_boxes.plane[currentX][currentY].y = player.y - pos.y * gameScale + planeY * gameScale * 2 + renderDesync.y * gameScale;
     if (lab[planeY][planeX] == 0) {
-        lab_boxes.plane[planeX][planeY].visible = false;
-    } else if (lab[planeY][planeX] == 0) {
-        lab_boxes.plane[planeX][planeY].visible = true;
+        lab_boxes.plane[currentX][currentY].visible = false;
+    } else if (lab[planeY][planeX] == 1) {
+        lab_boxes.plane[currentX][currentY].visible = true;
     }
-    lab_boxes.plane[planeX][planeY].size = gameScale / 10;
+    lab_boxes.plane[currentX][currentY].size = gameScale / 10;
 }
 
 function positionclones(clone) {
