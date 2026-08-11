@@ -3,6 +3,47 @@
             overflow: hidden;
         }
 
+        /* --- HAMBURGER MENU CSS --- */
+        #hamburger-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 90; /* Below pause menu, above canvas */
+            
+            width: 50px;
+            height: 50px;
+            background-color: rgba(0, 0, 0, 0.85);
+            border: 1px solid #ffffff;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        #hamburger-btn:hover {
+            background-color: #475569; /* Slate hover state matching inputs */
+            transform: translateY(-2px);
+        }
+
+        #hamburger-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Lines inside the hamburger button */
+        .hamburger-line {
+            width: 24px;
+            height: 3px;
+            background-color: #ffffff;
+            border-radius: 2px;
+        }
+
         /* --- PAUSE MENU CSS --- */
         #pause-menu {
             position: absolute;

@@ -22,10 +22,13 @@ document.addEventListener('keydown', function (event) {
 });
 
 function toggleMenu() {
-    pauseMenu.classList.toggle('hidden');
-    if(!(pauseMenu.classList.contains('hidden'))) {
-        allowMovment =false;
+    if (!settingsActive) {
+        pauseMenu.classList.toggle('hidden');
+        if (!(pauseMenu.classList.contains('hidden'))) {
+            allowMovment = false;
+        }
     }
+
 
 }
 
@@ -44,21 +47,21 @@ function deactivateSettings() {
 
 
 const setBgColor = () => {
-    
+
 
     BgColor = parseInt(colorInput.value.replace('#', ''), 16);
     game.setBackgroundColor(BgColor);
 }
 
 colorInput.addEventListener('input', function (event) {
-    
-    colorInputValue = event.target.value; 
+
+    colorInputValue = event.target.value;
 })
 
-colorInput.addEventListener('keydown', function (event) { 
+colorInput.addEventListener('keydown', function (event) {
     if (event.key === "Enter") {
-       setBgColor(); 
-       deactivateSettings();
+        setBgColor();
+        deactivateSettings();
     }
 });
 function applyColor() {
