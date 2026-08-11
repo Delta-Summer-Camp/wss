@@ -49,7 +49,7 @@ function create() {
     player.visible = true;
     player.size = gameScale / 200;
 
-    lab_boxes = initPlane(-10000, -10000, 40, 40, Math.ceil(currentSize.width / 2 / gameScale) + 3, Math.ceil(currentSize.height / 2 / gameScale) + 2, "box");
+    lab_boxes = initPlane(-10000, -10000, 40, 40, Math.ceil(currentSize.width / gameScale * 0.75), Math.ceil(currentSize.height / gameScale * 0.75), "box");
 
     otherPlayers = initClones(-100, -1000, 'player');
     otherPlayers.clones[0].visible = false;
