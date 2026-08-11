@@ -40,7 +40,7 @@ function arrangeData(inputDataObject) {
 //Output gets sent to ws.send
 function sendData() {
     outputData = {x:pos.x, y:pos.y, username:currentUser.username, playerId: currentUser.playerId};
-    console.log(outputData);
+    //console.log(outputData);
     // transmit output data via vss
 }
 
@@ -51,10 +51,10 @@ function onDisconnect(){
 
 //Test data
 arrangeData([
-    {x:22, y:2, isHunter: false, username:"TheAvreageBot", playerId:0, onHold:true},
-    {x:64, y:30, isHunter: true, username:"mMeneske", playerId:1, onHold:true},
-    {x:40, y:38, isHunter: true, username:"10x Engineer", playerId:2, onHold:false},
-    {x:49.5, y:48.5, isHunter:false, username:"YOU", playerId: 3}
+    {x:22.5, y:2.5, isHunter: false, username:"TheAvreageBot", playerId:0, onHold:true},
+    {x:64.5, y:30.5, isHunter: true, username:"mMeneske", playerId:1, onHold:true},
+    {x:40.5, y:38.5, isHunter: true, username:"10x Engineer", playerId:2, onHold:false},
+    {x:49.5, y:48.5, isHunter: false, username:"YOU", playerId: 3}
 ]);
 
 

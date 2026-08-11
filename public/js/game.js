@@ -144,7 +144,7 @@ function playerUpdates() {
             hasMoved = true;
         }
 
-        if(pos.x < mouse.x + currentSpd && pos.x > mouse.x - currentSpd && pos.y < mouse.y + currentSpd && pos.y > mouse.y - currentSpd) {
+        if(pos.x < mouse.x + currentSpd / 2 && pos.x > mouse.x - currentSpd / 2 && pos.y < mouse.y + currentSpd / 2 && pos.y > mouse.y - currentSpd / 2) {
             mouseMovment = false;
         }
 
@@ -189,8 +189,8 @@ function positionboxes(planeX, planeY) {
 
 function positionclones(clone) {
     if (otherUsers[clone].username !== undefined) {
-        otherPlayers.clones[clone].x = player.x - (pos.x - otherUsers[clone].x) * gameScale + renderDesync.x * gameScale;
-        otherPlayers.clones[clone].y = player.y - (pos.y - otherUsers[clone].y) * gameScale + renderDesync.y * gameScale;
+        otherPlayers.clones[clone].x = player.x - (pos.x - otherUsers[clone].x) * gameScale;
+        otherPlayers.clones[clone].y = player.y - (pos.y - otherUsers[clone].y) * gameScale;
         if (otherUsers[clone].isHunter){
             otherPlayers.clones[clone].costume = 0;
             costumeDebug.log("c0");
