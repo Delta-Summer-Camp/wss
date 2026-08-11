@@ -6,19 +6,24 @@ let playerNicnames;
 let otherNicknames = [];
 let lastServerUpdate;
 let lastTickMoment;
+let frezeTime;
+let currentDate = new Date;
 
-let phoneMovment = true;
+let lastHunter = false;
+let phoneMode = true;
 let mouseMovment = false;
 let allowMovment = true;
 const debugEnabled = false;
 
 let BgColor = 0x00FFFF;
+const gameScale = 50;
 const serverUpdateFrequency = 0.05;
 const currentSpd = 0.15;
-const gameScale = 50;
 const nickSize = 20;
 const nickDist = 40;
+const frezeLength = 5;
 const renderDesync = {x:0.5, y:0.5};
+let currentScreenStartPos = {x:0, y:0};
 let mouse = {x:0, y:0};
 
 let lab;
@@ -48,7 +53,7 @@ function create() {
     player.visible = true;
     player.size = gameScale / 200;
 
-    lab_boxes = initPlane(-10000, -10000, 40, 40, lab[0].length, lab.length, "box");
+    lab_boxes = initPlane(-10000, -10000, 40, 40, Math.ceil(currentSize.width / gameScale * 0.75), Math.ceil(currentSize.height / gameScale * 0.75), "box");
 
     otherPlayers = initClones(-100, -1000, 'player');
     otherPlayers.clones[0].visible = false;
@@ -80,6 +85,8 @@ function create() {
     costumeDebug = initDebug(debugEnabled,debugEnabled,debugEnabled,debugEnabled);
 }
 function update() {
+    currentDate = new Date;
+    time = currentDate.getTime();
     lag_test();
 
     mouseUpdates();
@@ -96,7 +103,7 @@ function update() {
 }
 
 function mouseUpdates() {
-    if (game.isMouseDown() && phoneMovment && allowMovment) {
+    if (game.isMouseDown() && phoneMode && allowMovment) {
         mouse.x = game.mouseX / gameScale - player.x / gameScale + pos.x;
         mouse.y = game.mouseY / gameScale - player.y / gameScale + pos.y;
         mouseMovment = true;
@@ -104,9 +111,22 @@ function mouseUpdates() {
 }
 
 function playerUpdates() {
-    if(allowMovment){
+    let freezeMovment = false;
+
+    if(lastHunter == false && currentUser.isHunter == true){
+        frezeTime = time + frezeLength * 1000;
+        console.log("yes");
+    }
+    if(frezeTime > time) {
+        freezeMovment = true;
+        mouseMovment = false;
+    }
+    lastHunter = currentUser.isHunter;
+
+
+    if(allowMovment && !freezeMovment){
         let hasMoved = false;
-        let overrideAutoMovement = game.isKeyDown('W') || game.isKeyDown('A') || game.isKeyDown('S') || game.isKeyDown('D') || game.isKeyDown('UP') || game.isKeyDown('LEFT') || game.isKeyDown('DOWN') || game.isKeyDown('UP');
+        let overrideAutoMovement = game.isKeyDown('W') || game.isKeyDown('A') || game.isKeyDown('S') || game.isKeyDown('D') || game.isKeyDown('UP') || game.isKeyDown('LEFT') || game.isKeyDown('DOWN') || game.isKeyDown('RIGHT');
         if (game.isKeyDown('W') || game.isKeyDown('UP') || (pos.y - mouse.y > 0 && mouseMovment && !overrideAutoMovement)) {
             pos.y -= currentSpd;
             while (lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1 || lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1) {
@@ -149,21 +169,20 @@ function playerUpdates() {
         }
 
         if(hasMoved) {
-            const time = new Date;
-            if(time.getTime() - lastServerUpdate > serverUpdateFrequency * 1000){
+            if(time - lastServerUpdate > serverUpdateFrequency * 1000){
                 sendData();
-                lastServerUpdate = time.getTime();
+                lastServerUpdate = time;
             }
             lastTickMoment = true;
         } else {
-            const time = new Date;
-            lastServerUpdate = time.getTime();
+            lastServerUpdate = time;
             if(lastTickMoment){
                 sendData();
             }
             lastTickMoment = false;
 
         }
+
     }
 
     if (currentUser.isHunter){
@@ -174,23 +193,30 @@ function playerUpdates() {
         costumeDebug.log("c1");
     }
     player.bringToFront();
+
+    currentScreenStartPos.x = Math.floor(pos.x / 2 - lab_boxes.plane.length / 2);
+    currentScreenStartPos.y = Math.floor(pos.y / 2 - lab_boxes.plane[0].length / 2);
 }
 
-function positionboxes(planeX, planeY) {
-    lab_boxes.plane[planeX][planeY].x = player.x - pos.x * gameScale + planeX * gameScale * 2 + renderDesync.x * gameScale;
-    lab_boxes.plane[planeX][planeY].y = player.y - pos.y * gameScale + planeY * gameScale * 2 + renderDesync.y * gameScale;
-    if (lab[planeY][planeX] == 0) {
-        lab_boxes.plane[planeX][planeY].visible = false;
+function positionboxes(currentX, currentY) {
+    let planeX = currentX + currentScreenStartPos.x;
+    let planeY = currentY + currentScreenStartPos.y;
+    lab_boxes.plane[currentX][currentY].x = player.x - pos.x * gameScale + planeX * gameScale * 2 + renderDesync.x * gameScale;
+    lab_boxes.plane[currentX][currentY].y = player.y - pos.y * gameScale + planeY * gameScale * 2 + renderDesync.y * gameScale;
+    if (planeY < 0 || planeY > 49 || planeX < 0 || planeX > 49) {
+        lab_boxes.plane[currentX][currentY].visible = true;
     } else if (lab[planeY][planeX] == 0) {
-        lab_boxes.plane[planeX][planeY].visible = true;
+        lab_boxes.plane[currentX][currentY].visible = false;
+    } else {
+        lab_boxes.plane[currentX][currentY].visible = true;
     }
-    lab_boxes.plane[planeX][planeY].size = gameScale / 10;
+    lab_boxes.plane[currentX][currentY].size = gameScale / 10;
 }
 
 function positionclones(clone) {
     if (otherUsers[clone].username !== undefined) {
-        otherPlayers.clones[clone].x = player.x - (pos.x - otherUsers[clone].x) * gameScale + renderDesync.x * gameScale;
-        otherPlayers.clones[clone].y = player.y - (pos.y - otherUsers[clone].y) * gameScale + renderDesync.y * gameScale;
+        otherPlayers.clones[clone].x = player.x - (pos.x - otherUsers[clone].x) * gameScale;
+        otherPlayers.clones[clone].y = player.y - (pos.y - otherUsers[clone].y) * gameScale;
         if (otherUsers[clone].isHunter){
             otherPlayers.clones[clone].costume = 0;
             costumeDebug.log("c0");
@@ -223,8 +249,6 @@ let tick_avg = 0;
 let tps = 0;
 
 function lag_test() {
-    const d = new Date();
-    let time = d.getTime();
     let late_time = time - last_time;
 
     timeTest.log("Tick took: " + late_time + " ms");

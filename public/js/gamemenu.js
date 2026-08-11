@@ -15,20 +15,32 @@ document.addEventListener('keydown', function (event) {
     console.log(settingsActive);
 
     if (event.key === 'Escape' && !(settingsActive)) {
-        toggleMenu();
+        activateMenu();
     } else if (event.key === 'Escape') {
         deactivateSettings();
     }
 });
 
-function toggleMenu() {
-    pauseMenu.classList.toggle('hidden');
+function activateMenu() {
+    if (allowMovment) {
+        pauseMenu.classList.toggle('hidden');
+        if (!(pauseMenu.classList.contains('hidden'))) {
+            allowMovment = false;
+        }
+    }
+
+
+}
+function deactivateMenu() {
+    pauseMenu.classList.add('hidden');
+    allowMovment =true;
 
 }
 
 function activateSettings() {
-    toggleMenu();
+    deactivateMenu();
     settingsActive = true;
+    allowMovment = false;
     console.log(settingsActive);
     settings.classList.toggle('hidden');
 }
@@ -36,24 +48,29 @@ function deactivateSettings() {
     settingsActive = false;
     console.log(settingsActive);
     settings.classList.add('hidden');
+    allowMovment = true;
 }
 
 
 const setBgColor = () => {
-    
+
 
     BgColor = parseInt(colorInput.value.replace('#', ''), 16);
     game.setBackgroundColor(BgColor);
 }
 
 colorInput.addEventListener('input', function (event) {
-    
-    colorInputValue = event.target.value; 
+
+    colorInputValue = event.target.value;
 })
 
-colorInput.addEventListener('keydown', function (event) { 
+colorInput.addEventListener('keydown', function (event) {
     if (event.key === "Enter") {
-       setBgColor(); 
-       deactivateSettings();
+        setBgColor();
+        deactivateSettings();
     }
-})
+});
+function applyColor() {
+    setBgColor();
+    deactivateSettings();
+}

@@ -49,3 +49,9 @@ npx http-server . -p 8080
 ```
 Then join on:
 http://localhost:8080/
+
+## Чё надо сделать для настроек
+
+ Когда настройки открыты отключать движение
+ Mobile Mode
+ Переместить css в css папку
