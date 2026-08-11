@@ -15,14 +15,14 @@ document.addEventListener('keydown', function (event) {
     console.log(settingsActive);
 
     if (event.key === 'Escape' && !(settingsActive)) {
-        toggleMenu();
+        activateMenu();
     } else if (event.key === 'Escape') {
         deactivateSettings();
     }
 });
 
-function toggleMenu() {
-    if (!settingsActive) {
+function activateMenu() {
+    if (allowMovment) {
         pauseMenu.classList.toggle('hidden');
         if (!(pauseMenu.classList.contains('hidden'))) {
             allowMovment = false;
@@ -31,9 +31,14 @@ function toggleMenu() {
 
 
 }
+function deactivateMenu() {
+    pauseMenu.classList.add('hidden');
+    allowMovment =true;
+
+}
 
 function activateSettings() {
-    toggleMenu();
+    deactivateMenu();
     settingsActive = true;
     allowMovment = false;
     console.log(settingsActive);

@@ -15,7 +15,7 @@
 </head>
 
 <body>
-    <div id="hamburger-btn" onclick="toggleMenu()">
+    <div id="hamburger-btn" onclick="activateMenu()">
         <span class="hamburger-line"></span>
         <span class="hamburger-line"></span>
         <span class="hamburger-line"></span>
@@ -25,7 +25,7 @@
     <div id="pause-menu" class="hidden">
         <div id="options">
             <h2 style="margin-top: 0;">Game Paused</h2>
-            <button class="btn btn-submit" onclick="toggleMenu()">Resume</button>
+            <button class="btn btn-submit" onclick="deactivateMenu()">Resume</button>
             <button class="btn btn-submit" onclick="activateSettings()">Settings</button>
             <a href="index.html"><button class="btn btn-submit">Exit</button></a>
         </div>
