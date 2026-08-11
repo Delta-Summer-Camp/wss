@@ -16,6 +16,7 @@ let allowMovment = true;
 const debugEnabled = false;
 
 let BgColor = 0x00FFFF;
+let wallType = 3; // 0 to 4
 const gameScale = 50;
 const serverUpdateFrequency = 0.05;
 const currentSpd = 0.15;
@@ -42,7 +43,7 @@ game.create = create;
 game.update = update;
 
 function preload() {
-    game.loadSpritesheet('box', 'assets/box.png', 20, 20);
+    game.loadSpritesheet('box', 'assets/wall.png', 200, 200);
     game.loadSpritesheet('player', 'assets/ballz.png', 200, 200);
 }
 
@@ -210,7 +211,8 @@ function positionboxes(currentX, currentY) {
     } else {
         lab_boxes.plane[currentX][currentY].visible = true;
     }
-    lab_boxes.plane[currentX][currentY].size = gameScale / 10;
+    lab_boxes.plane[currentX][currentY].size = gameScale / 100;
+    lab_boxes.plane[currentX][currentY].costume = wallType * 3 + 1;
 }
 
 function positionclones(clone) {
