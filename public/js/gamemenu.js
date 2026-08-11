@@ -60,4 +60,8 @@ colorInput.addEventListener('keydown', function (event) {
        setBgColor(); 
        deactivateSettings();
     }
-})
+});
+function applyColor() {
+    setBgColor();
+    deactivateSettings();
+}
