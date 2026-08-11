@@ -13,9 +13,9 @@ let allowMovment = true;
 const debugEnabled = false;
 
 let BgColor = 0x00FFFF;
+const gameScale = 50;
 const serverUpdateFrequency = 0.05;
 const currentSpd = 0.15;
-const gameScale = 50;
 const nickSize = 20;
 const nickDist = 40;
 const renderDesync = {x:0.5, y:0.5};
