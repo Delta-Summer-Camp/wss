@@ -186,7 +186,7 @@ function positionboxes(currentX, currentY) {
     let planeY = currentY + currentScreenStartPos.y;
     lab_boxes.plane[currentX][currentY].x = player.x - pos.x * gameScale + planeX * gameScale * 2 + renderDesync.x * gameScale;
     lab_boxes.plane[currentX][currentY].y = player.y - pos.y * gameScale + planeY * gameScale * 2 + renderDesync.y * gameScale;
-    if (planeY < 0 || planeY > 50 || planeX < 0 || planeX > 50) {
+    if (planeY < 0 || planeY > 49 || planeX < 0 || planeX > 49) {
         lab_boxes.plane[currentX][currentY].visible = true;
     } else if (lab[planeY][planeX] == 0) {
         lab_boxes.plane[currentX][currentY].visible = false;
