@@ -2,7 +2,7 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
-use Clue\React\Redis\RedisClient;
+
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 use Ratchet\Server\IoServer;
@@ -11,6 +11,12 @@ use Ratchet\WebSocket\WsServer;
 
 use React\EventLoop\Loop;
 use React\Socket\SocketServer;
+
+use Clue\React\Redis\Factory as RedisFactory;
+
+const REDIS_PORT = 6379;
+const MONGODB_PORT = 27017;
+const LOCALHOST = "127.0.0.1";
 
 // connection data
 class Client {
@@ -27,21 +33,24 @@ class Client {
   }
 }
 
-const URI = 'mongodb://127.0.0.1:27017';
+const URI = 'mongodb://' . LOCALHOST . ":" . MONGODB_PORT;
 const URI_OPTIONS = ['ServerSelectionTimeoutMS' => 10000];
 
 class GameServer implements MessageComponentInterface {
-  private RedisClient $redisPub;
+  private $redisPub;
   private MongoDB\Database $mongoDB;
   private MongoDB\Collection $users;
 
+  private array $gamers;
+
   public function __construct($redisSub, $redisPub) {
-    $mongoGamer = new MongoDB\Gamer(URI, URI_OPTIONS);
     try {
-      $this->mongoDB = $mongoGamer->getDatabase("game_data");
+      $mongoClient = new MongoDB\Client(URI, URI_OPTIONS);
+
+      $this->mongoDB = $mongoClient->selectDatabase("game_data");
       $this->users = $this->mongoDB->selectCollection("gamers");
     } catch (MongoDB\Driver\Exception\RuntimeException $e) {
-      printf("Failed to ping the MongoDB server: %s\n", $e->getMessage());
+      printf("Failed to connect to MongoDB: %s\n", $e->getMessage());
     }
 
     $this->redisPub = $redisPub;
@@ -56,7 +65,8 @@ class GameServer implements MessageComponentInterface {
 
   public function onOpen(ConnectionInterface $conn): void
   {
-    $client = new Client($conn);
+    $gamer = new Client($conn);
+    // ToDo: Save new $gamer to $gamers array
   }
 
   public function onMessage(ConnectionInterface $from, $msg): void {
@@ -75,23 +85,29 @@ class GameServer implements MessageComponentInterface {
 
 Loop::get()->futureTick(function () {
 
-  $redisSub = new RedisClient('localhost:6379');
-  $redisPub = new RedisClient('localhost:6379');
+  $factory = new RedisFactory(Loop::get());
 
-  $gameServer = new GameServer($redisSub, $redisPub);
+  $factory->createClient('redis://' . LOCALHOST . ":" . REDIS_PORT)->
+    then(function($redisSub) use ($factory) {
+    $factory->createClient('redis://' . LOCALHOST . ":" . REDIS_PORT)->
+    then(function ($redisPub) use ($redisSub) {
 
-  $socket = new SocketServer('0.0.0.0:8080');
+      $gameServer = new GameServer($redisSub, $redisPub);
 
-  new IoServer(
-    new HttpServer(
-      new WsServer($gameServer)
-    ),
-    $socket,
-    Loop::get()
-  );
+      $socket = new SocketServer('0.0.0.0:8080');
 
-  echo "WebSocket server running on port 8080\n";
+      new IoServer(
+        new HttpServer(
+          new WsServer($gameServer)
+        ),
+        $socket,
+        Loop::get()
+      );
 
+      echo "WebSocket server running on port 8080\n";
+
+    });
+  });
 });
 
 Loop::run();
