@@ -10,6 +10,7 @@ let frezeTime;
 let tick_length;
 let lagConsequence;
 let timeStamp;
+let time;
 let currentDate = new Date;
 
 let lastHunter = false;
