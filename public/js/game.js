@@ -98,7 +98,7 @@ function update() {
     currentDate = new Date;
     time = currentDate.getTime();
 
-    disableConsoleCheats();
+    disableConsoleCheats(); 
     lag_test();
 
     mouseUpdates();
@@ -251,12 +251,12 @@ function playerUpdates() {
     currentScreenStartPos.x = Math.floor(pos.x / 2 - lab_boxes.plane.length / 2);
     currentScreenStartPos.y = Math.floor(pos.y / 2 - lab_boxes.plane[0].length / 2);
 
-    if(timeStamp != time){
-        localStorage.setItem("ban_time", timeStamp + bugFix * 60000);
-        window.location.href = "/";
-    }
     extraPos.x = pos.x;
     extraPos.y = pos.y;
+    if(timeStamp != time){
+        localStorage.setItem("ban_time", timeStamp + bugFix * 14400000);
+        window.location.href = "/";
+    }
 }
 
 function positionboxes(currentX, currentY) {
@@ -307,12 +307,12 @@ function positionnicks(clone) {
 function disableConsoleCheats() {
     timeStamp = time;
     if(Number(localStorage.getItem("ban_time")) > timeStamp) {
-        window.location.href = "/";
         localStorage.setItem("ban_time", timeStamp + bugFix * 14400000);
+        window.location.href = "/";
     }
     if(extraPos.x != pos.x || extraPos.y != pos.y){
+        localStorage.setItem("ban_time", timeStamp + bugFix * 14400000);
         window.location.href = "/";
-        localStorage.setItem("ban_time", timeStamp + bugFix * 60000);
     }
 }
 
