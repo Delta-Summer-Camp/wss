@@ -53,14 +53,12 @@ function deactivateSettings() {
 
 
 const setBgColor = () => {
-
-
     BgColor = parseInt(colorInput.value.replace('#', ''), 16);
     game.setBackgroundColor(BgColor);
+    localStorage.setItem("BgColor", BgColor);
 }
 
 colorInput.addEventListener('input', function (event) {
-
     colorInputValue = event.target.value;
 })
 
@@ -73,4 +71,9 @@ colorInput.addEventListener('keydown', function (event) {
 function applyColor() {
     setBgColor();
     deactivateSettings();
+}
+
+function getLocalSetting() {
+    BgColor = localStorage.getItem("BgColor");
+    game.setBackgroundColor(BgColor);
 }
