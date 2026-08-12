@@ -148,3 +148,18 @@
             background-color: #64748b;
             /* slate-500 */
         }
+        .blue {
+            border: 5px solid #4338ca ;
+        }
+        .toggle-btn {
+            width: 100%;
+            color: #ffffff;
+            background-color: #475569; 
+            font-weight: 700;
+            font-size: 1.125rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            cursor: pointer;
+            border: none;
+        }

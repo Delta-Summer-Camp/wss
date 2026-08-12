@@ -6,8 +6,13 @@ const pauseMenu = document.getElementById('pause-menu');
 const settings = document.getElementById('settings');
 const colorInput = document.getElementById('color-input');
 const option = document.getElementById('options');
+const phoneToggle = document.getElementById('phoneModeToggle');
 let colorInputValue;
 let settingsActive = false;
+
+
+
+phoneToggle.textContent = "OFF";
 
 // Pause Menu Reveal
 
@@ -70,7 +75,15 @@ colorInput.addEventListener('keydown', function (event) {
         deactivateSettings();
     }
 });
-function applyColor() {
-    setBgColor();
-    deactivateSettings();
+function togglePhone() {
+    phoneToggle.classList.toggle('blue');
+
+    // ACTIVATE SETTINGS, TO BE EDITED AGAIN USING NEW FUNCTION!!!!!!!!!!!!!!!!!!!!!!
+    if (phoneToggle.classList.contains('blue')) {
+        phoneMode =true;
+        phoneToggle.textContent = "ON";
+    } else {
+        phoneMode = false;
+        phoneToggle.textContent = "OFF";
+    }
 }
