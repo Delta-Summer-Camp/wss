@@ -7,10 +7,18 @@ $redis = new Redis();
 $redis->connect('127.0.0.1', 6379);
 
 $event = [
-  #ToDo
+        'type'      => 'global_chat_message',
+        'timestamp' => time(),
+        'data'      => [
+                'player_id' => 101,
+                'username'  => 'Alex',
+                'message'   => 'Всем привет! Кто пойдет на босса?',
+                'channel'   => 'global'
+        ]
 ];
-$channel = 'internal';
-$redis->publish($channel, json_encode($event));
+
+$redis->publish('game_events', json_encode($event));
+
 
 $uri = 'mongodb://127.0.0.1:27017';
 $uriOptions = ['ServerSelectionTimeoutMS' => 10000];
