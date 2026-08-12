@@ -51,7 +51,6 @@ function deactivateSettings() {
     allowMovment = true;
 }
 
-
 const setBgColor = () => {
     BgColor = parseInt(colorInput.value.replace('#', ''), 16);
     game.setBackgroundColor(BgColor);
@@ -103,6 +102,7 @@ function applySettings() {
     // 3. Close settings window
     deactivateSettings();
 }
+
 function getLocalSetting() {
     if (localStorage.getItem("BgColor") !== undefined){
         BgColor = localStorage.getItem("BgColor");
