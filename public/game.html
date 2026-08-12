@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>WSS front end test</title>
+    <script src="js/lib/phaser.min.js"></script>
+    <script src="js/lib/DebugSys.js"></script>
+    <script src="js/lib/CloneSys.js"></script>
+    <script src="js/lib/ScratchGame.js"></script>
+    <script src="js/connection.js"></script>
+    <script src="js/game.js"></script>
+
+    <link rel="stylesheet" href="css/game.css">
+</head>
+
+<body>
+    <div id="hamburger-btn" onclick="activateMenu()">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+    </div>
+
+
+    <div id="pause-menu" class="hidden">
+        <div id="options">
+            <h2 style="margin-top: 0;">Game Paused</h2>
+            <button class="btn btn-submit" onclick="deactivateMenu()">Resume</button>
+            <button class="btn btn-submit" onclick="activateSettings()">Settings</button>
+            <a href="index.php"><button class="btn btn-submit">Exit</button></a>
+        </div>
+
+    </div>
+    <div id="settings" class="pause-menu hidden">
+        <h2>Color</h2>
+        <input type="text" placeholder="hex eg. #00FFFF" class="form-input" name="" id="color-input">
+        <button onclick="applyColor()" class="btn-submit btn">Apply</button>
+        <button onclick="deactivateSettings()" class="btn-submit btn">Cancel</button>
+    </div>
+
+    <script src="js/gamemenu.js"></script>
+
+</body>
+
+</html>

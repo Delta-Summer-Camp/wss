@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <?php
 
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
 
 $redis = new Redis();
 $redis->connect('127.0.0.1', 6379);
@@ -21,52 +21,119 @@ $redis->publish('game_events', json_encode($event));
 
 
 $uri = 'mongodb://127.0.0.1:27017';
+$uriOptions = ['ServerSelectionTimeoutMS' => 10000];
 
-$uriOptions = [
-        'ServerSelectionTimeoutMS' => 10000
-];
+try {
+    $mongoClient = new MongoDB\Client($uri, $uriOptions);
 
-$mongoClient = new MongoDB\Client($uri, $uriOptions);
+    $mongoDB = $mongoClient->selectDatabase("game_data");
 
-$mongoDB = $mongoClient->getDatabase("game_data");
+    // Select/create users collection
+    $users = $mongoDB->selectCollection("users");
 
-#$chat = $mongoDB->selectCollection("chat_messages");
+    // Create a test user
+    $newUser = [
+            'username' => 'Ian',
+            'email' => 'ianiliev111@gmail.com',
+            'score' => 0,
+            'created_at' => new MongoDB\BSON\UTCDateTime()
+    ];
 
-#$messages = $chat->find(
-# [],
-#        [
-#                'sort' => ['_id' => -1],
-#                'limit' => 20
-#        ]
-#);
+    // Insert user
+    $result = $users->insertOne($newUser);
 
-#?>
-#<html lang="en">
+    echo "MongoDB connection works!<br>";
+    echo "User added with ID: " . $result->getInsertedId() . "<br>";
+
+    // Get the user we just created
+    $user = $users->findOne([
+            '_id' => $result->getInsertedId()
+    ]);
+
+    echo "<pre>";
+    print_r($user);
+    echo "</pre>";
+
+} catch (Exception $e) {
+    echo "MongoDB error: " . $e->getMessage();
+}
+
+?>
+<html lang="en">
 
 <head>
-
-    <title>Global Chat</title>
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <script src="https://code.jquery.com/jquery-3.7.1.js"
-            integrity="sha256-eKhayi8LEQwp4NKx+CfCh+3qOVUtJn3QNZ0TciWLP4="
-            crossorigin="anonymous">
-    </script>
-
-    <script src="js/main.js"></script>
-
-    <link href="css/main.css" rel="stylesheet">
-
+    <meta charset="UTF-8" />
+    <title>WSS front end test</title>
+    <link rel="stylesheet" href="./css/main.css">
 </head>
 
 <body>
 
-<?php
+<!-- Registration -->
+<div id="registration" class="modal-overlay hidden">
+    <div class="modal-card text-left">
+        <h1 class="modal-title">Registration</h1>
+        <form method="post" class="form-layout">
 
-var_dump($redis);
+            <div class="form-group">
+                <label for="reg-username" class="form-label">Username:</label>
+                <input class="form-input" type="text" id="reg-username" name="username">
+            </div>
 
-?>
+            <div class="form-group">
+                <label for="reg-password" class="form-label">Password:</label>
+                <input class="form-input" type="password" id="reg-password" name="password">
+            </div>
+
+            <div class="form-group">
+                <label for="password2" class="form-label">Retype password:</label>
+                <input class="form-input" type="password" id="password2" name="password2">
+            </div>
+
+            <input onclick="startScreen()" class="btn btn-submit" type="button" value="Send">
+        </form>
+    </div>
+</div>
+<!-- Login -->
+
+<div id="login" class="modal-overlay">
+    <div class="modal-card text-center">
+        <h1 class="modal-title">Login</h1>
+        <form method="post" class="form-layout">
+            <div class="form-group">
+                <label for="login-username" class="form-label">Username:</label>
+                <input class="form-input" type="text" id="login-username" name="username">
+            </div>
+
+            <div class="form-group">
+                <label for="login-password" class="form-label">Password:</label>
+                <input class="form-input" type="password" id="login-password" name="password">
+            </div>
+
+            <input onclick="startScreen()" class="btn btn-submit" type="button" value="Send">
+        </form>
+        <p class="footer-text">
+            Don't have an account? <a href="#" onclick="register()" class="link">Register here</a>
+        </p>
+    </div>
+</div>
+
+<div id="start-screen" class="modal-overlay hidden">
+    <div class="modal-card modal-card-dark text-center">
+        <h1 class="game-title">MAZE GAME</h1>
+        <p class="game-instructions">
+            Use <span class="highlight-text">WASD</span> keys to navigate the maze.
+        </p>
+        <a href="./game.html">
+            <button onclick="startGame()" class="btn btn-submit">PLAY</button>
+        </a>
+
+    </div>
+</div>
+
+<script src="js/logincode.js"></script>
+
+
 
 </body>
 
