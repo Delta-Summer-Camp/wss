@@ -61,7 +61,7 @@ if ($user === null) {
 $passwordHash = md5($password);
 
 
-if ($passwordHash !== $user['password']) {
+if ($passwordHash !== $user['passwordHash']) {
     http_response_code(401);
 
     echo json_encode([
@@ -72,10 +72,9 @@ if ($passwordHash !== $user['password']) {
     exit;
 }
 
-
+    http_response_code(200);
 echo json_encode([
     'success' => true,
     'message' => 'Авторизация успешна',
-    'user_id' => (string) $user['_id'],
     'username' => $user['username']
 ], JSON_UNESCAPED_UNICODE);
