@@ -51,7 +51,7 @@ function onDisconnect(){
 
 //Test data
 arrangeData([
-    {x:22.5, y:2.5, isHunter: false, username:"TheAvreageBot", playerId:0, onHold:true},
+    {x:22.5, y:2.5, isHunter: false, username:"TheAverageBot", playerId:0, onHold:true},
     {x:64.5, y:30.5, isHunter: true, username:"mMeneske", playerId:1, onHold:true},
     {x:40.5, y:38.5, isHunter: true, username:"10x Engineer", playerId:2, onHold:false},
     {x:49.5, y:48.5, isHunter: false, username:"YOU", playerId: 3}

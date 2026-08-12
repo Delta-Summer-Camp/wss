@@ -148,18 +148,37 @@
             background-color: #64748b;
             /* slate-500 */
         }
-        .blue {
-            border: 5px solid #4338ca ;
-        }
-        .toggle-btn {
-            width: 100%;
-            color: #ffffff;
-            background-color: #475569; 
-            font-weight: 700;
-            font-size: 1.125rem;
-            border-radius: 0.75rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            transition: background-color 0.2s ease, transform 0.2s ease;
-            cursor: pointer;
-            border: none;
-        }
+
+
+        .wall-selector {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin: 10px 0;
+}
+
+.wall-option {
+    width: 36px;
+    height: 36px;
+    border: 2px solid #ffffff;
+    background-color: #333;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 4px;
+    user-select: none;
+    transition: transform 0.1s, border-color 0.1s;
+}
+
+.wall-option:hover {
+    transform: scale(1.05);
+    border-color: #00FFFF;
+}
+
+.wall-option.selected {
+    border-color: #00FF00;
+    box-shadow: 0 0 8px #00FF00;
+}

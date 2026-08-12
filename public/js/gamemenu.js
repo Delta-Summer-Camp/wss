@@ -75,15 +75,40 @@ colorInput.addEventListener('keydown', function (event) {
         deactivateSettings();
     }
 });
-function togglePhone() {
-    phoneToggle.classList.toggle('blue');
+function applyColor() {
+    setBgColor();
+    deactivateSettings();
+}
 
-    // ACTIVATE SETTINGS, TO BE EDITED AGAIN USING NEW FUNCTION!!!!!!!!!!!!!!!!!!!!!!
-    if (phoneToggle.classList.contains('blue')) {
-        phoneMode =true;
-        phoneToggle.textContent = "ON";
-    } else {
-        phoneMode = false;
-        phoneToggle.textContent = "OFF";
+
+
+// Store the pending wall type choice before applying
+let selectedWallType = wallType; 
+
+// Initialize Wall Picker Click Listeners
+document.querySelectorAll('.wall-option').forEach(option => {
+    option.addEventListener('click', function () {
+        // Remove active class from all options
+        document.querySelectorAll('.wall-option').forEach(el => el.classList.remove('selected'));
+        
+        // Highlight chosen option
+        this.classList.add('selected');
+        
+        // Update temporary variable
+        selectedWallType = parseInt(this.getAttribute('data-wall-type'), 10);
+    });
+});
+
+// Replace your old applyColor function with a combined applySettings function
+function applySettings() {
+    // 1. Update background color if typed
+    if (colorInput.value.trim() !== '') {
+        setBgColor();
     }
+    
+    // 2. Update active game wallType
+    wallType = selectedWallType;
+
+    // 3. Close settings window
+    deactivateSettings();
 }
