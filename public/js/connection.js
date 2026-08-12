@@ -1,6 +1,31 @@
 let pos = {x:49.5, y:48.5};
 let currentUser = {isHunter:false, username:"YOU", playerId: undefined};
 let otherUsers = [];
+let wsConnected = false;
+
+const ws = new WebSocket(
+    "wss://game26.delta.camp:8080/server/server.php?username=" + currentUser.username
+);
+
+ws.onopen = () => {
+    console.log("Wss connected!");
+    wsConnected = true;
+}
+
+ws.onmessage = (event) => {
+  arrangeData(data.toString());
+}
+
+ws.onerror = (error) => {
+   console.log("Ws Error: ", error);
+   allowMovment = false;
+}
+
+ws.onclose = () => {
+   //onDisconnect();
+   allowMovment = false;
+}
+
 
 // Function that gets activated by ws.onmessage
 function arrangeData(inputDataObject) {
@@ -40,6 +65,11 @@ function arrangeData(inputDataObject) {
 //Output gets sent to ws.send
 function sendData(position) {
     let outputData = {x:position.x, y:position.y, username:currentUser.username, playerId: currentUser.playerId};
+    if(wsConnected){
+        ws.send(outputData);
+    } else {
+        console.log("Wss not connected!");
+    }
     //console.log(outputData);
     // transmit output data via vss
 }
