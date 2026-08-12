@@ -24,7 +24,7 @@ ws.onerror = (error) => {
 }
 
 ws.onclose = () => {
-   //onDisconnect();
+   onDisconnect();
    allowMovment = false;
 }
 
