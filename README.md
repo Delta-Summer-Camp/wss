@@ -12,6 +12,15 @@
 {x:49.5, y:48.5, isHunter:false, username:"mMeneske", playerId:4}
 ```
 
+или
+```json
+[
+{x:1, y:1, isHunter:false, username:"Dima", playerId:1, onHold:false},
+{x:10, y:17, isHunter:true, username:"IamSmiley", playerId:2, onHold:true},
+{x:49.5, y:48.5, isHunter:false, username:"mMeneske", playerId:4}
+]
+```
+
 ### При отключении игрока
 
 ```json
