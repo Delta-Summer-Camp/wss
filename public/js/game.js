@@ -18,7 +18,7 @@ let allowMovment = true;
 const debugEnabled = false;
 
 let BgColor = 0x00FFFF;
-const gameScale = 10;
+const gameScale = 50;
 const serverUpdateFrequency = 0.05;
 const defaultSpd = 0.15;
 const nickSize = 0.4;
