@@ -98,6 +98,7 @@ function applySettings() {
     
     // 2. Update active game wallType
     wallType = selectedWallType;
+    localStorage.setItem("wallType", selectedWallType);
 
     // 3. Close settings window
     deactivateSettings();
@@ -106,7 +107,10 @@ function applySettings() {
 function getLocalSetting() {
     if (localStorage.getItem("BgColor") !== undefined){
         BgColor = localStorage.getItem("BgColor");
-        game.setBackgroundColor(BgColor);
+    }
+    if (localStorage.getItem("wallType") !== undefined){
+        selectedWallType = Number(localStorage.getItem("wallType"));
     } 
+    applySettings();
 }
 getLocalSetting();
