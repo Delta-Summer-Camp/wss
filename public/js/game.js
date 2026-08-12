@@ -306,13 +306,13 @@ function positionnicks(clone) {
 
 function disableConsoleCheats() {
     timeStamp = time;
-    if(extraPos.x != pos.x || extraPos.y != pos.y){
-        window.location.href = "/";
-        localStorage.setItem("ban_time", timeStamp + bugFix * 60000);
-    }
     if(Number(localStorage.getItem("ban_time")) > timeStamp) {
         window.location.href = "/";
         localStorage.setItem("ban_time", timeStamp + bugFix * 14400000);
+    }
+    if(extraPos.x != pos.x || extraPos.y != pos.y){
+        window.location.href = "/";
+        localStorage.setItem("ban_time", timeStamp + bugFix * 60000);
     }
 }
 
