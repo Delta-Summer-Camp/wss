@@ -104,6 +104,9 @@ function applySettings() {
     deactivateSettings();
 }
 function getLocalSetting() {
-    BgColor = localStorage.getItem("BgColor");
-    game.setBackgroundColor(BgColor);
+    if (localStorage.getItem("BgColor") !== undefined){
+        BgColor = localStorage.getItem("BgColor");
+        game.setBackgroundColor(BgColor);
+    } 
 }
+getLocalSetting();
