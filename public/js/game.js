@@ -16,7 +16,7 @@ let allowMovment = true;
 const debugEnabled = false;
 
 let BgColor = 0x00FFFF;
-let wallType = 0; // 0 to 5 black wall is 0
+let wallType = 6; // 0 to 7 black wall is 0
 const gameScale = 50;
 const serverUpdateFrequency = 0.05;
 const currentSpd = 0.15;
