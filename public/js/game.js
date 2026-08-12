@@ -118,7 +118,6 @@ function playerUpdates() {
 
     if(lastHunter == false && currentUser.isHunter == true){
         frezeTime = time + frezeLength * 1000;
-        console.log("yes");
     }
     if(frezeTime > time) {
         freezeMovment = true;
@@ -231,6 +230,9 @@ function playerUpdates() {
     if (currentUser.isHunter){
         player.costume = 0;
         costumeDebug.log("c0");
+    } else if (freezeMovment) {
+        player.costume = 3;
+        costumeDebug.log("c3");
     } else {
         player.costume = 1;
         costumeDebug.log("c1");

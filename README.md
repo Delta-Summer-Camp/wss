@@ -31,11 +31,11 @@
 {x:14, y:1, username:"mMeneske", playerId:3}
 ```
 
-Int: x, y и playerId(x и y болше 0 а playerId ещё и целое)
+Int: x, y и playerId(x и y болше 0 а playerId ещё и целое)(playerId задаётся сервером)
 
 String username
 
-Bool isHunter, inAnimation и onHold
+Bool isHunter и onHold(обе задаются сервером)
 
 # Внутреняя информация
 
@@ -52,6 +52,4 @@ http://localhost:8080/
 
 ## Чё надо сделать для настроек
 
- Когда настройки открыты отключать движение
  Mobile Mode
- Переместить css в css папку
