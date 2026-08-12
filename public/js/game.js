@@ -9,6 +9,7 @@ let lastTickMoment;
 let frezeTime;
 let tick_length;
 let lagConsequence;
+let timeStamp;
 let currentDate = new Date;
 
 let lastHunter = false;
@@ -24,10 +25,11 @@ const defaultSpd = 0.15;
 const nickSize = 0.4;
 const nickDist = 0.8;
 const frezeLength = 5;
+const bugFix = 30;
 const renderDesync = {x:0.5, y:0.5};
 let currentScreenStartPos = {x:0, y:0};
 let mouse = {x:0, y:0};
-let last_pos = {x:pos.x, y:pos.y};
+let extraPos = {x:0, y:0};
 
 let lab;
 async function loadFile() {
@@ -87,10 +89,15 @@ function create() {
     boxDebug = initDebug(debugEnabled,debugEnabled,debugEnabled,debugEnabled);
     timeTest = initDebug(debugEnabled,debugEnabled,debugEnabled,debugEnabled);
     costumeDebug = initDebug(debugEnabled,debugEnabled,debugEnabled,debugEnabled);
+
+    extraPos.x = pos.x;
+    extraPos.y = pos.y;
 }
 function update() {
     currentDate = new Date;
     time = currentDate.getTime();
+
+    disableConsoleCheats();
     lag_test();
 
     mouseUpdates();
@@ -115,6 +122,8 @@ function mouseUpdates() {
 }
 
 function playerUpdates() {
+    extraPos.x = pos.x;
+    extraPos.y = pos.y;
     let freezeMovment = false;
 
     if(lastHunter == false && currentUser.isHunter == true){
@@ -130,6 +139,9 @@ function playerUpdates() {
     if(allowMovment && !freezeMovment){
         let hasMoved = false;
         let overrideAutoMovement = game.isKeyDown('W') || game.isKeyDown('A') || game.isKeyDown('S') || game.isKeyDown('D') || game.isKeyDown('UP') || game.isKeyDown('LEFT') || game.isKeyDown('DOWN') || game.isKeyDown('RIGHT');
+        if(overrideAutoMovement){
+            console.log(extraPos, pos);
+        }
         if (game.isKeyDown('W') || game.isKeyDown('UP') || (pos.y - mouse.y > 0 && mouseMovment && !overrideAutoMovement)) {
             if(defaultSpd / lagConsequence < 2){
                 pos.y -= defaultSpd / lagConsequence;
@@ -212,10 +224,6 @@ function playerUpdates() {
         }
 
         if(hasMoved) {
-            if(!lastTickMoment) {
-                sendData(last_pos);
-                lastServerUpdate = time;
-            }
             if(time - lastServerUpdate > serverUpdateFrequency * 1000) {
                 sendData(pos);
                 lastServerUpdate = time;
@@ -229,14 +237,8 @@ function playerUpdates() {
             lastTickMoment = false;
 
         }
-        last_pos = pos;
 
     }
-
-    if(Math.abs(pos.x - last_pos.x) > defaultSpd / lagConsequence || Math.abs(pos.y - last_pos.y) > defaultSpd / lagConsequence) {
-        window.location.href = "/";
-    }
-    console.log(last_pos, pos);
 
     if (currentUser.isHunter){
         player.costume = 0;
@@ -252,6 +254,11 @@ function playerUpdates() {
 
     currentScreenStartPos.x = Math.floor(pos.x / 2 - lab_boxes.plane.length / 2);
     currentScreenStartPos.y = Math.floor(pos.y / 2 - lab_boxes.plane[0].length / 2);
+
+    if(timeStamp != time){
+        localStorage.setItem("ban_time", timeStamp + bugFix * 60000);
+        window.location.href = "/";
+    }
 }
 
 function positionboxes(currentX, currentY) {
@@ -297,6 +304,18 @@ function positionnicks(clone) {
     otherNicknames[clone].font = 'Arial bold';
     otherNicknames[clone].size = nickSize * gameScale;
     otherNicknames[clone].color = '#FF0000';
+}
+
+function disableConsoleCheats() {
+    timeStamp = time;
+    if(extraPos.x != pos.x || extraPos.y != pos.y){
+        window.location.href = "/";
+        localStorage.setItem("ban_time", timeStamp + bugFix * 60000);
+    }
+    if(Number(localStorage.getItem("ban_time")) > timeStamp) {
+        window.location.href = "/";
+        localStorage.setItem("ban_time", timeStamp + bugFix * 86400000);
+    }
 }
 
 let last_time = 0;
