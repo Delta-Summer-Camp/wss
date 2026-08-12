@@ -105,12 +105,15 @@ function applySettings() {
 }
 
 function getLocalSetting() {
-    if (localStorage.getItem("BgColor") !== undefined){
-        BgColor = localStorage.getItem("BgColor");
+    if (localStorage.getItem("BgColor") === undefined || localStorage.getItem("BgColor") === null){
+        localStorage.setItem("BgColor", BgColor);
     }
-    if (localStorage.getItem("wallType") !== undefined){
-        selectedWallType = Number(localStorage.getItem("wallType"));
+    if (localStorage.getItem("wallType") === undefined || localStorage.getItem("wallType") === null){
+        localStorage.setItem("wallType", wallType);
     } 
+    BgColor = localStorage.getItem("BgColor");
+    selectedWallType = Number(localStorage.getItem("wallType"));
+
     applySettings();
 }
 getLocalSetting();
