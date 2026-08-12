@@ -34,7 +34,18 @@
     <div id="settings" class="pause-menu hidden">
         <h2>Color</h2>
         <input type="text" placeholder="hex eg. #00FFFF" class="form-input" name="" id="color-input">
-        <button onclick="applyColor()" class="btn-submit btn">Apply</button>
+        <h2>Select Wall Type</h3>
+    <div id="wall-type-container" class="wall-selector">
+        <div class="wall-option active" data-wall-type="0">0</div>
+        <div class="wall-option" data-wall-type="1">1</div>
+        <div class="wall-option" data-wall-type="2">2</div>
+        <div class="wall-option" data-wall-type="3">3</div>
+        <div class="wall-option" data-wall-type="4">4</div>
+        <div class="wall-option" data-wall-type="5">5</div>
+        <div class="wall-option" data-wall-type="6">6</div>
+        <div class="wall-option" data-wall-type="7">7</div>
+    </div>
+        <button onclick="applySettings()" class="btn-submit btn">Apply</button>
         <button onclick="deactivateSettings()" class="btn-submit btn">Cancel</button>
     </div>
 
