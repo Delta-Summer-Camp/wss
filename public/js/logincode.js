@@ -43,7 +43,6 @@ loginForm.addEventListener('submit', function (event) {
 
     // Extract values using the "name" attributes from your HTML
     localStorage.setItem("username", formData.get('username'));
-    localStorage.setItem("password", formData.get('password'));
 });
 
 // Get Registration data from form
@@ -60,7 +59,6 @@ regForm.addEventListener('submit', function (event) {
     const passwordRegister = formData.get('password');
     const passwordConfirmRegister = formData.get('password2');
     localStorage.setItem("username", formData.get('username'));
-    localStorage.setItem("password", formData.get('password'));
 
 
     if (password !== passwordConfirmRegister) {
