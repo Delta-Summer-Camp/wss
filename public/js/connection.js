@@ -1,15 +1,9 @@
-let LoginData = {username:"NO"};
-
 let pos = {x:49.5, y:48.5};
 let currentUser = {isHunter:false, username:"", playerId: undefined};
 let otherUsers = [];
 let wsConnected = false;
 
-if(LoginData.username === undefined){
-    currentUser.username = RegistrationData.username;
-} else {
-    currentUser.username = LoginData.username;
-}
+currentUser.username = localStorage.getItem("username");
 
 const ws = new WebSocket(
     "wss://game26.delta.camp/server?username=" + currentUser.username

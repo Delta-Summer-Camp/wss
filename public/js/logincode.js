@@ -1,6 +1,4 @@
 let isPlaying = false;
-let LoginData = { username: "", password: "" };
-let RegistrationData = { username: "", password: "" };
 
 const registration = document.getElementById('registration');
 const login = document.getElementById('login');
@@ -44,12 +42,8 @@ loginForm.addEventListener('submit', function (event) {
     const formData = new FormData(loginForm);
 
     // Extract values using the "name" attributes from your HTML
-    const usernameLogin = formData.get('username');
-    const passwordLogin = formData.get('password');
-    
-    LoginData.username = formData.get('username');
-    LoginData.password = formData.get('password');
-
+    localStorage.setItem("username", formData.get('username'));
+    localStorage.setItem("password", formData.get('password'));
 });
 
 // Get Registration data from form
@@ -65,13 +59,13 @@ regForm.addEventListener('submit', function (event) {
     const usernameRegister = formData.get('username').trim();
     const passwordRegister = formData.get('password');
     const passwordConfirmRegister = formData.get('password2');
+    localStorage.setItem("username", formData.get('username'));
+    localStorage.setItem("password", formData.get('password'));
 
 
     if (password !== passwordConfirmRegister) {
         alert("Passwords do not match!");
         return;
     }
-    RegistrationData.username = usernameRegister;
-    RegistrationData.password = passwordRegister;
 
 });
