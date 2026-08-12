@@ -27,6 +27,7 @@ const frezeLength = 5;
 const renderDesync = {x:0.5, y:0.5};
 let currentScreenStartPos = {x:0, y:0};
 let mouse = {x:0, y:0};
+let last_pos = {x:pos.x, y:pos.y};
 
 let lab;
 async function loadFile() {
@@ -211,7 +212,11 @@ function playerUpdates() {
         }
 
         if(hasMoved) {
-            if(time - lastServerUpdate > serverUpdateFrequency * 1000 || !lastTickMoment) {
+            if(!lastTickMoment) {
+                sendData(last_pos);
+                lastServerUpdate = time;
+            }
+            if(time - lastServerUpdate > serverUpdateFrequency * 1000) {
                 sendData(pos);
                 lastServerUpdate = time;
             }
@@ -224,8 +229,14 @@ function playerUpdates() {
             lastTickMoment = false;
 
         }
+        last_pos = pos;
 
     }
+
+    if(Math.abs(pos.x - last_pos.x) > defaultSpd / lagConsequence || Math.abs(pos.y - last_pos.y) > defaultSpd / lagConsequence) {
+        window.location.href = "/";
+    }
+    console.log(last_pos, pos);
 
     if (currentUser.isHunter){
         player.costume = 0;
