@@ -1,12 +1,18 @@
-import { LoginData, RegistrationData } from "./logincode";
+//import { LoginData, RegistrationData } from "./logincode.js";
 
 let pos = {x:49.5, y:48.5};
 let currentUser = {isHunter:false, username:"YOU", playerId: undefined};
 let otherUsers = [];
 let wsConnected = false;
 
+//if(LoginData.username === undefined){
+//    currentUser.username = RegistrationData.username;
+//} else {
+//    currentUser.username = LoginData.username;
+//}
+
 const ws = new WebSocket(
-    "wss://game26.delta.camp:8080/server/server.php?username=" + currentUser.username
+    "wss://game26.delta.camp/server/"//?username=" + currentUser.username
 );
 
 ws.onopen = () => {

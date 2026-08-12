@@ -1,6 +1,6 @@
 let isPlaying = false;
-export const LoginData = { username: "", password: "" };
-export const RegistrationData = { username: "", password: "" };
+let LoginData = { username: "", password: "" };
+let RegistrationData = { username: "", password: "" };
 
 const registration = document.getElementById('registration');
 const login = document.getElementById('login');
