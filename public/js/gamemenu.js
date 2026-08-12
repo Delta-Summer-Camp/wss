@@ -53,14 +53,12 @@ function deactivateSettings() {
 
 
 const setBgColor = () => {
-
-
     BgColor = parseInt(colorInput.value.replace('#', ''), 16);
     game.setBackgroundColor(BgColor);
+    localStorage.setItem("BgColor", BgColor);
 }
 
 colorInput.addEventListener('input', function (event) {
-
     colorInputValue = event.target.value;
 })
 
@@ -74,8 +72,6 @@ function applyColor() {
     setBgColor();
     deactivateSettings();
 }
-
-
 
 // Store the pending wall type choice before applying
 let selectedWallType = wallType; 
@@ -106,4 +102,8 @@ function applySettings() {
 
     // 3. Close settings window
     deactivateSettings();
+}
+function getLocalSetting() {
+    BgColor = localStorage.getItem("BgColor");
+    game.setBackgroundColor(BgColor);
 }
