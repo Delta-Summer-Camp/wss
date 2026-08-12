@@ -21,8 +21,8 @@ let BgColor = 0x00FFFF;
 const gameScale = 50;
 const serverUpdateFrequency = 0.05;
 const defaultSpd = 0.15;
-const nickSize = 20;
-const nickDist = 40;
+const nickSize = 0.4;
+const nickDist = 0.8;
 const frezeLength = 5;
 const renderDesync = {x:0.5, y:0.5};
 let currentScreenStartPos = {x:0, y:0};
@@ -37,6 +37,7 @@ loadFile();
 
 
 let currentSize = {width:document.documentElement.clientWidth, height:document.documentElement.clientHeight};
+
 
 let game = new ScratchGame(currentSize.width, currentSize.height);
 game.preload = preload;
@@ -74,10 +75,10 @@ function create() {
     playerStatus.color = '#FF0000';
     playerStatus.size = 50;
 
-    playerNickname = this.createText(currentSize.width / 2, currentSize.height / 2 - nickDist, currentUser.username);
+    playerNickname = this.createText(currentSize.width / 2, currentSize.height / 2 - nickDist * gameScale, currentUser.username);
     playerNickname.makeXYCentred();
     playerNickname.font = 'Arial bold';
-    playerNickname.size = nickSize;
+    playerNickname.size = nickSize * gameScale;
     playerNickname.color = '#FF0000';
     playerNickname.bringToFront();
 
@@ -117,7 +118,6 @@ function playerUpdates() {
 
     if(lastHunter == false && currentUser.isHunter == true){
         frezeTime = time + frezeLength * 1000;
-        console.log("yes");
     }
     if(frezeTime > time) {
         freezeMovment = true;
@@ -135,7 +135,6 @@ function playerUpdates() {
                 pos.y = Math.floor(pos.y * 100) / 100;
                 while (lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1 || lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1) {
                     pos.y += 0.01;
-                    console.log(defaultSpd / lagConsequence);
                 }
             } else {
                 for(let i = 0; i < defaultSpd / lagConsequence; i += 0.01){
@@ -212,15 +211,15 @@ function playerUpdates() {
         }
 
         if(hasMoved) {
-            if(time - lastServerUpdate > serverUpdateFrequency * 1000){
-                sendData();
+            if(time - lastServerUpdate > serverUpdateFrequency * 1000 || !lastTickMoment) {
+                sendData(pos);
                 lastServerUpdate = time;
             }
             lastTickMoment = true;
         } else {
             lastServerUpdate = time;
             if(lastTickMoment){
-                sendData();
+                sendData(pos);
             }
             lastTickMoment = false;
 
@@ -231,6 +230,9 @@ function playerUpdates() {
     if (currentUser.isHunter){
         player.costume = 0;
         costumeDebug.log("c0");
+    } else if (freezeMovment) {
+        player.costume = 3;
+        costumeDebug.log("c3");
     } else {
         player.costume = 1;
         costumeDebug.log("c1");
@@ -279,10 +281,10 @@ function positionnicks(clone) {
     if (otherNicknames[clone] != undefined) {
         otherNicknames[clone].destroy()
     }
-    otherNicknames[clone] = game.createText(otherPlayers.clones[clone].x, otherPlayers.clones[clone].y - nickDist, otherUsers[clone].username);
+    otherNicknames[clone] = game.createText(otherPlayers.clones[clone].x, otherPlayers.clones[clone].y - nickDist * gameScale, otherUsers[clone].username);
     otherNicknames[clone].makeXYCentred();
     otherNicknames[clone].font = 'Arial bold';
-    otherNicknames[clone].size = nickSize;
+    otherNicknames[clone].size = nickSize * gameScale;
     otherNicknames[clone].color = '#FF0000';
 }
 
