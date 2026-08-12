@@ -122,8 +122,6 @@ function mouseUpdates() {
 }
 
 function playerUpdates() {
-    extraPos.x = pos.x;
-    extraPos.y = pos.y;
     let freezeMovment = false;
 
     if(lastHunter == false && currentUser.isHunter == true){
@@ -139,9 +137,6 @@ function playerUpdates() {
     if(allowMovment && !freezeMovment){
         let hasMoved = false;
         let overrideAutoMovement = game.isKeyDown('W') || game.isKeyDown('A') || game.isKeyDown('S') || game.isKeyDown('D') || game.isKeyDown('UP') || game.isKeyDown('LEFT') || game.isKeyDown('DOWN') || game.isKeyDown('RIGHT');
-        if(overrideAutoMovement){
-            console.log(extraPos, pos);
-        }
         if (game.isKeyDown('W') || game.isKeyDown('UP') || (pos.y - mouse.y > 0 && mouseMovment && !overrideAutoMovement)) {
             if(defaultSpd / lagConsequence < 2){
                 pos.y -= defaultSpd / lagConsequence;
@@ -259,6 +254,8 @@ function playerUpdates() {
         localStorage.setItem("ban_time", timeStamp + bugFix * 60000);
         window.location.href = "/";
     }
+    extraPos.x = pos.x;
+    extraPos.y = pos.y;
 }
 
 function positionboxes(currentX, currentY) {
@@ -314,7 +311,7 @@ function disableConsoleCheats() {
     }
     if(Number(localStorage.getItem("ban_time")) > timeStamp) {
         window.location.href = "/";
-        localStorage.setItem("ban_time", timeStamp + bugFix * 86400000);
+        localStorage.setItem("ban_time", timeStamp + bugFix * 14400000);
     }
 }
 
