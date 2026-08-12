@@ -7,6 +7,8 @@ let otherNicknames = [];
 let lastServerUpdate;
 let lastTickMoment;
 let frezeTime;
+let tick_length;
+let lagConsequence;
 let currentDate = new Date;
 
 let lastHunter = false;
@@ -19,9 +21,9 @@ let BgColor = 0x00FFFF;
 let wallType = 5; // 0 to 7 black wall is 0
 const gameScale = 50;
 const serverUpdateFrequency = 0.05;
-const currentSpd = 0.15;
-const nickSize = 20;
-const nickDist = 40;
+const defaultSpd = 0.15;
+const nickSize = 0.4;
+const nickDist = 0.8;
 const frezeLength = 5;
 const renderDesync = {x:0.5, y:0.5};
 let currentScreenStartPos = {x:0, y:0};
@@ -36,6 +38,7 @@ loadFile();
 
 
 let currentSize = {width:document.documentElement.clientWidth, height:document.documentElement.clientHeight};
+
 
 let game = new ScratchGame(currentSize.width, currentSize.height);
 game.preload = preload;
@@ -73,10 +76,10 @@ function create() {
     playerStatus.color = '#FF0000';
     playerStatus.size = 50;
 
-    playerNickname = this.createText(currentSize.width / 2, currentSize.height / 2 - nickDist, currentUser.username);
+    playerNickname = this.createText(currentSize.width / 2, currentSize.height / 2 - nickDist * gameScale, currentUser.username);
     playerNickname.makeXYCentred();
     playerNickname.font = 'Arial bold';
-    playerNickname.size = nickSize;
+    playerNickname.size = nickSize * gameScale;
     playerNickname.color = '#FF0000';
     playerNickname.bringToFront();
 
@@ -116,7 +119,6 @@ function playerUpdates() {
 
     if(lastHunter == false && currentUser.isHunter == true){
         frezeTime = time + frezeLength * 1000;
-        console.log("yes");
     }
     if(frezeTime > time) {
         freezeMovment = true;
@@ -129,56 +131,96 @@ function playerUpdates() {
         let hasMoved = false;
         let overrideAutoMovement = game.isKeyDown('W') || game.isKeyDown('A') || game.isKeyDown('S') || game.isKeyDown('D') || game.isKeyDown('UP') || game.isKeyDown('LEFT') || game.isKeyDown('DOWN') || game.isKeyDown('RIGHT');
         if (game.isKeyDown('W') || game.isKeyDown('UP') || (pos.y - mouse.y > 0 && mouseMovment && !overrideAutoMovement)) {
-            pos.y -= currentSpd;
-            while (lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1 || lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1) {
-                pos.y += 0.01;
+            if(defaultSpd / lagConsequence < 2){
+                pos.y -= defaultSpd / lagConsequence;
+                pos.y = Math.floor(pos.y * 100) / 100;
+                while (lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1 || lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1) {
+                    pos.y += 0.01;
+                }
+            } else {
+                for(let i = 0; i < defaultSpd / lagConsequence; i += 0.01){
+                    pos.y -= 0.01;
+                    if (lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1 || lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1) {
+                        pos.y += 0.01;
+                    }
+                }
             }
             wallDebug.log(lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1, "1");
             pos.y = Math.floor(pos.y * 100) / 100;
             hasMoved = true;
         }
         if (game.isKeyDown('S') || game.isKeyDown('DOWN')  || (pos.y - mouse.y < 0 && mouseMovment && !overrideAutoMovement)) {
-            pos.y += currentSpd;
-            while (lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1 || lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1) {
-                pos.y -= 0.01;
+            if(defaultSpd / lagConsequence < 2){
+                pos.y += defaultSpd / lagConsequence;
+                pos.y = Math.ceil(pos.y * 100) / 100;
+                while (lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1 || lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1) {
+                    pos.y -= 0.01;
+                }
+            } else {
+                for(let i = 0; i < defaultSpd / lagConsequence; i += 0.01){
+                    pos.y += 0.01;
+                    if (lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1 || lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1) {
+                        pos.y -= 0.01;
+                    }
+                }
             }
             wallDebug.log(lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1, "2");
             pos.y = Math.floor(pos.y * 100) / 100;
             hasMoved = true;
         }
         if (game.isKeyDown('D') || game.isKeyDown('RIGHT')  || (pos.x - mouse.x < 0 && mouseMovment && !overrideAutoMovement)) {
-            pos.x += currentSpd;
-            while (lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1 || lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1) {
-                pos.x -= 0.01;
+            if(defaultSpd / lagConsequence < 2){
+                pos.x += defaultSpd / lagConsequence;
+                pos.x = Math.ceil(pos.x * 100) / 100;
+                while (lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1 || lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1) {
+                    pos.x -= 0.01;
+                }
+            } else {
+                for(let i = 0; i < defaultSpd / lagConsequence; i += 0.01){
+                    pos.x += 0.01;
+                    if (lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1 || lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1) {
+                        pos.x -= 0.01;
+                    }
+                }
             }
             wallDebug.log(lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1, "3");
-            pos.x = Math.floor(pos.x * 100) / 100;
+            pos.x = Math.ceil(pos.x * 100) / 100;
             hasMoved = true;
         }
         if (game.isKeyDown('A') || game.isKeyDown('LEFT')  || (pos.x - mouse.x > 0 && mouseMovment && !overrideAutoMovement)) {
-            pos.x -= currentSpd;
-            while (lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1 || lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1) {
-                pos.x += 0.01;
+            if(defaultSpd / lagConsequence < 2){
+                pos.x -= defaultSpd / lagConsequence;
+                pos.x = Math.floor(pos.x * 100) / 100;
+                while (lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1 || lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1) {
+                    pos.x += 0.01;
+                }
+            } else {
+                for(let i = 0; i < defaultSpd / lagConsequence; i += 0.01){
+                    pos.x -= 0.01;
+                    if (lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1 || lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1) {
+                        pos.x += 0.01;
+                    }
+                }
             }
             wallDebug.log(lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1, "4");
             pos.x = Math.floor(pos.x * 100) / 100;
             hasMoved = true;
         }
 
-        if(pos.x < mouse.x + currentSpd && pos.x > mouse.x - currentSpd && pos.y < mouse.y + currentSpd && pos.y > mouse.y - currentSpd) {
+        if(pos.x < mouse.x + defaultSpd && pos.x > mouse.x - defaultSpd && pos.y < mouse.y + defaultSpd && pos.y > mouse.y - defaultSpd) {
             mouseMovment = false;
         }
 
         if(hasMoved) {
-            if(time - lastServerUpdate > serverUpdateFrequency * 1000){
-                sendData();
+            if(time - lastServerUpdate > serverUpdateFrequency * 1000 || !lastTickMoment) {
+                sendData(pos);
                 lastServerUpdate = time;
             }
             lastTickMoment = true;
         } else {
             lastServerUpdate = time;
             if(lastTickMoment){
-                sendData();
+                sendData(pos);
             }
             lastTickMoment = false;
 
@@ -189,6 +231,9 @@ function playerUpdates() {
     if (currentUser.isHunter){
         player.costume = 0;
         costumeDebug.log("c0");
+    } else if (freezeMovment) {
+        player.costume = 3;
+        costumeDebug.log("c3");
     } else {
         player.costume = 1;
         costumeDebug.log("c1");
@@ -238,10 +283,10 @@ function positionnicks(clone) {
     if (otherNicknames[clone] != undefined) {
         otherNicknames[clone].destroy()
     }
-    otherNicknames[clone] = game.createText(otherPlayers.clones[clone].x, otherPlayers.clones[clone].y - nickDist, otherUsers[clone].username);
+    otherNicknames[clone] = game.createText(otherPlayers.clones[clone].x, otherPlayers.clones[clone].y - nickDist * gameScale, otherUsers[clone].username);
     otherNicknames[clone].makeXYCentred();
     otherNicknames[clone].font = 'Arial bold';
-    otherNicknames[clone].size = nickSize;
+    otherNicknames[clone].size = nickSize * gameScale;
     otherNicknames[clone].color = '#FF0000';
 }
 
@@ -251,10 +296,10 @@ let tick_avg = 0;
 let tps = 0;
 
 function lag_test() {
-    let late_time = time - last_time;
+    tick_length = time - last_time;
 
-    timeTest.log("Tick took: " + late_time + " ms");
-    tick_time[tick_time.length] = late_time;
+    timeTest.log("Tick took: " + tick_length + " ms");
+    tick_time[tick_time.length] = tick_length;
     tick_avg = 0;
     if (tick_time.length > 5000) {
         for(let i = tick_time.length - 5000; i < tick_time.length; ++i){
@@ -270,4 +315,6 @@ function lag_test() {
     tps = Math.floor(1000 / tick_avg);
 
     last_time = time;
+
+    lagConsequence = 100 / tick_length / 6;
 }

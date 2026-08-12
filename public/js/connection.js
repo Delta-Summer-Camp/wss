@@ -38,8 +38,8 @@ function arrangeData(inputDataObject) {
 }
 
 //Output gets sent to ws.send
-function sendData() {
-    outputData = {x:pos.x, y:pos.y, username:currentUser.username, playerId: currentUser.playerId};
+function sendData(position) {
+    let outputData = {x:position.x, y:position.y, username:currentUser.username, playerId: currentUser.playerId};
     //console.log(outputData);
     // transmit output data via vss
 }

@@ -5,6 +5,12 @@
     <meta charset="UTF-8" />
     <title>WSS front end test</title>
     <link rel="stylesheet" href="./css/main.css">
+
+    <style type="text/css">
+    body {
+    margin: 0;
+}
+    </style>
 </head>
 
 <body>
@@ -34,7 +40,6 @@
             </form>
         </div>
     </div>
-    <!-- Login -->
 
     <div id="login" class="modal-overlay">
         <div class="modal-card text-center">
@@ -53,7 +58,7 @@
                 <input onclick="startScreen()" class="btn btn-submit" type="button" value="Send">
             </form>
             <p class="footer-text">
-                Don't have an account? <a href="#" onclick="register()" class="link">Register here</a>
+Don't have an account? <a href="#" onclick="register()" class="link">Register here</a>
             </p>
         </div>
     </div>
