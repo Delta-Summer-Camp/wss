@@ -1,18 +1,18 @@
-//import { LoginData, RegistrationData } from "./logincode.js";
+let LoginData = {username:"NO"};
 
 let pos = {x:49.5, y:48.5};
-let currentUser = {isHunter:false, username:"YOU", playerId: undefined};
+let currentUser = {isHunter:false, username:"", playerId: undefined};
 let otherUsers = [];
 let wsConnected = false;
 
-//if(LoginData.username === undefined){
-//    currentUser.username = RegistrationData.username;
-//} else {
-//    currentUser.username = LoginData.username;
-//}
+if(LoginData.username === undefined){
+    currentUser.username = RegistrationData.username;
+} else {
+    currentUser.username = LoginData.username;
+}
 
 const ws = new WebSocket(
-    "wss://game26.delta.camp/server/"//?username=" + currentUser.username
+    "wss://game26.delta.camp/server?username=" + currentUser.username
 );
 
 ws.onopen = () => {
@@ -86,16 +86,3 @@ function sendData(position) {
 function onDisconnect(){
     window.location.href = "/";
 }
-
-//Test data
-arrangeData([
-    {x:22.5, y:2.5, isHunter: false, username:"TheAvreageBot", playerId:0, onHold:true},
-    {x:64.5, y:30.5, isHunter: true, username:"mMeneske", playerId:1, onHold:true},
-    {x:40.5, y:38.5, isHunter: true, username:"10x Engineer", playerId:2, onHold:false},
-    {x:49.5, y:48.5, isHunter: false, username:"YOU", playerId: 3}
-]);
-
-
-//arrangeData({x:49.5, y:47.5, isHunter:false, username:"YOU", playerId: 3});
-
-//arrangeData({x:0, y:0, isHunter:false, username:undefined, playerId: 0});
