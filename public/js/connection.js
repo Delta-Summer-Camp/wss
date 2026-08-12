@@ -1,3 +1,5 @@
+import { LoginData, RegistrationData } from "./logincode";
+
 let pos = {x:49.5, y:48.5};
 let currentUser = {isHunter:false, username:"YOU", playerId: undefined};
 let otherUsers = [];
