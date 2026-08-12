@@ -16,7 +16,7 @@ let allowMovment = true;
 const debugEnabled = false;
 
 let BgColor = 0x00FFFF;
-let wallType = 6; // 0 to 7 black wall is 0
+let wallType = 5; // 0 to 7 black wall is 0
 const gameScale = 50;
 const serverUpdateFrequency = 0.05;
 const currentSpd = 0.15;
@@ -204,7 +204,7 @@ function positionboxes(currentX, currentY) {
     let planeY = currentY + currentScreenStartPos.y;
     lab_boxes.plane[currentX][currentY].x = player.x - pos.x * gameScale + planeX * gameScale * 2 + renderDesync.x * gameScale;
     lab_boxes.plane[currentX][currentY].y = player.y - pos.y * gameScale + planeY * gameScale * 2 + renderDesync.y * gameScale;
-    if (planeY < 0 || planeY > 49 || planeX < 0 || planeX > 49) {
+    if (planeY < 0 || planeY > lab.length - 1 || planeX < 0 || planeX > lab[0].length - 1) {
         lab_boxes.plane[currentX][currentY].visible = true;
     } else if (lab[planeY][planeX] == 0) {
         lab_boxes.plane[currentX][currentY].visible = false;
