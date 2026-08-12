@@ -219,7 +219,6 @@ function playerUpdates() {
             lastTickMoment = true;
         } else {
             lastServerUpdate = time;
-            console.log(lastTickMoment);
             if(lastTickMoment){
                 sendData(pos);
             }
