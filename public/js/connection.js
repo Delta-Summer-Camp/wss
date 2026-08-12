@@ -6,7 +6,7 @@ let wsConnected = false;
 currentUser.username = localStorage.getItem("username");
 
 const ws = new WebSocket(
-    "wss://game26.delta.camp/server?username=" + currentUser.username
+    "wss://game26.delta.camp/server"
 );
 
 ws.onopen = () => {
