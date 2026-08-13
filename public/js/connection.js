@@ -1,4 +1,5 @@
-let pos = {x:49.5, y:48.5};
+const startPos = {x:49.5, y:48.5}
+let pos = {x:startPos.x, y:startPos.y};
 let currentUser = {isHunter:false, username:"YOU", playerId: undefined};
 let otherUsers = [];
 

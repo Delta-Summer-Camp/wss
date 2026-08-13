@@ -15,13 +15,12 @@ let time;
 let currentDate = new Date;
 
 let lastHunter = false;
-let phoneMode = false;
+let phoneMode = true;
 let mouseMovment = false;
 let allowMovment = true;
 const debugEnabled = false;
 
 let BgColor = 0x00FFFF;
-let wallType = 5; // 0 to 7 black wall is 0
 const gameScale = 50;
 const serverUpdateFrequency = 0.05;
 const defaultSpd = 0.15;
@@ -70,7 +69,7 @@ game.create = create;
 game.update = update;
 
 function preload() {
-    game.loadSpritesheet('box', 'assets/wall.png', 200, 200);
+    game.loadSpritesheet('box', 'assets/box.png', 20, 20);
     game.loadSpritesheet('player', 'assets/ballz.png', 200, 200);
 }
 
@@ -287,15 +286,14 @@ function positionboxes(currentX, currentY) {
     let planeY = currentY + currentScreenStartPos.y;
     lab_boxes.plane[currentX][currentY].x = player.x - pos.x * gameScale + planeX * gameScale * 2 + renderDesync.x * gameScale;
     lab_boxes.plane[currentX][currentY].y = player.y - pos.y * gameScale + planeY * gameScale * 2 + renderDesync.y * gameScale;
-    if (planeY < 0 || planeY > lab.length - 1 || planeX < 0 || planeX > lab[0].length - 1) {
+    if (planeY < 0 || planeY > 49 || planeX < 0 || planeX > 49) {
         lab_boxes.plane[currentX][currentY].visible = true;
     } else if (lab[planeY][planeX] == 0) {
         lab_boxes.plane[currentX][currentY].visible = false;
     } else {
         lab_boxes.plane[currentX][currentY].visible = true;
     }
-    lab_boxes.plane[currentX][currentY].size = gameScale / 100;
-    lab_boxes.plane[currentX][currentY].costume = wallType * 3 + 1;
+    lab_boxes.plane[currentX][currentY].size = gameScale / 10;
 }
 
 function positionclones(clone) {
