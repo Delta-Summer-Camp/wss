@@ -56,16 +56,13 @@ function deactivateSettings() {
     allowMovment = true;
 }
 
-
 const setBgColor = () => {
-
-
     BgColor = parseInt(colorInput.value.replace('#', ''), 16);
     game.setBackgroundColor(BgColor);
+    localStorage.setItem("BgColor", BgColor);
 }
 
 colorInput.addEventListener('input', function (event) {
-
     colorInputValue = event.target.value;
 })
 
@@ -79,8 +76,6 @@ function applyColor() {
     setBgColor();
     deactivateSettings();
 }
-
-
 
 // Store the pending wall type choice before applying
 let selectedWallType = wallType; 
@@ -113,10 +108,25 @@ function applySettings() {
     
     // 2. Update active game wallType
     wallType = selectedWallType;
+    localStorage.setItem("wallType", selectedWallType);
 
     // 3. Close settings window
     deactivateSettings();
 }
+
+function getLocalSetting() {
+    if (localStorage.getItem("BgColor") === undefined || localStorage.getItem("BgColor") === null){
+        localStorage.setItem("BgColor", BgColor);
+    }
+    if (localStorage.getItem("wallType") === undefined || localStorage.getItem("wallType") === null){
+        localStorage.setItem("wallType", wallType);
+    } 
+    BgColor = localStorage.getItem("BgColor");
+    selectedWallType = Number(localStorage.getItem("wallType"));
+
+    applySettings();
+}
+getLocalSetting();
 function togglePhoneMode() {
     if(phoneMode) {
         phoneToggle.textContent = "OFF";
