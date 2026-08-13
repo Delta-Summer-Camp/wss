@@ -1,4 +1,5 @@
-let pos = {x:49.5, y:48.5};
+const startPos = {x:49.5, y:48.5}
+let pos = {x:startPos.x, y:startPos.y};
 let currentUser = {isHunter:false, username:"", playerId: undefined};
 let otherUsers = [];
 let wsConnected = false;
@@ -78,5 +79,5 @@ function sendData(position) {
 
 //Removes the player from /game.html(.php) if they are not connected to the server
 function onDisconnect(){
-    window.location.href = "/";
+    //window.location.href = "/";
 }
