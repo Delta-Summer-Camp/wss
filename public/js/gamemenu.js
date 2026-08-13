@@ -6,8 +6,13 @@ const pauseMenu = document.getElementById('pause-menu');
 const settings = document.getElementById('settings');
 const colorInput = document.getElementById('color-input');
 const option = document.getElementById('options');
+const phoneToggle = document.getElementById('phoneModeToggle');
 let colorInputValue;
 let settingsActive = false;
+
+
+
+phoneToggle.textContent = "OFF";
 
 // Pause Menu Reveal
 
@@ -95,6 +100,11 @@ function applySettings() {
     if (colorInput.value.trim() !== '') {
         setBgColor();
     }
+    if (phoneToggle.textContent === "OFF") {
+        phoneMode = false;
+    } else {
+        phoneMode = true;
+    }
     
     // 2. Update active game wallType
     wallType = selectedWallType;
@@ -117,3 +127,10 @@ function getLocalSetting() {
     applySettings();
 }
 getLocalSetting();
+function togglePhoneMode() {
+    if(phoneMode) {
+        phoneToggle.textContent = "OFF";
+    } else {
+        phoneToggle.textContent = "ON";
+    }
+}

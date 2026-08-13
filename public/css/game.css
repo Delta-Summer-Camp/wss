@@ -182,3 +182,36 @@
     border-color: #00FF00;
     box-shadow: 0 0 8px #00FF00;
 }
+
+
+#phoneModeToggle {
+  background-color: #4338ca;
+  color: #ffffff;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.625rem 1.25rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
+}
+
+/* Hover effect: slightly lighter shade */
+#phoneModeToggle:hover {
+  background-color: #4f46e5;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Click/Active effect: slightly darker shade */
+#phoneModeToggle:active {
+  background-color: #3730a3;
+  transform: scale(0.98);
+}
+
+/* Focus outline for accessibility */
+#phoneModeToggle:focus-visible {
+  outline: 2px solid #818cf8;
+  outline-offset: 2px;
+}

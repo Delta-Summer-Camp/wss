@@ -12,7 +12,7 @@ let lagConsequence;
 let currentDate = new Date;
 
 let lastHunter = false;
-let phoneMode = true;
+let phoneMode = false;
 let mouseMovment = false;
 let allowMovment = true;
 const debugEnabled = false;
