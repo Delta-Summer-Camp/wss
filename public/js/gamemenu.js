@@ -105,10 +105,22 @@ function applySettings() {
     if (colorInput.value.trim() !== '') {
         setBgColor();
     }
+    if (phoneToggle.textContent === "OFF") {
+        phoneMode = false;
+    } else {
+        phoneMode = true;
+    }
     
     // 2. Update active game wallType
     wallType = selectedWallType;
 
     // 3. Close settings window
     deactivateSettings();
+}
+function togglePhoneMode() {
+    if(phoneMode) {
+        phoneToggle.textContent = "OFF";
+    } else {
+        phoneToggle.textContent = "ON";
+    }
 }
