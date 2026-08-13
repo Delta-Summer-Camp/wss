@@ -228,15 +228,15 @@ function playerUpdates() {
 
     }
 
-    if (currentUser.isHunter){
-        player.costume = 0;
-        costumeDebug.log("c0");
+    if (currentUser.playerStatus == "runner"){
+        player.costume = 1;
+        costumeDebug.log("c1");
     } else if (freezeMovment) {
         player.costume = 3;
         costumeDebug.log("c3");
-    } else {
-        player.costume = 1;
-        costumeDebug.log("c1");
+    } else if (currentUser.playerStatus == "hunter"){
+        player.costume = 0;
+        costumeDebug.log("c0");
     }
     player.bringToFront();
 
@@ -264,12 +264,12 @@ function positionclones(clone) {
     if (otherUsers[clone].username !== undefined) {
         otherPlayers.clones[clone].x = player.x - (pos.x - otherUsers[clone].x) * gameScale;
         otherPlayers.clones[clone].y = player.y - (pos.y - otherUsers[clone].y) * gameScale;
-        if (otherUsers[clone].isHunter){
+        if (otherUsers[clone].playerStatus == "hunter"){
             otherPlayers.clones[clone].costume = 0;
             costumeDebug.log("c0");
         } else {
-            otherPlayers.clones[clone].costume = 1 + otherUsers[clone].onHold * 2;
-            costumeDebug.log("c" + otherPlayers.clones[clone].costume);
+            otherPlayers.clones[clone].costume = 1;
+            costumeDebug.log("c1");
         }
         otherPlayers.clones[clone].visible = true;
     } else {
