@@ -3,62 +3,34 @@
 ## На ws.onmessage данные:
 
 ```json
-{x:1, y:1, isHunter:false, username:"Dima", playerId:1, onHold:false}
+{x:1, y:1, playerState:false, username:"Dima"}
 ```
 ```json
-{x:10, y:17, isHunter:true, username:"IamSmiley", playerId:2, onHold:true}
+{x:10, y:17, playerState:true, username:"IamSmiley"}
 ```
 ```json
-{x:49.5, y:48.5, isHunter:false, username:"mMeneske", playerId:4}
-```
-
-или
-```json
-[
-{x:1, y:1, isHunter:false, username:"Dima", playerId:1, onHold:false},
-{x:10, y:17, isHunter:true, username:"IamSmiley", playerId:2, onHold:true},
-{x:49.5, y:48.5, isHunter:false, username:"mMeneske", playerId:4}
-]
+{x:49.5, y:48.5, playerState:false, username:"mMeneske"}
 ```
 
 ### При отключении игрока
 
 ```json
-{username:undefined, playerId:1}
+{playerState:disconnected, username: "Iamabot"}
 ```
 
 
 ## В начале игры мы вам на ws.send:
 
 ```json
-{x:14, y:1, username:"mMeneske", playerId:undefined}
+{x:49.5, y:48.5 username:"mMeneske"}
 ```
 
 ## На ws.send далее:
 
 ```json
-{x:14, y:1, username:"mMeneske", playerId:3}
+{x:14, y:1, username:"mMeneske"}
 ```
 
-Int: x, y и playerId(x и y болше 0 а playerId ещё и целое)(playerId задаётся сервером)
+Int: x и y
 
-String username
-
-Bool isHunter и onHold(обе задаются сервером)
-
-# Внутреняя информация
-
-To start server run:
-```bash
-python -m http.server 8080
-```
-или
-```bash
-npx http-server . -p 8080
-```
-Then join on:
-http://localhost:8080/
-
-## Чё надо сделать для настроек
-
- Mobile Mode
+String username и playerState
