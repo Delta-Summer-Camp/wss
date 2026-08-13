@@ -55,6 +55,10 @@ async function loadFile2() {
 }
 loadFile2();
 
+if(pos.x != startPos.x || pos.y != startPos.y){
+    window.location.href = "/game.html";
+}
+
 
 let currentSize = {width:document.documentElement.clientWidth, height:document.documentElement.clientHeight};
 
