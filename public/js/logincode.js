@@ -22,6 +22,22 @@ function addUser() {
         },
         function (data, status) {
             alert("Status: " + status + "; data: " + data['message']);
+            localStorage.setItem("username", $("#reg--username").val());
+            if (data['success'] === true) {
+                startScreen()
+            }
+        })
+}
+
+function validateLogin() {
+    $.post("login.php",
+        {
+            username: $("#login-username").val(),
+            passwordHash: md5($("#login-password").val())
+        },
+        function (data, status) {
+            alert("Status: " + status + "; data: " + data['message']);
+            localStorage.setItem("username", $("#login-username").val());
             if (data['success'] === true) {
                 startScreen()
             }
@@ -51,6 +67,7 @@ function startGame() {
 }
 // Get Login data from form
 
+/*
 const loginForm = document.getElementById('login-form');
 
 loginForm.addEventListener('submit', function (event) {
@@ -85,4 +102,4 @@ regForm.addEventListener('submit', function (event) {
         return;
     }
 
-});
+});*/
