@@ -24,7 +24,7 @@
 ### При отключении игрока
 
 ```json
-{status:disconnected, username:"iAmAbot" playerId:3}
+{status:"disconnected", username:"iAmAbot" playerId:3}
 ```
 
 

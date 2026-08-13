@@ -37,7 +37,7 @@ function arrangeData(inputDataObject) {
             pos.y = inputDataObject.y;
             otherUsers[inputDataObject.playerId] = {username: undefined};
         } else {
-            if (inputDataObject.username === undefined){
+            if (inputDataObject.username === undefined || inputDataObject.playerStatus == "disconnected"){
                 otherUsers[inputDataObject.playerId] = {username: undefined};
             } else {
                 otherUsers[inputDataObject.playerId] = inputDataObject;
@@ -52,7 +52,7 @@ function arrangeData(inputDataObject) {
                 pos.y = inputDataObject[i].y;
                 otherUsers[inputDataObject[i].playerId] = {username: undefined}
             } else {
-                if (inputDataObject[i].username === undefined){
+                if (inputDataObject[i].username === undefined || inputDataObject[i].playerStatus == "disconnected"){
                     otherUsers[inputDataObject[i].playerId] = {username: undefined}
                 } else {
                     otherUsers[inputDataObject[i].playerId] = inputDataObject[i];
