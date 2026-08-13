@@ -6,8 +6,13 @@ const pauseMenu = document.getElementById('pause-menu');
 const settings = document.getElementById('settings');
 const colorInput = document.getElementById('color-input');
 const option = document.getElementById('options');
+const phoneToggle = document.getElementById('phoneModeToggle');
 let colorInputValue;
 let settingsActive = false;
+
+
+
+phoneToggle.textContent = "OFF";
 
 // Pause Menu Reveal
 
