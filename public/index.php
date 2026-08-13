@@ -75,7 +75,7 @@
 <div id="registration" class="modal-overlay hidden">
     <div class="modal-card text-left">
         <h1 class="modal-title">Registration</h1>
-        <form method="post" class="form-layout">
+        <form id="registration-form" method="post" class="form-layout">
 
             <div class="form-group">
                 <label for="reg-username" class="form-label">Username:</label>
@@ -101,7 +101,7 @@
 <div id="login" class="modal-overlay">
     <div class="modal-card text-center">
         <h1 class="modal-title">Login</h1>
-        <form method="post" class="form-layout">
+        <form id="login-form" method="post" class="form-layout">
             <div class="form-group">
                 <label for="login-username" class="form-label">Username:</label>
                 <input class="form-input" type="text" id="login-username" name="username">
