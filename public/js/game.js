@@ -12,12 +12,13 @@ let lagConsequence;
 let currentDate = new Date;
 
 let lastHunter = false;
-let phoneMode = true;
+let phoneMode = false;
 let mouseMovment = false;
 let allowMovment = true;
 const debugEnabled = false;
 
 let BgColor = 0x00FFFF;
+let wallType = 5; // 0 to 7 black wall is 0
 const gameScale = 50;
 const serverUpdateFrequency = 0.05;
 const defaultSpd = 0.15;
@@ -45,7 +46,7 @@ game.create = create;
 game.update = update;
 
 function preload() {
-    game.loadSpritesheet('box', 'assets/box.png', 20, 20);
+    game.loadSpritesheet('box', 'assets/wall.png', 200, 200);
     game.loadSpritesheet('player', 'assets/ballz.png', 200, 200);
 }
 
@@ -227,15 +228,15 @@ function playerUpdates() {
 
     }
 
-    if (currentUser.isHunter){
-        player.costume = 0;
-        costumeDebug.log("c0");
+    if (currentUser.playerStatus == "runner"){
+        player.costume = 1;
+        costumeDebug.log("c1");
     } else if (freezeMovment) {
         player.costume = 3;
         costumeDebug.log("c3");
-    } else {
-        player.costume = 1;
-        costumeDebug.log("c1");
+    } else if (currentUser.playerStatus == "hunter"){
+        player.costume = 0;
+        costumeDebug.log("c0");
     }
     player.bringToFront();
 
@@ -248,26 +249,27 @@ function positionboxes(currentX, currentY) {
     let planeY = currentY + currentScreenStartPos.y;
     lab_boxes.plane[currentX][currentY].x = player.x - pos.x * gameScale + planeX * gameScale * 2 + renderDesync.x * gameScale;
     lab_boxes.plane[currentX][currentY].y = player.y - pos.y * gameScale + planeY * gameScale * 2 + renderDesync.y * gameScale;
-    if (planeY < 0 || planeY > 49 || planeX < 0 || planeX > 49) {
+    if (planeY < 0 || planeY > lab.length - 1 || planeX < 0 || planeX > lab[0].length - 1) {
         lab_boxes.plane[currentX][currentY].visible = true;
     } else if (lab[planeY][planeX] == 0) {
         lab_boxes.plane[currentX][currentY].visible = false;
     } else {
         lab_boxes.plane[currentX][currentY].visible = true;
     }
-    lab_boxes.plane[currentX][currentY].size = gameScale / 10;
+    lab_boxes.plane[currentX][currentY].size = gameScale / 100;
+    lab_boxes.plane[currentX][currentY].costume = wallType * 3 + 1;
 }
 
 function positionclones(clone) {
     if (otherUsers[clone].username !== undefined) {
         otherPlayers.clones[clone].x = player.x - (pos.x - otherUsers[clone].x) * gameScale;
         otherPlayers.clones[clone].y = player.y - (pos.y - otherUsers[clone].y) * gameScale;
-        if (otherUsers[clone].isHunter){
+        if (otherUsers[clone].playerStatus == "hunter"){
             otherPlayers.clones[clone].costume = 0;
             costumeDebug.log("c0");
         } else {
-            otherPlayers.clones[clone].costume = 1 + otherUsers[clone].onHold * 2;
-            costumeDebug.log("c" + otherPlayers.clones[clone].costume);
+            otherPlayers.clones[clone].costume = 1;
+            costumeDebug.log("c1");
         }
         otherPlayers.clones[clone].visible = true;
     } else {

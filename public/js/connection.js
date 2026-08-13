@@ -1,13 +1,11 @@
 let pos = {x:49.5, y:48.5};
-let currentUser = {isHunter:false, username:"", playerId: undefined};
+let currentUser = {playerStatus:"", username:"", playerId: undefined};
 let otherUsers = [];
 let wsConnected = false;
 
 currentUser.username = localStorage.getItem("username");
 
-const ws = new WebSocket(
-    "wss://game26.delta.camp/server"
-);
+const ws = new WebSocket("wss://game26.delta.camp/server");
 
 ws.onopen = () => {
     console.log("Wss connected!");
@@ -20,12 +18,12 @@ ws.onmessage = (event) => {
 
 ws.onerror = (error) => {
    console.log("Ws Error: ", error);
-   allowMovment = false;
+   //allowMovment = false;
 }
 
 ws.onclose = () => {
    onDisconnect();
-   allowMovment = false;
+   //allowMovment = false;
 }
 
 
@@ -33,7 +31,7 @@ ws.onclose = () => {
 function arrangeData(inputDataObject) {
     if (inputDataObject.length === undefined) {
         if (inputDataObject.username == currentUser.username) {
-            currentUser.isHunter = inputDataObject.isHunter;
+            currentUser.playerStatus = inputDataObject.playerStatus;
             currentUser.playerId = inputDataObject.playerId;
             pos.x = inputDataObject.x;
             pos.y = inputDataObject.y;
@@ -48,7 +46,7 @@ function arrangeData(inputDataObject) {
     } else {
         for(let i = 0; i < inputDataObject.length; ++i){
             if (inputDataObject[i].username == currentUser.username) {
-                currentUser.isHunter = inputDataObject[i].isHunter;
+                currentUser.playerStatus = inputDataObject[i].playerStatus;
                 currentUser.playerId = inputDataObject[i].playerId;
                 pos.x = inputDataObject[i].x;
                 pos.y = inputDataObject[i].y;
