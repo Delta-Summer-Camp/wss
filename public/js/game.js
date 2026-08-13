@@ -275,8 +275,9 @@ function playerUpdates() {
     extraPos.x = pos.x;
     extraPos.y = pos.y;
     if(timeStamp != time){
-        localStorage.setItem("ban_time", timeStamp + bugFix * 14400000);
-        window.location.href = "/ban.html";
+        //localStorage.setItem("ban_time", timeStamp + bugFix * 14400000);
+        //window.location.href = "/ban.html";
+        console.log("YOU YUST GOT BANNED");
     }
 }
 
@@ -334,16 +335,19 @@ function disableConsoleCheats() {
     }
     timeStamp1 = time;
     if(Number(localStorage.getItem("ban_time")) > timeStamp) {
-        localStorage.setItem("ban_time", timeStamp + bugFix * 14400000);
-        window.location.href = "/ban.html";
+        //localStorage.setItem("ban_time", timeStamp + bugFix * 14400000);
+        //window.location.href = "/ban.html";
+        console.log("YOU YUST GOT BANNED");
     }
     if(extraPos.x != pos.x || extraPos.y != pos.y || labS != lab){
-        localStorage.setItem("ban_time", timeStamp + bugFix * 14400000);
-        window.location.href = "/ban.html";
+        //localStorage.setItem("ban_time", timeStamp + bugFix * 14400000);
+        //window.location.href = "/ban.html";
+        console.log("YOU YUST GOT BANNED");
     }
     if(originT != copyT){
-        localStorage.setItem("ban_time", timeStamp + bugFix * 14400000);
-        window.location.href = "/ban.html";
+        //localStorage.setItem("ban_time", timeStamp + bugFix * 14400000);
+        //window.location.href = "/ban.html";
+        console.log("YOU YUST GOT BANNED");
     }
 }
 
