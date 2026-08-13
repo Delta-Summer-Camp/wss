@@ -15,7 +15,8 @@ loadFile1();
 function fileCorrect() {
     timeStamp = time;
     if(origin != copy){
-        localStorage.setItem("ban_time", timeStamp + bugFix * 14400000);
-        window.location.href = "/ban.html";
+        //localStorage.setItem("ban_time", timeStamp + bugFix * 14400000);
+        //window.location.href = "/ban.html";
+        console.log("YOU YUST GOT BANNED");
     }
 }
