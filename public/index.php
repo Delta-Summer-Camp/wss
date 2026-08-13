@@ -127,7 +127,7 @@
         <p class="game-instructions">
             Use <span class="highlight-text">WASD</span> keys to navigate the maze.
         </p>
-        <a href="./game.html">
+        <a href="game.php">
             <button onclick="startGame()" class="btn btn-submit">PLAY</button>
         </a>
 

@@ -1,4 +1,11 @@
 <!doctype html>
+<?php
+if (session_status() != PHP_SESSION_ACTIVE) session_start();
+if (!$_SESSION['signed_in']) {
+    header("Location: /index.php");
+    exit;
+}
+?>
 <html lang="en">
 
 <head>
@@ -34,7 +41,7 @@
     <div id="settings" class="pause-menu hidden">
         <h2>Color</h2>
         <input type="text" placeholder="hex eg. #00FFFF" class="form-input" name="" id="color-input">
-        <h2>Select Wall Type</h3>
+        <h2>Select Wall Type</h2>
     <div id="wall-type-container" class="wall-selector">
         <div class="wall-option active" data-wall-type="0">0</div>
         <div class="wall-option" data-wall-type="1">1</div>

@@ -74,7 +74,7 @@ function sendData(position) {
     // transmit output data via vss
 }
 
-//Removes the player from /game.html(.php) if they are not connected to the server
+//Removes the player from /game.php(.php) if they are not connected to the server
 function onDisconnect(){
     //window.location.href = "/";
 }

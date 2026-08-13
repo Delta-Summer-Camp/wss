@@ -2,7 +2,7 @@
 
  require __DIR__ . '/vendor/autoload.php';
 
-header('Content-Type: application/json; charset=utf-8');
+  header('Content-Type: application/json; charset=utf-8');
 
   use MongoDB\Client;
 
@@ -46,9 +46,14 @@ if ($passwordHash !== $user['passwordHash']) {
     exit;
 }
 
+session_start();
+session_destroy();
+session_start();
+$_SESSION['signed_in'] = true;
+$_SESSION['username'] = $username;
+
 echo json_encode([
   'success' => true,
   'message' => 'Авторизация успешна',
-  'user' => $user
-//    'username' => $user['username']
+  'username' => $user['username']
 ], JSON_UNESCAPED_UNICODE);
