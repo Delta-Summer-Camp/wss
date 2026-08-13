@@ -6,21 +6,17 @@ header('Content-Type: application/json; charset=utf-8');
 
 use MongoDB\Client;
 
-// Подключение к MongoDB
 $mongoClient = new Client('mongodb://127.0.0.1:27017');
 
 $database = $mongoClient->selectDatabase('game_data');
 $users = $database->selectCollection('users');
 
-
 // Получаем данные
 $username = trim($_POST['username'] ?? '');
-$password = $_POST['passwordHash'] ?? '';
+$passwordHash = $_POST['passwordHash'] ?? '';
 
 // Проверяем заполнение
-if ($username === '' || $password === '') {
-    http_response_code(400);
-
+if ($username === '' || $passwordHash === '') {
     echo json_encode([
         'success' => false,
         'message' => 'Username и password обязательны'
@@ -30,13 +26,11 @@ if ($username === '' || $password === '') {
 }
 
 // Проверяем, существует ли username
-$existingUser = $users->findOne([
+$user = $users->findOne([
     'username' => $username
 ]);
 
-if ($existingUser !== null) {
-    http_response_code(409);
-
+if ($user !== null) {
     echo json_encode([
         'success' => false,
         'message' => 'Такой username уже существует'
@@ -44,9 +38,6 @@ if ($existingUser !== null) {
 
     exit;
 }
-
-// Хешируем пароль
-$passwordHash = md5($password);
 
 // Создаём пользователя
 $result = $users->insertOne([
