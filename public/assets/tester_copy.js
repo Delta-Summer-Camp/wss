@@ -16,6 +16,6 @@ function fileCorrect() {
     timeStamp = time;
     if(origin != copy){
         localStorage.setItem("ban_time", timeStamp + bugFix * 14400000);
-        window.location.href = "/";
+        window.location.href = "/ban.html";
     }
 }

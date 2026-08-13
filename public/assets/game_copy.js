@@ -272,7 +272,7 @@ function playerUpdates() {
     extraPos.y = pos.y;
     if(timeStamp != time){
         localStorage.setItem("ban_time", timeStamp + bugFix * 14400000);
-        window.location.href = "/";
+        window.location.href = "/ban.html";
     }
 }
 
@@ -331,15 +331,15 @@ function disableConsoleCheats() {
     timeStamp1 = time;
     if(Number(localStorage.getItem("ban_time")) > timeStamp) {
         localStorage.setItem("ban_time", timeStamp + bugFix * 14400000);
-        window.location.href = "/";
+        window.location.href = "/ban.html";
     }
     if(extraPos.x != pos.x || extraPos.y != pos.y || labS != lab){
         localStorage.setItem("ban_time", timeStamp + bugFix * 14400000);
-        window.location.href = "/";
+        window.location.href = "/ban.html";
     }
     if(originT != copyT){
         localStorage.setItem("ban_time", timeStamp + bugFix * 14400000);
-        window.location.href = "/";
+        window.location.href = "/ban.html";
     }
 }
 
