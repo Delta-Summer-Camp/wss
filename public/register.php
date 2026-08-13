@@ -11,11 +11,12 @@ $mongoClient = new Client('mongodb://127.0.0.1:27017');
 $database = $mongoClient->selectDatabase('game_data');
 $users = $database->selectCollection('users');
 
+// Получаем данные
 $username = trim($_POST['username'] ?? '');
-$password = $_POST['passwordHash'] ?? '';
+$passwordHash = $_POST['passwordHash'] ?? '';
 
 // Проверяем заполнение
-if ($username === '' || $password === '') {
+if ($username === '' || $passwordHash === '') {
     echo json_encode([
         'success' => false,
         'message' => 'Username и password обязательны'
@@ -37,9 +38,6 @@ if ($user !== null) {
 
     exit;
 }
-
-// Хешируем пароль
-$passwordHash = md5($password);
 
 // Создаём пользователя
 $result = $users->insertOne([

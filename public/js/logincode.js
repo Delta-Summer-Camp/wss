@@ -21,6 +21,25 @@ function validateLogin() {
         })
 }
 
+function addUser() {
+    if ($("#password2").val() !== $("#reg-password").val()) {
+        alert("Пароли не совпадают.");
+        return;
+    }
+
+    $.post("register.php",
+        {
+            username: $("#reg-username").val(),
+            passwordHash: md5($("#reg-password").val())
+        },
+        function (data, status) {
+            alert("Status: " + status + "; data: " + data['message']);
+            if (data['success'] === true) {
+                startScreen()
+            }
+        })
+}
+
 function register() {
     login.classList.add('hidden');
     registration.classList.remove('hidden');

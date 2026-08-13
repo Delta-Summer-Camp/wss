@@ -92,7 +92,7 @@
                 <input class="form-input" type="password" id="password2" name="password2">
             </div>
 
-            <input onclick="startScreen()" class="btn btn-submit" type="button" value="Send">
+            <input onclick="addUser()" class="btn btn-submit" type="button" value="Send">
         </form>
     </div>
 </div>
