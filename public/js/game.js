@@ -4,13 +4,11 @@ let lab_boxes;
 let playerStatus;
 let playerNicnames;
 let otherNicknames = [];
-let otherUsers = [];
 let lastServerUpdate;
 let lastTickMoment;
 let frezeTime;
 let tick_length;
 let lagConsequence;
-let playerCount;
 let currentDate = new Date;
 
 let lastHunter = false;
@@ -99,11 +97,7 @@ function update() {
 
     lab_boxes.runAll(positionboxes);
 
-    playerCount = 0;
-    otherUsers = [];
-    otherUsers.forEach(countUsers());
-    otherPlayers.createClones(playerCount - otherPlayers.amount, 0);
-    otherPlayers.deleteClones(playerCount, otherPlayers.amount)
+    otherPlayers.createClones(otherUsers.length - otherPlayers.amount(), 0);
     otherPlayers.runAll(positionclones);
     otherPlayers.runAll(positionnicks);
 
@@ -117,11 +111,6 @@ function mouseUpdates() {
         mouse.y = game.mouseY / gameScale - player.y / gameScale + pos.y;
         mouseMovment = true;
     }
-}
-
-function countUsers(id) {
-    ++playerCount;
-    otherUsers[otherUsers.length] = otherData[id];
 }
 
 function playerUpdates() {
@@ -238,15 +227,15 @@ function playerUpdates() {
 
     }
 
-    if (currentUser.playerState == "runner"){
-        player.costume = 1;
-        costumeDebug.log("c1");
+    if (currentUser.isHunter){
+        player.costume = 0;
+        costumeDebug.log("c0");
     } else if (freezeMovment) {
         player.costume = 3;
         costumeDebug.log("c3");
-    } else if (currentUser.playerState == "hunter"){
-        player.costume = 0;
-        costumeDebug.log("c0");
+    } else {
+        player.costume = 1;
+        costumeDebug.log("c1");
     }
     player.bringToFront();
 
@@ -270,16 +259,22 @@ function positionboxes(currentX, currentY) {
 }
 
 function positionclones(clone) {
-    otherPlayers.clones[clone].x = player.x - (pos.x - otherUsers[clone].x) * gameScale;
-    otherPlayers.clones[clone].y = player.y - (pos.y - otherUsers[clone].y) * gameScale;
-    if (otherUsers[clone].isHunter){
-        otherPlayers.clones[clone].costume = 0;
-        costumeDebug.log("c0");
+    if (otherUsers[clone].username !== undefined) {
+        otherPlayers.clones[clone].x = player.x - (pos.x - otherUsers[clone].x) * gameScale;
+        otherPlayers.clones[clone].y = player.y - (pos.y - otherUsers[clone].y) * gameScale;
+        if (otherUsers[clone].isHunter){
+            otherPlayers.clones[clone].costume = 0;
+            costumeDebug.log("c0");
+        } else {
+            otherPlayers.clones[clone].costume = 1 + otherUsers[clone].onHold * 2;
+            costumeDebug.log("c" + otherPlayers.clones[clone].costume);
+        }
+        otherPlayers.clones[clone].visible = true;
     } else {
-        otherPlayers.clones[clone].costume = 1 + otherUsers[clone].onHold * 2;
-        costumeDebug.log("c" + otherPlayers.clones[clone].costume);
+        otherPlayers.clones[clone].x = -10000;
+        otherPlayers.clones[clone].y = -10000;
+        otherPlayers.clones[clone].visible = false;
     }
-    otherPlayers.clones[clone].visible = true;
 }
 
 function positionnicks(clone) {
