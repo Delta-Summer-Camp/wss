@@ -12,10 +12,10 @@ header('Content-Type: application/json; charset=utf-8');
  $users = $database->selectCollection('users');
 
 $username = trim($_POST['username'] ?? '');
-$password = $_POST['passwordHash'] ?? '';
+$passwordHash = $_POST['passwordHash'] ?? '';
 
 // Проверяем заполнение
-if ($username === '' || $password === '') {
+if ($username === '' || $passwordHash === '') {
     echo json_encode([
         'success' => false,
         'message' => 'Username и password обязательны'
@@ -36,9 +36,6 @@ if ($user === null) {
 
     exit;
 }
-
-$passwordHash = md5($password);
-
 
 if ($passwordHash !== $user['passwordHash']) {
     echo json_encode([
