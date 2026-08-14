@@ -26,12 +26,12 @@ ws.onmessage = (event) => {
 
 ws.onerror = (error) => {
    console.log("Ws Error: ", error);
-   allowMovment = false;
+   //allowMovment = false;
 }
 
 ws.onclose = () => {
    onDisconnect();
-   allowMovment = false;
+   //allowMovment = false;
 }
 
 
