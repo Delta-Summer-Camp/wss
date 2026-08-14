@@ -124,7 +124,8 @@ function getLocalSetting() {
     } 
     BgColor = localStorage.getItem("BgColor");
     selectedWallType = Number(localStorage.getItem("wallType"));
-    wallType = Boolean(localStorage.getItem("phoneMode"));
+    phoneMode = Boolean(localStorage.getItem("phoneMode"));
+    togglePhoneMode();
 
     applySettings();
 }
