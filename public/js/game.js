@@ -103,7 +103,13 @@ function update() {
     otherPlayers.runAll(positionnicks);
 
     text.text = 'X: ' + pos.x + '\nY: ' + pos.y + '\nTPS: ' + tps;
-    playerStatus.text = `${(currentUser.isHunter)? "Status: Hunter" : "Status: Runner"}`;
+    if(currentUser.playerStatus == "hunter"){
+        playerStatus.text = "Status: Hunter";
+    } else if (currentUser.playerStatus == "runner"){
+        playerStatus.text = "Status: Runner";
+    } else if (freezeMovment){
+        playerStatus.text = "Status: Frozen";
+    }
 }
 
 function mouseUpdates() {
@@ -267,9 +273,12 @@ function positionclones(clone) {
         if (otherUsers[clone].playerStatus == "hunter"){
             otherPlayers.clones[clone].costume = 0;
             costumeDebug.log("c0");
-        } else {
+        } else if (otherUsers[clone].playerStatus == "runner"){
             otherPlayers.clones[clone].costume = 1;
             costumeDebug.log("c1");
+        } else if (otherUsers[clone].playerStatus == "holding"){
+            otherPlayers.clones[clone].costume = 3;
+            costumeDebug.log("c3");
         }
         otherPlayers.clones[clone].visible = true;
     } else {
