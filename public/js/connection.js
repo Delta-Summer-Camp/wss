@@ -1,5 +1,5 @@
 let pos = {x:49.5, y:48.5};
-let currentUser = {playerStatus:"", username:"", playerId: undefined};
+let currentUser = {playerStatus:"", username:""};
 let otherUsers = [];
 let wsConnected = false;
 
@@ -37,33 +37,47 @@ ws.onclose = () => {
 
 // Function that gets activated by ws.onmessage
 function arrangeData(inputDataObject) {
-    if (inputDataObject.length === undefined) {
+    if(inputDataObject.length === undefined){
         if (inputDataObject.username == currentUser.username) {
             currentUser.playerStatus = inputDataObject.playerStatus;
-            currentUser.playerId = inputDataObject.playerId;
-           // pos.x = inputDataObject.x;
-            //pos.y = inputDataObject.y;
-            otherUsers[inputDataObject.playerId] = {username: undefined};
+            pos.x = inputDataObject.x;
+            pos.y = inputDataObject.y;
         } else {
-            if (inputDataObject.username === undefined || inputDataObject.playerStatus == "disconnected"){
-                otherUsers[inputDataObject.playerId] = {username: undefined};
+            let useId;
+            for(let i = 0; i < otherUsers.length; ++i){
+                if(otherUsers[i].username == inputDataObject.username){
+                    useId = i;
+                }
+            }
+            if(useId === undefined){
+                useId = otherUsers.length;
+            }
+            if (inputDataObject.playerStatus == "disconnected"){
+                otherUsers[useId] = {username: undefined};
             } else {
-                otherUsers[inputDataObject.playerId] = inputDataObject;
+                otherUsers[useId] = inputDataObject;
             }
         }
     } else {
         for(let i = 0; i < inputDataObject.length; ++i){
             if (inputDataObject[i].username == currentUser.username) {
                 currentUser.playerStatus = inputDataObject[i].playerStatus;
-                currentUser.playerId = inputDataObject[i].playerId;
-              //  pos.x = inputDataObject[i].x;
-               // pos.y = inputDataObject[i].y;
-                otherUsers[inputDataObject[i].playerId] = {username: undefined}
+                pos.x = inputDataObject[i].x;
+                pos.y = inputDataObject[i].y;
             } else {
-                if (inputDataObject[i].username === undefined || inputDataObject[i].playerStatus == "disconnected"){
-                    otherUsers[inputDataObject[i].playerId] = {username: undefined}
+                let useId;
+                for(let a = 0; a < otherUsers.length; ++a){
+                    if(otherUsers[a].username == inputDataObject[i].username){
+                        useId = a;
+                    }
+                }
+                if(useId === undefined){
+                    useId = otherUsers[i].length;
+                }
+                if (inputDataObject[i].playerStatus == "disconnected"){
+                    otherUsers[useId] = {username: undefined};
                 } else {
-                    otherUsers[inputDataObject[i].playerId] = inputDataObject[i];
+                    otherUsers[useId] = inputDataObject;
                 }
             }
         }
@@ -72,7 +86,7 @@ function arrangeData(inputDataObject) {
 
 //Output gets sent to ws.send
 function sendData(position) {
-    let outputData = {type: 'move',x:position.x, y:position.y, username:currentUser.username, playerId: currentUser.playerId};
+    let outputData = {type: 'move',x:position.x, y:position.y, username:currentUser.username};
     if(wsConnected){
         ws.send(JSON.stringify(outputData));
     } else {
