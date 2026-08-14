@@ -99,7 +99,8 @@ class GameServer implements MessageComponentInterface
                 $player->getConn()->close();
             }
             return;
-        }
+            }
+
         //if (isset($data['type']) && $data['type'] === 'session_drop'){        }
 
         if (!$player->isTrusted) return;
@@ -108,7 +109,40 @@ class GameServer implements MessageComponentInterface
             $player->x = (float)$data['x'];
             $player->y = (float)$data['y'];
             $player->messageCount++;
-            //if ($player->status === "Hunter" && $player->){        }
+            if ($player->status === "hunter") {
+                $triggerDistance = 1.0;
+
+                foreach ($this->players as $otherPlayer) {
+                    // Проверяем только авторизованных мирных игроков (Runner)
+                    if ($otherPlayer->isTrusted && $otherPlayer->status === "runner") {
+                        $dx = $player->x - $otherPlayer->x;
+                        $dy = $player->y - $otherPlayer->y;
+
+                        // Если подошел вплотную — меняем роли
+                        if ($dx <= 1 && $dy <= 1) {
+                            $player->status = "runner";       // Текущий хантер становится мирным
+                            $otherPlayer->status = "hunter";  // Осаленный мирный становится хантером
+
+                            echo "Игрок {$otherPlayer->username} осален игроком {$player->username} и стал hunter eyes!\n";
+
+                            // Синхронизируем изменение статуса второго игрока в Redis/клиентам
+                            $this->publishState($otherPlayer);
+
+                            // Сохраняем смену ролей в MongoDB сразу, чтобы статус не потерялся
+                            $this->users->updateOne(
+                                ['username' => $player->username],
+                                ['$set' => ['status' => $player->status]]
+                            );
+                            $this->users->updateOne(
+                                ['username' => $otherPlayer->username],
+                                ['$set' => ['status' => $otherPlayer->status]]
+                            );
+
+                            break; // Меняем только одного игрока за шаг
+                        }
+                    }
+                }
+            }
             if ($player->messageCount % 100 === 0) {
                 $this->users->updateOne(
                     ['username' => $player->username],
