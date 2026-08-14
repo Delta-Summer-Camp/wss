@@ -10,7 +10,8 @@ playScreen.classList.add('hidden');
 
 
 function addUser() {
-    if ($("#password2").val() !== $("#reg-password").val()) {
+    const regPasswordValue = $("#reg-password").val()
+    if ($("#password2").val() !== regPasswordValue) {
         alert("Пароли не совпадают.");
         return;
     }
@@ -18,7 +19,7 @@ function addUser() {
     $.post("register.php",
         {
             username: $("#reg-username").val(),
-            passwordHash: md5($("#reg-password").val())
+            passwordHash: md5(regPasswordValue)
         },
         function (data, status) {
             alert("Status: " + status + "; data: " + data['message']);
