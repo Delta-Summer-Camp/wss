@@ -61,7 +61,6 @@ function create() {
 
     otherPlayers = initClones(-100, -1000, 'player');
     otherPlayers.clones[0].visible = false;
-    otherPlayers.clones[0].size = gameScale / 200;
 
     text = this.createText(200, 50, "");
     text.makeXYCentred();
@@ -277,6 +276,8 @@ function positionclones(clone) {
         otherPlayers.clones[clone].y = -10000;
         otherPlayers.clones[clone].visible = false;
     }
+    otherPlayers.clones[clone].size = gameScale / 200;
+
 }
 
 function positionnicks(clone) {
