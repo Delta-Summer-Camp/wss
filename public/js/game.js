@@ -261,7 +261,7 @@ function positionboxes(currentX, currentY) {
 }
 
 function positionclones(clone) {
-    if (otherUsers[clone].username !== undefined) {
+   if (otherUsers[clone] && otherUsers[clone].username !== undefined) {
         otherPlayers.clones[clone].x = player.x - (pos.x - otherUsers[clone].x) * gameScale;
         otherPlayers.clones[clone].y = player.y - (pos.y - otherUsers[clone].y) * gameScale;
         if (otherUsers[clone].playerStatus == "hunter"){
@@ -283,13 +283,14 @@ function positionnicks(clone) {
     if (otherNicknames[clone] != undefined) {
         otherNicknames[clone].destroy()
     }
+    if (otherUsers[clone] && otherUsers[clone].username !== undefined) {
     otherNicknames[clone] = game.createText(otherPlayers.clones[clone].x, otherPlayers.clones[clone].y - nickDist * gameScale, otherUsers[clone].username);
     otherNicknames[clone].makeXYCentred();
     otherNicknames[clone].font = 'Arial bold';
     otherNicknames[clone].size = nickSize * gameScale;
     otherNicknames[clone].color = '#FF0000';
+  }
 }
-
 let last_time = 0;
 let tick_time = [];
 let tick_avg = 0;

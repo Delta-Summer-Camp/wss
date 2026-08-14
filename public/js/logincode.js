@@ -10,8 +10,7 @@ playScreen.classList.add('hidden');
 
 
 function addUser() {
-    const regPasswordValue = $("#reg-password").val()
-    if ($("#password2").val() !== regPasswordValue) {
+    if ($("#password2").val() !== $("#reg-password").val()) {
         alert("Пароли не совпадают.");
         return;
     }
@@ -19,11 +18,13 @@ function addUser() {
     $.post("register.php",
         {
             username: $("#reg-username").val(),
-            passwordHash: md5(regPasswordValue)
+            passwordHash: md5($("#reg-password").val())
         },
         function (data, status) {
             alert("Status: " + status + "; data: " + data['message']);
             if (data['success'] === true) {
+		localStorage.setItem("username", $("#reg-username").val());
+                localStorage.setItem("passwordHash", md5($("#reg-password").val()));
                 startScreen()
             }
         })
@@ -37,23 +38,9 @@ function validateLogin() {
         },
         function (data, status) {
             alert("Status: " + status + "; data: " + data['message']);
-            localStorage.setItem("username", $("#reg--username").val());
             if (data['success'] === true) {
-                startScreen()
-            }
-        })
-}
-
-function validateLogin() {
-    $.post("login.php",
-        {
-            username: $("#login-username").val(),
-            passwordHash: md5($("#login-password").val())
-        },
-        function (data, status) {
-            alert("Status: " + status + "; data: " + data['message']);
-            localStorage.setItem("username", $("#login-username").val());
-            if (data['success'] === true) {
+		localStorage.setItem("username", $("#login-username").val());
+                localStorage.setItem("passwordHash", md5($("#login-password").val()));
                 startScreen()
             }
         })
@@ -82,7 +69,6 @@ function startGame() {
 }
 // Get Login data from form
 
-/*
 const loginForm = document.getElementById('login-form');
 
 loginForm.addEventListener('submit', function (event) {
@@ -117,4 +103,4 @@ regForm.addEventListener('submit', function (event) {
         return;
     }
 
-});*/
+});

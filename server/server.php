@@ -90,6 +90,9 @@ echo "Heelo Redis";
             }
             return;
         }
+	if (isset($data['type']) && $data['type'] === 'session_drop'){
+		
+        }
 
         if (!$player->isTrusted) return;
 
@@ -114,11 +117,12 @@ echo "Heelo Redis";
         foreach ($this->gamers as $c) {
             if ($c->isTrusted) {
                 $gameState[] = [
-                    'sessionId' => $c->getConn()->resourceId,
+                    'playerId' => $c->getConn()->resourceId,
                     'username' => $c->username,
                     'x' => $c->x,
                     'y' => $c->y,
-		    'isHunter' => false
+		    'isHunter' => false,
+		    'playerStatus'=>'runner'
                 ];
 }
 }
