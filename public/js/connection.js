@@ -26,10 +26,12 @@ ws.onmessage = (event) => {
 
 ws.onerror = (error) => {
    console.log("Ws Error: ", error);
+   wsConnected = false;
    //allowMovment = false;
 }
 
 ws.onclose = () => {
+   wsConnected = false;
    onDisconnect();
    //allowMovment = false;
 }
@@ -40,8 +42,8 @@ function arrangeData(inputDataObject) {
     if(inputDataObject.length === undefined){
         if (inputDataObject.username === currentUser.username) {
             currentUser.playerStatus = inputDataObject.playerStatus;
-            pos.x = inputDataObject.x;
-            pos.y = inputDataObject.y;
+            //pos.x = inputDataObject.x;
+            //pos.y = inputDataObject.y;
         } else {
             let useId;
             for(let i = 0; i < otherUsers.length; ++i){
@@ -62,22 +64,22 @@ function arrangeData(inputDataObject) {
         for(let i = 0; i < inputDataObject.length; ++i){
             if (inputDataObject[i].username === currentUser.username) {
                 currentUser.playerStatus = inputDataObject[i].playerStatus;
-                pos.x = inputDataObject[i].x;
-                pos.y = inputDataObject[i].y;
+               // pos.x = inputDataObject[i].x;
+               // pos.y = inputDataObject[i].y;
             } else {
                 let useId;
                 for(let a = 0; a < otherUsers.length; ++a){
-                    if(otherUsers[a].username === inputDataObject[i].username){
+                    if(otherUsers[a] && otherUsers[a].username === inputDataObject[i].username){
                         useId = a;
                     }
                 }
                 if(useId === undefined){
-                    useId = otherUsers[i].length;
+                    useId = otherUsers.length;
                 }
                 if (inputDataObject[i].playerStatus === "disconnected"){
                     otherUsers[useId] = {username: undefined};
                 } else {
-                    otherUsers[useId] = inputDataObject;
+                    otherUsers[useId] = inputDataObject[i];
                 }
             }
         }
