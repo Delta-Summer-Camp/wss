@@ -276,6 +276,9 @@ function positionclones(clone) {
         } else if (otherUsers[clone].playerStatus == "runner"){
             otherPlayers.clones[clone].costume = 1;
             costumeDebug.log("c1");
+        } else if (otherUsers[clone].playerStatus == "holding"){
+            otherPlayers.clones[clone].costume = 3;
+            costumeDebug.log("c3");
         }
         otherPlayers.clones[clone].visible = true;
     } else {
