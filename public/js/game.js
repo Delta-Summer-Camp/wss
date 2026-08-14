@@ -103,7 +103,13 @@ function update() {
     otherPlayers.runAll(positionnicks);
 
     text.text = 'X: ' + pos.x + '\nY: ' + pos.y + '\nTPS: ' + tps;
-    playerStatus.text = `${(currentUser.isHunter)? "Status: Hunter" : "Status: Runner"}`;
+    if(currentUser.playerStatus == "hunter"){
+        playerStatus.text = "Status: Hunter";
+    } else if (currentUser.playerStatus == "runner"){
+        playerStatus.text = "Status: Runner";
+    } else if (freezeMovment){
+        playerStatus.text = "Status: Frozen";
+    }
 }
 
 function mouseUpdates() {
