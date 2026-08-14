@@ -273,7 +273,7 @@ function positionclones(clone) {
         if (otherUsers[clone].playerStatus == "hunter"){
             otherPlayers.clones[clone].costume = 0;
             costumeDebug.log("c0");
-        } else {
+        } else if (otherUsers[clone].playerStatus == "runner"){
             otherPlayers.clones[clone].costume = 1;
             costumeDebug.log("c1");
         }
