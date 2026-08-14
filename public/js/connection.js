@@ -6,7 +6,7 @@ let wsConnected = false;
 currentUser.username = localStorage.getItem("username");
 const passwordHash = localStorage.getItem("passwordHash");
 
-const ws = new WebSocket("wss://game26.delta.camp/server");
+const ws = new WebSocket("wss://game26.delta.camp/server/");
 
 ws.onopen = () => {
     console.log("Wss connected!");
