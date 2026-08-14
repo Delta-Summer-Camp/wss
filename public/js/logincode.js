@@ -28,6 +28,20 @@ function addUser() {
         })
 }
 
+function validateLogin() {
+    $.post("login.php",
+        {
+            username: $("#login-username").val(),
+            passwordHash: md5($("#login-password").val())
+        },
+        function (data, status) {
+            alert("Status: " + status + "; data: " + data['message']);
+            if (data['success'] === true) {
+                startScreen()
+            }
+        })
+}
+
 function register() {
     login.classList.add('hidden');
     registration.classList.remove('hidden');
