@@ -38,21 +38,21 @@ ws.onclose = () => {
 // Function that gets activated by ws.onmessage
 function arrangeData(inputDataObject) {
     if(inputDataObject.length === undefined){
-        if (inputDataObject.username == currentUser.username) {
+        if (inputDataObject.username === currentUser.username) {
             currentUser.playerStatus = inputDataObject.playerStatus;
             pos.x = inputDataObject.x;
             pos.y = inputDataObject.y;
         } else {
             let useId;
             for(let i = 0; i < otherUsers.length; ++i){
-                if(otherUsers[i].username == inputDataObject.username){
+                if(otherUsers[i].username === inputDataObject.username){
                     useId = i;
                 }
             }
             if(useId === undefined){
                 useId = otherUsers.length;
             }
-            if (inputDataObject.playerStatus == "disconnected"){
+            if (inputDataObject.playerStatus === "disconnected"){
                 otherUsers[useId] = {username: undefined};
             } else {
                 otherUsers[useId] = inputDataObject;
@@ -60,21 +60,21 @@ function arrangeData(inputDataObject) {
         }
     } else {
         for(let i = 0; i < inputDataObject.length; ++i){
-            if (inputDataObject[i].username == currentUser.username) {
+            if (inputDataObject[i].username === currentUser.username) {
                 currentUser.playerStatus = inputDataObject[i].playerStatus;
                 pos.x = inputDataObject[i].x;
                 pos.y = inputDataObject[i].y;
             } else {
                 let useId;
                 for(let a = 0; a < otherUsers.length; ++a){
-                    if(otherUsers[a].username == inputDataObject[i].username){
+                    if(otherUsers[a].username === inputDataObject[i].username){
                         useId = a;
                     }
                 }
                 if(useId === undefined){
                     useId = otherUsers[i].length;
                 }
-                if (inputDataObject[i].playerStatus == "disconnected"){
+                if (inputDataObject[i].playerStatus === "disconnected"){
                     otherUsers[useId] = {username: undefined};
                 } else {
                     otherUsers[useId] = inputDataObject;
