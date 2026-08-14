@@ -21,7 +21,7 @@ class Client
 {
     private ConnectionInterface $conn;
     public ?string $username = null;
-    public string $status = "runner";
+    public string $playerStatus = "runner";
     public bool $isTrusted = false;
     public float $x = 49.5;
     public float $y = 48.5;
@@ -92,6 +92,24 @@ class GameServer implements MessageComponentInterface
                 $player->username = $username;
                 $player->x = (float)($userDoc['x'] ?? 49.5);
                 $player->y = (float)($userDoc['y'] ?? 48.5);
+
+		if(!isset($userDoc['status'])) {
+			$totalGam = $this->users->countDocuments();
+			if($totalGam > 0 && $totalGam % 4 === 0) {
+				$player->playerStatus = "hunter";
+			}else{
+				$player->playerStatus = "runner";
+			}
+
+			$this->users->updateOne(
+			['username' => $username],
+			['$set' => ['status' => $player->playerStatus]]
+			);
+			}else{
+				$player->playerStatus = $userDoc['status'];
+
+
+}
                 $player->isTrusted = true;
                 $this->publishState($player);
 
@@ -108,12 +126,38 @@ class GameServer implements MessageComponentInterface
             $player->x = (float)$data['x'];
             $player->y = (float)$data['y'];
             $player->messageCount++;
-            //if ($player->status === "Hunter" && $player->){        }
+            if ($player->playerStatus === "hunter") {
+		$triggDist = 1.0;
+		foreach ($this->players as $otherPlayer) {
+		if ($otherPlayer->isTrusted && $otherPlayer->playerStatus === "runner") {
+			$dx = abs($player->x - $otherPlayer->x);
+            		$dy = abs($player->y - $otherPlayer->y);
+			if ($dx <= $triggDist && $dy <= $triggDist) {
+				$player->playerStatus = "runner";
+				$otherPlayer->playerStatus = "hunter";
+				echo  "ismemntnie";
+				$this->publishState($otherPlayer);
+				$this->users->updateOne(
+                    			['username' => $player->username],
+                    			['$set' => ['status' => $player->playerStatus]]
+                		);
+                		$this->users->updateOne(
+                    			['username' => $otherPlayer->username],
+                    			['$set' => ['status' => $otherPlayer->playerStatus]]
+               			 );
+				break;
+			}
+		}
+	}
+
+
+
+        }
             if ($player->messageCount % 100 === 0) {
                 $this->users->updateOne(
                     ['username' => $player->username],
-                    ['$set' => ['x' => $player->x, 'y' => $player->y],
-                        ['status'=> $player->status]]
+                    ['$set' => ['x' => $player->x, 'y' => $player->y,
+                        'status'=> $player->playerStatus]]
                 );
                 $player->messageCount = 0;
             }
@@ -124,7 +168,8 @@ class GameServer implements MessageComponentInterface
     private function publishState($player): void
     {
         if ($player->isTrusted) {
-            $this->redisPub->publish("game_events", json_encode($this->players));
+	    $plList = array_values($this->players);
+            $this->redisPub->publish("game_events", json_encode($plList));
             $this->redisData->set($player->username, json_encode($player));
         }
     }
@@ -140,7 +185,7 @@ class GameServer implements MessageComponentInterface
                 ['$set' => ['x' => $player->x, 'y' => $player->y]]
             );
         }
-        $player->status="disconnected";
+        $player->playerStatus="disconnected";
         $this->publishState($player);
         unset($this->players[$conn->resourceId]);
         echo "Соединение закрыто.\n";
