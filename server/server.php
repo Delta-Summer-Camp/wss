@@ -11,64 +11,74 @@ use React\EventLoop\Loop;
 use React\Socket\SocketServer;
 use Clue\React\Redis\Factory as RedisFactory;
 use Clue\React\Redis\Client as RedisClient;
-const REDIS_PORT=6379;
+
+const REDIS_PORT = 6379;
 const MONGODB_PORT = 27017;
 const LOCALHOST = "127.0.0.1";
 const URI = 'mongodb://' . LOCALHOST . ":" . MONGODB_PORT;
 
-class Client {
+class Client
+{
     private ConnectionInterface $conn;
     public ?string $username = null;
+    public string $status = "runner";
     public bool $isTrusted = false;
     public float $x = 49.5;
     public float $y = 48.5;
     public int $messageCount = 0;
 
-    public function __construct(ConnectionInterface $conn) {
+    public function __construct(ConnectionInterface $conn)
+    {
         $this->conn = $conn;
     }
 
-    public function getConn(): ConnectionInterface {
+    public function getConn(): ConnectionInterface
+    {
         return $this->conn;
     }
 }
 
-class GameServer implements MessageComponentInterface {
+class GameServer implements MessageComponentInterface
+{
     private MongoDB\Collection $users;
-    private array $gamers = [];
+    private array $players = [];
     private RedisClient $redisSub;
     private RedisClient $redisPub;
+    private RedisClient $redisData;
 
-    public function __construct(RedisClient $redisSub, RedisClient $redisPub) {
-	 $mongoClient = new MongoDB\Client(URI);
-	 $this->users = $mongoClient->selectDatabase("game_data")->selectCollection("users");
-	 echo "Сервер запущен\n";
-	 $this->redisSub = $redisSub;
-	 $this->redisPub = $redisPub;
-
-	 $this->redisSub->subscribe('game_events');
-	 $this->redisSub->on('message', function(string $channel, string $load){
-		if($channel == 'game_events') {
-			 foreach($this->gamers as $d) {
-				if($d->isTrusted) {
-					 $d->getConn()->send($load);
+    public function __construct(RedisClient $redisSub, RedisClient $redisPub, RedisClient $redisData)
+    {
+        $mongoClient = new MongoDB\Client(URI);
+        $this->users = $mongoClient->selectDatabase("game_data")->selectCollection("users");
+        echo "Сервер запущен\n";
+        $this->redisSub = $redisSub;
+        $this->redisPub = $redisPub;
+        $this->redisData = $redisData;
+        $this->redisSub->subscribe('game_events');
+        $this->redisSub->on('message', function (string $channel, string $load) {
+            if ($channel == 'game_events') {
+                foreach ($this->players as $player) {
+                    if ($player->isTrusted) {
+                        $player->getConn()->send($load);
+                    }
+                }
+            }
+        });
+        echo "Heelo Redis";
     }
-}
-}
-});
-echo "Heelo Redis";
-}
 
-    public function onOpen(ConnectionInterface $conn): void {
-        $this->gamers[$conn->resourceId] = new Client($conn);
-	echo "new gamer";
-	//$this->redisData->set('username' . $this->gamers[$conn->resourceId]->username . ':conn', $conn);
-	//$this->redisData->set('username' . "player444" . ':conn', $conn);
-	}
+    public function onOpen(ConnectionInterface $conn): void
+    {
+        $this->players[$conn->resourceId] = new Client($conn);
+        echo "new gamer";
+        //$this->redisData->set('username' . $this->gamers[$conn->resourceId]->username . ':conn', $conn);
+        //$this->redisData->set('username' . "player444" . ':conn', $conn);
+    }
 
-    public function onMessage(ConnectionInterface $from, $msg): void {
+    public function onMessage(ConnectionInterface $from, $msg): void
+    {
         $data = json_decode($msg, true);
-        $player = $this->gamers[$from->resourceId] ?? null;
+        $player = $this->players[$from->resourceId] ?? null;
 
         if (!$player) return;
 
@@ -83,13 +93,14 @@ echo "Heelo Redis";
                 $player->x = (float)($userDoc['x'] ?? 49.5);
                 $player->y = (float)($userDoc['y'] ?? 48.5);
                 $player->isTrusted = true;
-		$this->publishState();
+                $this->publishState($player);
 
             } else {
                 $player->getConn()->close();
             }
             return;
         }
+        //if (isset($data['type']) && $data['type'] === 'session_drop'){        }
 
         if (!$player->isTrusted) return;
 
@@ -97,40 +108,31 @@ echo "Heelo Redis";
             $player->x = (float)$data['x'];
             $player->y = (float)$data['y'];
             $player->messageCount++;
-
+            //if ($player->status === "Hunter" && $player->){        }
             if ($player->messageCount % 100 === 0) {
                 $this->users->updateOne(
                     ['username' => $player->username],
-                    ['$set' => ['x' => $player->x, 'y' => $player->y]]
+                    ['$set' => ['x' => $player->x, 'y' => $player->y],
+                        ['status'=> $player->status]]
                 );
                 $player->messageCount = 0;
             }
-	$this->publishState();
+            $this->publishState($player);
         }
-}
+    }
 
-	private function publishState(): void {
-        $gameState = [];
-        foreach ($this->gamers as $c) {
-            if ($c->isTrusted) {
-                $gameState[] = [
-                    'sessionId' => $c->getConn()->resourceId,
-                    'username' => $c->username,
-                    'x' => $c->x,
-                    'y' => $c->y,
-		    'isHunter' => false
-                ];
-}
-}
-			if(!empty($gameState)) {
-			 $this->redisPub->publish("game_events", json_encode($gameState));
-
-            }
+    private function publishState($player): void
+    {
+        if ($player->isTrusted) {
+            $this->redisPub->publish("game_events", json_encode($this->players));
+            $this->redisData->set($player->username, json_encode($player));
         }
+    }
 
 
-    public function onClose(ConnectionInterface $conn): void {
-        $player = $this->gamers[$conn->resourceId];
+    public function onClose(ConnectionInterface $conn): void
+    {
+        $player = $this->players[$conn->resourceId];
 
         if ($player && $player->isTrusted && $player->username) {
             $this->users->updateOne(
@@ -138,41 +140,45 @@ echo "Heelo Redis";
                 ['$set' => ['x' => $player->x, 'y' => $player->y]]
             );
         }
+        $player->status="disconnected";
+        $this->publishState($player);
+        unset($this->players[$conn->resourceId]);
+        echo "Соединение закрыто.\n";
+        $this->publishState($player);
 
-        unset($this->gamers[$conn->resourceId]);
-	 echo "Соединение закрыто.\n";
-	 $this->publishState();
     }
 
-    public function onError(ConnectionInterface $conn, \Exception $e): void {
+    public function onError(ConnectionInterface $conn, \Exception $e): void
+    {
         $conn->close();
     }
 }
+
 Loop::get()->futureTick(function () {
 
-  $factory = new RedisFactory(Loop::get());
+    $factory = new RedisFactory(Loop::get());
 
-  $factory->createClient('redis://' . LOCALHOST . ":" . REDIS_PORT)->
-  then(function ($redisSub) use ($factory) {
     $factory->createClient('redis://' . LOCALHOST . ":" . REDIS_PORT)->
-    then(function ($redisPub) use ($factory, $redisSub) {
-      $factory->createClient('redis://' . LOCALHOST . ":" . REDIS_PORT)->
-      then(function ($redisData) use ($redisPub, $redisSub) {
+    then(function ($redisSub) use ($factory) {
+        $factory->createClient('redis://' . LOCALHOST . ":" . REDIS_PORT)->
+        then(function ($redisPub) use ($factory, $redisSub) {
+            $factory->createClient('redis://' . LOCALHOST . ":" . REDIS_PORT)->
+            then(function ($redisData) use ($redisPub, $redisSub) {
 
-        $gameServer = new GameServer($redisSub, $redisPub);
+                $gameServer = new GameServer($redisSub, $redisPub, $redisData);
 
-        $socket = new SocketServer('0.0.0.0:8080');
+                $socket = new SocketServer('0.0.0.0:8080');
 
-        new IoServer(
-          new HttpServer(
-            new WsServer($gameServer)
-          ),
-          $socket,
-          Loop::get()
-        );
-      });
+                new IoServer(
+                    new HttpServer(
+                        new WsServer($gameServer)
+                    ),
+                    $socket,
+                    Loop::get()
+                );
+            });
+        });
     });
-  });
 });
 
 

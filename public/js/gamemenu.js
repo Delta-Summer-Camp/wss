@@ -12,7 +12,7 @@ let settingsActive = false;
 
 
 
-phoneToggle.textContent = "OFF";
+phoneToggle.textContent = "ON";
 
 // Pause Menu Reveal
 
@@ -105,6 +105,7 @@ function applySettings() {
     } else {
         phoneMode = true;
     }
+    localStorage.setItem("phoneMode", phoneMode);
     
     // 2. Update active game wallType
     wallType = selectedWallType;
@@ -123,6 +124,7 @@ function getLocalSetting() {
     } 
     BgColor = localStorage.getItem("BgColor");
     selectedWallType = Number(localStorage.getItem("wallType"));
+    wallType = Boolean(localStorage.getItem("phoneMode"));
 
     applySettings();
 }

@@ -102,7 +102,13 @@ function update() {
     otherPlayers.runAll(positionnicks);
 
     text.text = 'X: ' + pos.x + '\nY: ' + pos.y + '\nTPS: ' + tps;
-    playerStatus.text = `${(currentUser.isHunter)? "Status: Hunter" : "Status: Runner"}`;
+    if(currentUser.playerStatus == "hunter"){
+        playerStatus.text = "Status: Hunter";
+    } else if (currentUser.playerStatus == "runner"){
+        playerStatus.text = "Status: Runner";
+    } else if (freezeMovment){
+        playerStatus.text = "Status: Frozen";
+    }
 }
 
 function mouseUpdates() {
@@ -260,15 +266,18 @@ function positionboxes(currentX, currentY) {
 }
 
 function positionclones(clone) {
-    if (otherUsers[clone].username !== undefined) {
+   if (otherUsers[clone] && otherUsers[clone].username !== undefined) {
         otherPlayers.clones[clone].x = player.x - (pos.x - otherUsers[clone].x) * gameScale;
         otherPlayers.clones[clone].y = player.y - (pos.y - otherUsers[clone].y) * gameScale;
         if (otherUsers[clone].playerStatus == "hunter"){
             otherPlayers.clones[clone].costume = 0;
             costumeDebug.log("c0");
-        } else {
+        } else if (otherUsers[clone].playerStatus == "runner"){
             otherPlayers.clones[clone].costume = 1;
             costumeDebug.log("c1");
+        } else if (otherUsers[clone].playerStatus == "holding"){
+            otherPlayers.clones[clone].costume = 3;
+            costumeDebug.log("c3");
         }
         otherPlayers.clones[clone].visible = true;
     } else {
@@ -284,13 +293,14 @@ function positionnicks(clone) {
     if (otherNicknames[clone] != undefined) {
         otherNicknames[clone].destroy()
     }
+    if (otherUsers[clone] && otherUsers[clone].username !== undefined) {
     otherNicknames[clone] = game.createText(otherPlayers.clones[clone].x, otherPlayers.clones[clone].y - nickDist * gameScale, otherUsers[clone].username);
     otherNicknames[clone].makeXYCentred();
     otherNicknames[clone].font = 'Arial bold';
     otherNicknames[clone].size = nickSize * gameScale;
     otherNicknames[clone].color = '#FF0000';
+  }
 }
-
 let last_time = 0;
 let tick_time = [];
 let tick_avg = 0;
