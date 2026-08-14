@@ -1,3 +1,4 @@
+localStorage.setItem("passwordHash", 0);
 let isPlaying = false;
 
 const registration = document.getElementById('registration');

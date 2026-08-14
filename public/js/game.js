@@ -11,10 +11,10 @@ let tick_length;
 let lagConsequence;
 let currentDate = new Date;
 
-let lastHunter = false;
 let phoneMode = true;
 let mouseMovment = false;
 let allowMovment = true;
+let freezeMovment = false;
 const debugEnabled = false;
 
 let wallType = 0; // 0 to 7 black wall is 0
@@ -120,16 +120,15 @@ function mouseUpdates() {
 }
 
 function playerUpdates() {
-    let freezeMovment = false;
+    freezeMovment = false;
 
-    if(lastHunter == false && currentUser.isHunter == true){
+    if(currentUser.status == "frozen"){
         frezeTime = time + frezeLength * 1000;
     }
     if(frezeTime > time) {
         freezeMovment = true;
         mouseMovment = false;
     }
-    lastHunter = currentUser.isHunter;
 
 
     if(allowMovment && !freezeMovment){
