@@ -117,19 +117,18 @@ function mouseUpdates() {
         mouse.y = game.mouseY / gameScale - player.y / gameScale + pos.y;
         mouseMovment = true;
     }
+    if(!phoneMode){
+        mouseMovment = false;
+    }
 }
 
 function playerUpdates() {
     freezeMovment = false;
 
     if(currentUser.status == "frozen"){
-        frezeTime = time + frezeLength * 1000;
-    }
-    if(frezeTime > time) {
         freezeMovment = true;
         mouseMovment = false;
     }
-
 
     if(allowMovment && !freezeMovment){
         let hasMoved = false;
@@ -265,7 +264,7 @@ function positionboxes(currentX, currentY) {
 }
 
 function positionclones(clone) {
-   if (otherUsers[clone] && otherUsers[clone].username !== undefined) {
+   if (otherUsers[clone] !== null && otherUsers[clone].username !== undefined) {
         otherPlayers.clones[clone].x = player.x - (pos.x - otherUsers[clone].x) * gameScale;
         otherPlayers.clones[clone].y = player.y - (pos.y - otherUsers[clone].y) * gameScale;
         if (otherUsers[clone].playerStatus == "hunter"){
