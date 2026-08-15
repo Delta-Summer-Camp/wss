@@ -261,7 +261,7 @@ function positionboxes(currentX, currentY) {
 }
 
 function positionclones(clone) {
-   if (otherUsers[clone] && otherUsers[clone].username !== undefined) {
+   if (otherUsers[clone] !== null && otherUsers[clone].username !== undefined) {
         otherPlayers.clones[clone].x = player.x - (pos.x - otherUsers[clone].x) * gameScale;
         otherPlayers.clones[clone].y = player.y - (pos.y - otherUsers[clone].y) * gameScale;
         if (otherUsers[clone].playerStatus == "hunter"){
