@@ -123,13 +123,9 @@ function playerUpdates() {
     freezeMovment = false;
 
     if(currentUser.status == "frozen"){
-        frezeTime = time + frezeLength * 1000;
-    }
-    if(frezeTime > time) {
         freezeMovment = true;
         mouseMovment = false;
     }
-
 
     if(allowMovment && !freezeMovment){
         let hasMoved = false;
