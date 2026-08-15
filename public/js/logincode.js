@@ -23,7 +23,6 @@ function addUser() {
         },
         function (data, status) {
             localStorage.setItem("username", $("#reg-username").val());
-            localStorage.setItem("passwordHash", md5($("#reg-password").val()));
             alert("Status: " + status + "; data: " + data['message']);
             if (data['success'] === true) {
                 startScreen()
@@ -39,7 +38,6 @@ function validateLogin() {
         },
         function (data, status) {
     		localStorage.setItem("username", $("#login-username").val());
-            localStorage.setItem("passwordHash", md5($("#login-password").val()));
             alert("Status: " + status + "; data: " + data['message']);
             if (data['success'] === true) {
                 startScreen()
