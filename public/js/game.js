@@ -126,7 +126,7 @@ function playerUpdates() {
     if(currentUser.status == "frozen"){
         freezeMovment = true;
         mouseMovment = false;
-    } else if(currentUser.status == "hunter" || currentUser.status == "hunter"){
+    } else if(currentUser.status == "runner" || currentUser.status == "hunter"){
         freezeMovment = false;
         mouseMovment = true;
     }
