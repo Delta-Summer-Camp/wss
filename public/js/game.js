@@ -117,6 +117,9 @@ function mouseUpdates() {
         mouse.y = game.mouseY / gameScale - player.y / gameScale + pos.y;
         mouseMovment = true;
     }
+    if(!phoneMode){
+        mouseMovment = false;
+    }
 }
 
 function playerUpdates() {
