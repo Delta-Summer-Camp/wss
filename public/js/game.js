@@ -123,11 +123,12 @@ function mouseUpdates() {
 }
 
 function playerUpdates() {
-    freezeMovment = false;
-
     if(currentUser.status == "frozen"){
         freezeMovment = true;
         mouseMovment = false;
+    } else if(currentUser.status == "hunter" || currentUser.status == "hunter"){
+        freezeMovment = false;
+        mouseMovment = true;
     }
 
     if(allowMovment && !freezeMovment){
