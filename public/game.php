@@ -10,7 +10,7 @@ if (!$_SESSION['signed_in']) {
 
 <head>
     <meta charset="UTF-8" />
-    <title>WSS front end test</title>
+    <title>Саолчки</title>
     <script src="js/lib/phaser.min.js"></script>
     <script src="js/lib/DebugSys.js"></script>
     <script src="js/lib/CloneSys.js"></script>
