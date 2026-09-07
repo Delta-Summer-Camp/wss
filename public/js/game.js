@@ -123,6 +123,8 @@ function mouseUpdates() {
     }
     if(!phoneMode){
         mouseMovment = false;
+        mouse.x = pos.x;
+        mouse.y = pos.y;
     }
 }
 
