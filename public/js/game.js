@@ -19,7 +19,9 @@ const debugEnabled = false;
 
 let wallType = 0; // 0 to 7 black wall is 0
 let BgColor = 0x00FFFF;
-const gameScale = 50;
+const playScale = 50;
+const watchScale = 30;
+const gameScale = Number(isPlayer) * playScale + Number(!isPlayer) * watchScale;
 const serverUpdateFrequency = 0.05;
 const defaultSpd = 0.15;
 const nickSize = 0.4;
@@ -52,7 +54,7 @@ function create() {
     game.setBackgroundColor(BgColor);
     
     player = game.createSprite(currentSize.width / 2, currentSize.height / 2, 'player');
-    player.visible = true;
+    player.visible = isPlayer;
     player.size = gameScale / 200;
 
     lab_boxes = initPlane(-10000, -10000, 40, 40, Math.ceil(currentSize.width / gameScale * 0.75), Math.ceil(currentSize.height / gameScale * 0.75), "box");
@@ -72,6 +74,7 @@ function create() {
     playerStatus.font = 'Arial bold';
     playerStatus.color = '#FF0000';
     playerStatus.size = 50;
+    playerStatus.visible = isPlayer;
 
     playerNickname = this.createText(currentSize.width / 2, currentSize.height / 2 - nickDist * gameScale, currentUser.username);
     playerNickname.makeXYCentred();
@@ -79,6 +82,7 @@ function create() {
     playerNickname.size = nickSize * gameScale;
     playerNickname.color = '#FF0000';
     playerNickname.bringToFront();
+    playerNickname.visible = isPlayer;
 
     wallDebug = initDebug(debugEnabled,debugEnabled,debugEnabled,debugEnabled);
     boxDebug = initDebug(debugEnabled,debugEnabled,debugEnabled,debugEnabled);
@@ -137,13 +141,13 @@ function playerUpdates() {
             if(defaultSpd / lagConsequence < 2){
                 pos.y -= defaultSpd / lagConsequence;
                 pos.y = Math.floor(pos.y * 100) / 100;
-                while (lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1 || lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1) {
+                while (lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] > 0 + Number(!isPlayer) || lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] > 0 + Number(!isPlayer)) {
                     pos.y += 0.01;
                 }
             } else {
                 for(let i = 0; i < defaultSpd / lagConsequence; i += 0.01){
                     pos.y -= 0.01;
-                    if (lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1 || lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1) {
+                    if (lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] > 0 + Number(!isPlayer)|| lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] > 0 + Number(!isPlayer)) {
                         pos.y += 0.01;
                     }
                 }
@@ -156,13 +160,13 @@ function playerUpdates() {
             if(defaultSpd / lagConsequence < 2){
                 pos.y += defaultSpd / lagConsequence;
                 pos.y = Math.ceil(pos.y * 100) / 100;
-                while (lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1 || lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1) {
+                while (lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] > 0 + Number(!isPlayer) || lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] > 0 + Number(!isPlayer)) {
                     pos.y -= 0.01;
                 }
             } else {
                 for(let i = 0; i < defaultSpd / lagConsequence; i += 0.01){
                     pos.y += 0.01;
-                    if (lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1 || lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1) {
+                    if (lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] > 0 + Number(!isPlayer) || lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] > 0 + Number(!isPlayer)) {
                         pos.y -= 0.01;
                     }
                 }
@@ -175,13 +179,13 @@ function playerUpdates() {
             if(defaultSpd / lagConsequence < 2){
                 pos.x += defaultSpd / lagConsequence;
                 pos.x = Math.ceil(pos.x * 100) / 100;
-                while (lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1 || lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1) {
+                while (lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] > 0 + Number(!isPlayer) || lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] > 0 + Number(!isPlayer)) {
                     pos.x -= 0.01;
                 }
             } else {
                 for(let i = 0; i < defaultSpd / lagConsequence; i += 0.01){
                     pos.x += 0.01;
-                    if (lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1 || lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] == 1) {
+                    if (lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] > 0 + Number(!isPlayer) || lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.ceil(pos.x)/2)] > 0 + Number(!isPlayer)) {
                         pos.x -= 0.01;
                     }
                 }
@@ -194,13 +198,13 @@ function playerUpdates() {
             if(defaultSpd / lagConsequence < 2){
                 pos.x -= defaultSpd / lagConsequence;
                 pos.x = Math.floor(pos.x * 100) / 100;
-                while (lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1 || lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1) {
+                while (lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] > 0 + Number(!isPlayer) || lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] > 0 + Number(!isPlayer)) {
                     pos.x += 0.01;
                 }
             } else {
                 for(let i = 0; i < defaultSpd / lagConsequence; i += 0.01){
                     pos.x -= 0.01;
-                    if (lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1 || lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] == 1) {
+                    if (lab[Math.floor(Math.floor(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] > 0 + Number(!isPlayer) || lab[Math.floor(Math.ceil(pos.y)/2)][Math.floor(Math.floor(pos.x)/2)] > 0 + Number(!isPlayer)) {
                         pos.x += 0.01;
                     }
                 }
@@ -214,13 +218,13 @@ function playerUpdates() {
             mouseMovment = false;
         }
 
-        if(hasMoved) {
+        if(hasMoved && isPlayer) {
             if(time - lastServerUpdate > serverUpdateFrequency * 1000 || !lastTickMoment) {
                 sendData(pos);
                 lastServerUpdate = time;
             }
             lastTickMoment = true;
-        } else {
+        } else if (isPlayer) {
             lastServerUpdate = time;
             if(lastTickMoment){
                 sendData(pos);
