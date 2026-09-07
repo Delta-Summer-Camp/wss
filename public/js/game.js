@@ -5,7 +5,7 @@ let playerStatus;
 let playerNicnames;
 let otherNicknames = [];
 let lastServerUpdate;
-let lastTickMoment;
+let lastTickMovment;
 let frezeTime;
 let tick_length;
 let lagConsequence;
@@ -123,10 +123,10 @@ function mouseUpdates() {
 }
 
 function playerUpdates() {
-    if(currentUser.status == "frozen"){
+    if(currentUser.playerStatus == "frozen"){
         freezeMovment = true;
         mouseMovment = false;
-    } else if(currentUser.status == "runner" || currentUser.status == "hunter"){
+    } else if(currentUser.playerStatus == "runner" || currentUser.playerStatus == "hunter"){
         freezeMovment = false;
         mouseMovment = true;
     }
@@ -216,20 +216,26 @@ function playerUpdates() {
         }
 
         if(hasMoved) {
-            if(time - lastServerUpdate > serverUpdateFrequency * 1000 || !lastTickMoment) {
+            if(time - lastServerUpdate > serverUpdateFrequency * 1000 || !lastTickMovment) {
                 sendData(pos);
                 lastServerUpdate = time;
             }
-            lastTickMoment = true;
+            lastTickMovment = true;
         } else {
             lastServerUpdate = time;
-            if(lastTickMoment){
+            if(lastTickMovment){
                 sendData(pos);
+            } else if(time - lastServerUpdate > serverUpdateFrequency * 1000) {
+                keepAlive();
             }
-            lastTickMoment = false;
+            lastTickMovment = false;
 
         }
 
+    } else {
+        if(time - lastServerUpdate > serverUpdateFrequency * 1000) {
+            keepAlive();
+        }
     }
 
     if (currentUser.playerStatus == "runner"){
