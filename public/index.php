@@ -11,7 +11,7 @@
 //        'timestamp' => time(),
 //        'data'      => [
 //                'player_id' => 101,
-//                'username'  => 'Alex',
+//                'username'  => 'xxx',
 //                'message'   => 'Всем привет! Кто пойдет на босса?',
 //                'channel'   => 'global'
 //        ]
@@ -33,8 +33,8 @@
 //
 //    // Create a test user
 //    $newUser = [
-//            'username' => 'Ian',
-//            'email' => 'ianiliev111@gmail.com',
+//            'username' => 'xxx',
+//            'email' => 'xxx@gmail.com',
 //            'score' => 0,
 //            'created_at' => new MongoDB\BSON\UTCDateTime()
 //    ];
@@ -123,14 +123,26 @@
 
 <div id="start-screen" class="modal-overlay hidden">
     <div class="modal-card modal-card-dark text-center">
-        <h1 class="game-title">MAZE GAME</h1>
-        <p class="game-instructions">
-            Use <span class="highlight-text">WASD</span> keys to navigate the maze.
-        </p>
-        <a href="game.php">
-            <button onclick="startGame()" class="btn btn-submit">PLAY</button>
-        </a>
-
+        <h1 class="game-title">CHOOSE GAME</h1>
+        <div class="game-option-list">
+            <div class="game-options">
+                <h2 class="game-option-title">Game 1</h2>
+                <a href="game.php?game=g1">
+                    <button onclick="startGame()" class="btn btn-submit">PLAY</button>
+                </a>
+                <a href="game.php?game=w1">
+                    <button onclick="startGame()" class="btn btn-submit">WATCH</button>
+                </a>
+            </div>
+            <div class="game-options">
+                <h2 class="game-option-title">Game 2</h2>
+                <a href="game.php?game=g2">
+                    <button onclick="startGame()" class="btn btn-submit">PLAY</button>
+                </a>
+                <a href="game.php?game=w2">
+                    <button onclick="startGame()" class="btn btn-submit">WATCH</button>
+                </a>
+            </div>
     </div>
 </div>
 

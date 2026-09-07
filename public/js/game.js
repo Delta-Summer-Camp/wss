@@ -29,16 +29,14 @@ const renderDesync = {x:0.5, y:0.5};
 let currentScreenStartPos = {x:0, y:0};
 let mouse = {x:0, y:0};
 
-let lab;
-async function loadFile() {
-    const response = await fetch("../assets/lab.json");
-    lab = await response.json();  
-}
-loadFile();
-
-
 let currentSize = {width:document.documentElement.clientWidth, height:document.documentElement.clientHeight};
 
+let lab;
+async function loadFile() {
+    const response = await fetch("../assets/lab" + gameType + ".json");
+    lab = await response.json();
+}
+loadFile();
 
 let game = new ScratchGame(currentSize.width, currentSize.height);
 game.preload = preload;
@@ -87,6 +85,7 @@ function create() {
     timeTest = initDebug(debugEnabled,debugEnabled,debugEnabled,debugEnabled);
     costumeDebug = initDebug(debugEnabled,debugEnabled,debugEnabled,debugEnabled);
 }
+
 function update() {
     currentDate = new Date;
     time = currentDate.getTime();

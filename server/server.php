@@ -109,7 +109,7 @@ class GameServer implements MessageComponentInterface
 				$player->playerStatus = $userDoc['status'];
 
 
-}
+                }
                 $player->isTrusted = true;
                 $this->publishState($player);
 

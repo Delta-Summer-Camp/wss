@@ -1,10 +1,10 @@
 <!doctype html>
 <?php
-if (session_status() != PHP_SESSION_ACTIVE) session_start();
-if (!$_SESSION['signed_in']) {
-    header("Location: /index.php");
-    exit;
-}
+// if (session_status() != PHP_SESSION_ACTIVE) session_start();
+// if (!$_SESSION['signed_in']) {
+//     header("Location: /index.php");
+//     exit;
+// }
 ?>
 <html lang="en">
 
@@ -15,6 +15,7 @@ if (!$_SESSION['signed_in']) {
     <script src="js/lib/DebugSys.js"></script>
     <script src="js/lib/CloneSys.js"></script>
     <script src="js/lib/ScratchGame.js"></script>
+    <script src="js/gameChoice.js"></script>
     <script src="js/connection.js"></script>
     <script src="js/game.js"></script>
 

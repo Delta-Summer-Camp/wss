@@ -121,7 +121,10 @@ function getLocalSetting() {
     }
     if (localStorage.getItem("wallType") === undefined || localStorage.getItem("wallType") === null){
         localStorage.setItem("wallType", wallType);
-    } 
+    }
+    if (localStorage.getItem("phoneMode") === undefined || localStorage.getItem("phoneMode") === null){
+        localStorage.setItem("phoneMode", phoneMode);
+    }
     BgColor = localStorage.getItem("BgColor");
     selectedWallType = Number(localStorage.getItem("wallType"));
     phoneMode = Boolean(localStorage.getItem("phoneMode"));

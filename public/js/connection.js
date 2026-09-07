@@ -9,7 +9,6 @@ const passwordHash = localStorage.getItem("passwordHash");
 const ws = new WebSocket("wss://game26.delta.camp/server/");
 
 ws.onopen = () => {
-    console.log("Wss connected!");
     wsConnected = true;
     let auth = {
 	type: 'auth',
@@ -33,7 +32,6 @@ ws.onerror = (error) => {
 ws.onclose = () => {
    wsConnected = false;
    onDisconnect();
-   allowMovment = false;
 }
 
 
@@ -42,8 +40,8 @@ function arrangeData(inputDataObject) {
     if(inputDataObject.length === undefined){
         if (inputDataObject.username === currentUser.username) {
             currentUser.playerStatus = inputDataObject.playerStatus;
-            //pos.x = inputDataObject.x;
-            //pos.y = inputDataObject.y;
+            pos.x = inputDataObject.x;
+            pos.y = inputDataObject.y;
         } else {
             let useId;
             for(let i = 0; i < otherUsers.length; ++i){
@@ -64,8 +62,8 @@ function arrangeData(inputDataObject) {
         for(let i = 0; i < inputDataObject.length; ++i){
             if (inputDataObject[i].username === currentUser.username) {
                 currentUser.playerStatus = inputDataObject[i].playerStatus;
-               // pos.x = inputDataObject[i].x;
-               // pos.y = inputDataObject[i].y;
+                pos.x = inputDataObject[i].x;
+                pos.y = inputDataObject[i].y;
             } else {
                 let useId;
                 for(let a = 0; a < otherUsers.length; ++a){
@@ -94,11 +92,10 @@ function sendData(position) {
     } else {
         console.log("Wss not connected!");
     }
-    //console.log(outputData);
-    // transmit output data via vss
 }
 
 //Removes the player from /game.php(.php) if they are not connected to the server
 function onDisconnect(){
-    window.location.href = "/";
+    allowMovment = false;
+    //window.location.href = "/";
 }

@@ -79,6 +79,17 @@ body {
     margin-bottom: 2rem;
 }
 
+.game-option-list {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.game-options {
+    flex: 1;
+}
+
 .highlight-text {
     color: #818cf8; /* indigo-400 */
     font-weight: 600;
