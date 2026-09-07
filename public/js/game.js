@@ -228,11 +228,9 @@ function playerUpdates() {
             }
             lastTickMovment = true;
         } else if (isPlayer) {
-            lastServerUpdate = time;
             if(lastTickMovment){
                 sendData(pos);
-            } else if(time - lastServerUpdate > keepAliveFrequency * 1000) {
-                keepAlive();
+                lastServerUpdate = time;
             }
             lastTickMovment = false;
 
@@ -241,6 +239,7 @@ function playerUpdates() {
     } else {
         if(time - lastServerUpdate > keepAliveFrequency * 1000) {
             keepAlive();
+            lastServerUpdate = time;
         }
     }
 
