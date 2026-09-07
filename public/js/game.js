@@ -21,6 +21,7 @@ let wallType = 0; // 0 to 7 black wall is 0
 let BgColor = 0x00FFFF;
 const gameScale = 50;
 const serverUpdateFrequency = 0.05;
+const keepAliveFrequency = 5;
 const defaultSpd = 0.15;
 const nickSize = 0.4;
 const nickDist = 0.8;
@@ -225,7 +226,7 @@ function playerUpdates() {
             lastServerUpdate = time;
             if(lastTickMovment){
                 sendData(pos);
-            } else if(time - lastServerUpdate > serverUpdateFrequency * 1000) {
+            } else if(time - lastServerUpdate > keepAliveFrequency * 1000) {
                 keepAlive();
             }
             lastTickMovment = false;
@@ -233,7 +234,7 @@ function playerUpdates() {
         }
 
     } else {
-        if(time - lastServerUpdate > serverUpdateFrequency * 1000) {
+        if(time - lastServerUpdate > keepAliveFrequency * 1000) {
             keepAlive();
         }
     }
