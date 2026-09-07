@@ -10,9 +10,13 @@ const phoneToggle = document.getElementById('phoneModeToggle');
 let colorInputValue;
 let settingsActive = false;
 
+// Settings Variables
+let wallType = 0; // 0 to 7 black wall is 0
+let BgColor = 0x00FFFF;
+let phoneMode = true;
 
+getLocalSetting();
 
-phoneToggle.textContent = "ON";
 
 // Pause Menu Reveal
 
@@ -41,17 +45,21 @@ function deactivateMenu() {
     allowMovment =true;
 
 }
+function activateMenuButton() {
+    phoneMode = false;
+    mouseUpdates();
+    phoneMode = JSON.parse(localStorage.getItem("phoneMode"));
+    activateMenu();
+}
 
 function activateSettings() {
-    deactivateMenu();
     settingsActive = true;
     allowMovment = false;
-    console.log(settingsActive);
     settings.classList.toggle('hidden');
+    updateWallSelection();
 }
 function deactivateSettings() {
     settingsActive = false;
-    console.log(settingsActive);
     settings.classList.add('hidden');
     allowMovment = true;
 }
@@ -69,16 +77,11 @@ colorInput.addEventListener('input', function (event) {
 colorInput.addEventListener('keydown', function (event) {
     if (event.key === "Enter") {
         setBgColor();
-        deactivateSettings();
     }
 });
 function applyColor() {
     setBgColor();
-    deactivateSettings();
 }
-
-// Store the pending wall type choice before applying
-let selectedWallType = wallType; 
 
 // Initialize Wall Picker Click Listeners
 document.querySelectorAll('.wall-option').forEach(option => {
@@ -90,29 +93,18 @@ document.querySelectorAll('.wall-option').forEach(option => {
         this.classList.add('selected');
         
         // Update temporary variable
-        selectedWallType = parseInt(this.getAttribute('data-wall-type'), 10);
+        wallType = parseInt(this.getAttribute('data-wall-type'), 10);
+        localStorage.setItem('wallType', wallType);
     });
 });
 
-// Replace your old applyColor function with a combined applySettings function
-function applySettings() {
-    // 1. Update background color if typed
-    if (colorInput.value.trim() !== '') {
-        setBgColor();
-    }
-    if (phoneToggle.textContent === "OFF") {
-        phoneMode = false;
-    } else {
-        phoneMode = true;
-    }
-    localStorage.setItem("phoneMode", phoneMode);
-    
-    // 2. Update active game wallType
-    wallType = selectedWallType;
-    localStorage.setItem("wallType", selectedWallType);
-
-    // 3. Close settings window
-    deactivateSettings();
+function updateWallSelection() {
+    document.querySelectorAll('.wall-option').forEach(option => {
+        option.classList.toggle(
+            'selected',
+            parseInt(option.getAttribute('data-wall-type'), 10) === wallType
+        );
+    });
 }
 
 function getLocalSetting() {
@@ -126,17 +118,25 @@ function getLocalSetting() {
         localStorage.setItem("phoneMode", phoneMode);
     }
     BgColor = localStorage.getItem("BgColor");
-    selectedWallType = Number(localStorage.getItem("wallType"));
-    phoneMode = Boolean(localStorage.getItem("phoneMode"));
-    togglePhoneMode();
-
-    applySettings();
+    wallType = Number(localStorage.getItem("wallType"));
+    phoneMode = JSON.parse(localStorage.getItem("phoneMode"));
+    updatePhoneToggleText();
 }
-getLocalSetting();
+
 function togglePhoneMode() {
-    if(phoneMode) {
-        phoneToggle.textContent = "OFF";
+    if (phoneMode == true) {
+        phoneMode = false;
     } else {
+        phoneMode = true;
+    }
+    localStorage.setItem("phoneMode", phoneMode);
+    updatePhoneToggleText();
+}
+
+function updatePhoneToggleText() {
+    if (phoneMode) {
         phoneToggle.textContent = "ON";
+    } else {
+        phoneToggle.textContent = "OFF";
     }
 }

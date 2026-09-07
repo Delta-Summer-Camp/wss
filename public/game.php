@@ -1,10 +1,10 @@
 <!doctype html>
 <?php
-// if (session_status() != PHP_SESSION_ACTIVE) session_start();
-// if (!$_SESSION['signed_in']) {
-//     header("Location: /index.php");
-//     exit;
-// }
+if (session_status() != PHP_SESSION_ACTIVE) session_start();
+if (!$_SESSION['signed_in']) {
+    header("Location: /index.php");
+    exit;
+}
 ?>
 <html lang="en">
 
@@ -23,7 +23,7 @@
 </head>
 
 <body>
-    <div id="hamburger-btn" onclick="activateMenu()">
+    <div id="hamburger-btn" onclick="activateMenuButton()">
         <span class="hamburger-line"></span>
         <span class="hamburger-line"></span>
         <span class="hamburger-line"></span>
@@ -55,8 +55,7 @@
     </div>
     <h2>Phone Mode</h2>
         <button id="phoneModeToggle" onclick="togglePhoneMode()"></button>
-        <button onclick="applySettings()" class="btn-submit btn">Apply</button>
-        <button onclick="deactivateSettings()" class="btn-submit btn">Cancel</button>
+        <button onclick="deactivateSettings()" class="btn-submit btn">Exit Settings</button>
     </div>
 
     <script src="js/gamemenu.js"></script>

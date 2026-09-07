@@ -11,16 +11,13 @@ let tick_length;
 let lagConsequence;
 let currentDate = new Date;
 
-let phoneMode = true;
 let mouseMovment = false;
 let allowMovment = true;
 let freezeMovment = false;
 const debugEnabled = false;
 
-let wallType = 0; // 0 to 7 black wall is 0
-let BgColor = 0x00FFFF;
 const playScale = 50;
-const watchScale = 30;
+const watchScale = 20;
 const gameScale = Number(isPlayer) * playScale + Number(!isPlayer) * watchScale;
 const serverUpdateFrequency = 0.05;
 const keepAliveFrequency = 5;
