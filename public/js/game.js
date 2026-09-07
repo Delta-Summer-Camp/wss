@@ -23,6 +23,7 @@ const playScale = 50;
 const watchScale = 30;
 const gameScale = Number(isPlayer) * playScale + Number(!isPlayer) * watchScale;
 const serverUpdateFrequency = 0.05;
+const keepAliveFrequency = 5;
 const defaultSpd = 0.15;
 const nickSize = 0.4;
 const nickDist = 0.8;
@@ -228,7 +229,7 @@ function playerUpdates() {
             lastServerUpdate = time;
             if(lastTickMovment){
                 sendData(pos);
-            } else if(time - lastServerUpdate > serverUpdateFrequency * 1000) {
+            } else if(time - lastServerUpdate > keepAliveFrequency * 1000) {
                 keepAlive();
             }
             lastTickMovment = false;
@@ -236,7 +237,7 @@ function playerUpdates() {
         }
 
     } else {
-        if(time - lastServerUpdate > serverUpdateFrequency * 1000) {
+        if(time - lastServerUpdate > keepAliveFrequency * 1000) {
             keepAlive();
         }
     }
