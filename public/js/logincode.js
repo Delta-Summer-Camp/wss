@@ -70,5 +70,3 @@ function startGame() {
     isPlaying = true;
 
 }
-
-startScreen();

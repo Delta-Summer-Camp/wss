@@ -1,4 +1,4 @@
-let pos = {x:49.5, y:48.5};
+let pos = {x:0, y:0};
 let currentUser = {playerStatus:"", username:""};
 let otherUsers = [];
 let wsConnected = false;
@@ -106,6 +106,12 @@ function keepAlive() {
 //Removes the player from /game.php(.php) if they are not connected to the server
 function onDisconnect(){
     allowMovment = false;
-    // window.location.href = "/";
+    window.location.href = "/";
     wsConnected = false;
+}
+
+if(gameId == 1){
+    pos = {x:49.5, y:48.5};
+} else {
+    pos = {x:250, y:250};
 }
