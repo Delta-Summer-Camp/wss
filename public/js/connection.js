@@ -86,7 +86,7 @@ function arrangeData(inputDataObject) {
 
 //Output gets sent to ws.send
 function sendData(position) {
-    let outputData = {type: 'move',x:position.x, y:position.y, username:currentUser.username};
+    let outputData = {type: 'move', game:gameId, x:position.x, y:position.y, username:currentUser.username};
     if(wsConnected){
         ws.send(JSON.stringify(outputData));
     } else {
@@ -96,11 +96,16 @@ function sendData(position) {
 
 function keepAlive() {
     let outputData = {type: 'keepAlive'};
-    ws.send(JSON.stringify(outputData));
+    if(wsConnected){
+        ws.send(JSON.stringify(outputData));
+    } else {
+        console.log("Wss not connected!");
+    }
 }
 
 //Removes the player from /game.php(.php) if they are not connected to the server
 function onDisconnect(){
     allowMovment = false;
-    window.location.href = "/";
+    // window.location.href = "/";
+    wsConnected = false;
 }

@@ -33,7 +33,7 @@ let currentSize = {width:document.documentElement.clientWidth, height:document.d
 
 let lab;
 async function loadFile() {
-    const response = await fetch("../assets/lab" + gameType + ".json");
+    const response = await fetch("../assets/lab" + gameId + ".json");
     lab = await response.json();
 }
 loadFile();
