@@ -1,5 +1,4 @@
 let pos = {x:0, y:0};
-let currentUser = {playerStatus:"", username:""};
 let otherUsers = [];
 let wsConnected = false;
 
@@ -86,7 +85,7 @@ function arrangeData(inputDataObject) {
 
 //Output gets sent to ws.send
 function sendData(position) {
-    let outputData = {type: 'move', game:gameId, x:position.x, y:position.y, username:currentUser.username};
+    let outputData = {type: 'move', gameId:currentUser.gameId, x:position.x, y:position.y, username:currentUser.username};
     if(wsConnected){
         ws.send(JSON.stringify(outputData));
     } else {
@@ -110,8 +109,8 @@ function onDisconnect(){
     wsConnected = false;
 }
 
-if(gameId == 1){
+if(currentUser.gameId == 1){
     pos = {x:49.5, y:48.5};
-} else {
+} else if (currentUser.gameId == 2) {
     pos = {x:250, y:250};
 }

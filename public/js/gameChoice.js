@@ -1,3 +1,6 @@
+let currentUser = {playerStatus:"", username:"", gameId: ""};
+let isPlayer = true;
+
 const urlParams = new URLSearchParams(window.location.search);
 const idValue = urlParams.get('game');
 
@@ -5,10 +8,9 @@ if (idValue === undefined) {
     window.location.href = "/";
 }
 
-let gameId = Number(idValue[idValue.length - 1]);
-let isPlayer = true;
+currentUser.gameId = Number(idValue[idValue.length - 1]);
 
-if (typeof gameId !== "number" || isNaN(gameId) || gameId < 1 || gameId > 2 || (idValue[0] !== "w" && idValue[0] !== "g")) {
+if (typeof currentUser.gameId !== "number" || isNaN(currentUser.gameId) || currentUser.gameId < 1 || currentUser.gameId > 2 || (idValue[0] !== "w" && idValue[0] !== "g")) {
     window.location.href = "/";
 }
 

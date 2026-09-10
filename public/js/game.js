@@ -33,7 +33,7 @@ let currentSize = {width:document.documentElement.clientWidth, height:document.d
 
 let lab;
 async function loadFile() {
-    const response = await fetch("../assets/lab" + gameId + ".json");
+    const response = await fetch("../assets/lab" + currentUser.gameId + ".json");
     lab = await response.json();
 }
 loadFile();
@@ -273,7 +273,7 @@ function positionboxes(currentX, currentY) {
 }
 
 function positionclones(clone) {
-   if (otherUsers[clone] !== null && otherUsers[clone].username !== undefined) {
+   if (otherUsers[clone] !== null || otherUsers[clone].username !== undefined || !otherUsers[clone].gameId === currentUser.gameId) {
         otherPlayers.clones[clone].x = player.x - (pos.x - otherUsers[clone].x) * gameScale;
         otherPlayers.clones[clone].y = player.y - (pos.y - otherUsers[clone].y) * gameScale;
         if (otherUsers[clone].playerStatus == "hunter"){
