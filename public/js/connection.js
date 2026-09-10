@@ -98,6 +98,11 @@ function keepAlive() {
     }
 }
 
+function keepAlive() {
+    let outputData = {type: 'keepAlive'};
+    ws.send(JSON.stringify(outputData));
+}
+
 //Removes the player from /game.php(.php) if they are not connected to the server
 function onDisconnect(){
     allowMovment = false;
