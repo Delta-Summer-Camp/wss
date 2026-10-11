@@ -9,8 +9,8 @@ if (!$_SESSION['signed_in']) {
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <title>Саолчки</title>
+    <meta charset="UTF-8"/>
+    <title>Салочки</title>
     <script src="js/lib/phaser.min.js"></script>
     <script src="js/lib/DebugSys.js"></script>
     <script src="js/lib/CloneSys.js"></script>
@@ -22,26 +22,28 @@ if (!$_SESSION['signed_in']) {
 </head>
 
 <body>
-    <div id="hamburger-btn" onclick="activateMenu()">
-        <span class="hamburger-line"></span>
-        <span class="hamburger-line"></span>
-        <span class="hamburger-line"></span>
+<div id="hamburger-btn" onclick="activateMenu()">
+    <span class="hamburger-line"></span>
+    <span class="hamburger-line"></span>
+    <span class="hamburger-line"></span>
+</div>
+
+
+<div id="pause-menu" class="hidden">
+    <div id="options">
+        <h2 style="margin-top: 0;">Game Paused</h2>
+        <button class="btn btn-submit" onclick="deactivateMenu()">Resume</button>
+        <button class="btn btn-submit" onclick="activateSettings()">Settings</button>
+        <a href="index.php">
+            <button class="btn btn-submit">Exit</button>
+        </a>
     </div>
 
-
-    <div id="pause-menu" class="hidden">
-        <div id="options">
-            <h2 style="margin-top: 0;">Game Paused</h2>
-            <button class="btn btn-submit" onclick="deactivateMenu()">Resume</button>
-            <button class="btn btn-submit" onclick="activateSettings()">Settings</button>
-            <a href="index.php"><button class="btn btn-submit">Exit</button></a>
-        </div>
-
-    </div>
-    <div id="settings" class="pause-menu hidden">
-        <h2>Color</h2>
-        <input type="text" placeholder="hex eg. #00FFFF" class="form-input" name="" id="color-input">
-        <h2>Select Wall Type</h2>
+</div>
+<div id="settings" class="pause-menu hidden">
+    <h2>Color</h2>
+    <input type="text" placeholder="hex eg. #00FFFF" class="form-input" name="" id="color-input">
+    <h2>Select Wall Type</h2>
     <div id="wall-type-container" class="wall-selector">
         <div class="wall-option active" data-wall-type="0">0</div>
         <div class="wall-option" data-wall-type="1">1</div>
@@ -53,12 +55,12 @@ if (!$_SESSION['signed_in']) {
         <div class="wall-option" data-wall-type="7">7</div>
     </div>
     <h2>Phone Mode</h2>
-        <button id="phoneModeToggle" onclick="togglePhoneMode()"></button>
-        <button onclick="applySettings()" class="btn-submit btn">Apply</button>
-        <button onclick="deactivateSettings()" class="btn-submit btn">Cancel</button>
-    </div>
+    <button id="phoneModeToggle" onclick="togglePhoneMode()"></button>
+    <button onclick="applySettings()" class="btn-submit btn">Apply</button>
+    <button onclick="deactivateSettings()" class="btn-submit btn">Cancel</button>
+</div>
 
-    <script src="js/gamemenu.js"></script>
+<script src="js/gamemenu.js"></script>
 
 </body>
 

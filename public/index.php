@@ -1,69 +1,14 @@
 <!DOCTYPE html>
 <?php
-//
-//require __DIR__ . '/vendor/autoload.php';
-//
-//$redis = new Redis();
-//$redis->connect('127.0.0.1', 6379);
-//
-//$event = [
-//        'type'      => 'global_chat_message',
-//        'timestamp' => time(),
-//        'data'      => [
-//                'player_id' => 101,
-//                'username'  => 'Alex',
-//                'message'   => 'Всем привет! Кто пойдет на босса?',
-//                'channel'   => 'global'
-//        ]
-//];
-//
-//$redis->publish('game_events', json_encode($event));
-//
-//
-//$uri = 'mongodb://127.0.0.1:27017';
-//$uriOptions = ['ServerSelectionTimeoutMS' => 10000];
-//
-//try {
-//    $mongoClient = new MongoDB\Client($uri, $uriOptions);
-//
-//    $mongoDB = $mongoClient->selectDatabase("game_data");
-//
-//    // Select/create users collection
-//    $users = $mongoDB->selectCollection("users");
-//
-//    // Create a test user
-//    $newUser = [
-//            'username' => 'Ian',
-//            'email' => 'ianiliev111@gmail.com',
-//            'score' => 0,
-//            'created_at' => new MongoDB\BSON\UTCDateTime()
-//    ];
-//
-//    // Insert user
-//    $result = $users->insertOne($newUser);
-//
-//    echo "MongoDB connection works!<br>";
-//    echo "User added with ID: " . $result->getInsertedId() . "<br>";
-//
-//    // Get the user we just created
-//    $user = $users->findOne([
-//            '_id' => $result->getInsertedId()
-//    ]);
-//
-//    echo "<pre>";
-//    print_r($user);
-//    echo "</pre>";
-//
-//} catch (Exception $e) {
-//    echo "MongoDB error: " . $e->getMessage();
-//}
-//
-//?>
+session_start();
+session_destroy();
+session_start();
+?>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8" />
-    <title>Саолчки</title>
+    <title>Салочки</title>
     <link rel="stylesheet" href="./css/main.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="./js/lib/md5.js"></script>
@@ -96,8 +41,8 @@
         </form>
     </div>
 </div>
-<!-- Login -->
 
+<!-- Login -->
 <div id="login" class="modal-overlay">
     <div class="modal-card text-center">
         <h1 class="modal-title">Login</h1>

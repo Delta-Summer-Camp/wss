@@ -46,6 +46,10 @@ $result = $users->insertOne([
     'created_at' => new MongoDB\BSON\UTCDateTime()
 ]);
 
+if (session_status() != PHP_SESSION_ACTIVE) session_start();
+$_SESSION['signed_in'] = true;
+$_SESSION['username'] = $username;
+
 echo json_encode([
     'success' => true,
     'message' => 'Регистрация успешна',
