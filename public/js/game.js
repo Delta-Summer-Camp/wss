@@ -18,7 +18,7 @@ let freezeMovment = false;
 const debugEnabled = false;
 
 let wallType = 0; // 0 to 7 black wall is 0
-let BgColor = 0x00FFFF;
+let BgColor = "#00FFFF";
 const gameScale = 50;
 const serverUpdateFrequency = 0.05;
 const keepAliveFrequency = 5;
@@ -30,6 +30,10 @@ const renderDesync = {x:0.5, y:0.5};
 let currentScreenStartPos = {x:0, y:0};
 let mouse = {x:0, y:0};
 
+let isPlayer = window.location.pathname != "/screen.php";
+let c;
+let ctx;
+
 let lab;
 async function loadFile() {
     const response = await fetch("../assets/lab.json");
@@ -39,7 +43,6 @@ loadFile();
 
 
 let currentSize = {width:document.documentElement.clientWidth, height:document.documentElement.clientHeight};
-
 
 let game = new ScratchGame(currentSize.width, currentSize.height);
 game.preload = preload;
@@ -55,7 +58,7 @@ function create() {
     game.setBackgroundColor(BgColor);
     
     player = game.createSprite(currentSize.width / 2, currentSize.height / 2, 'player');
-    player.visible = true;
+    player.visible = isPlayer;
     player.size = gameScale / 200;
 
     lab_boxes = initPlane(-10000, -10000, 40, 40, Math.ceil(currentSize.width / gameScale * 0.75), Math.ceil(currentSize.height / gameScale * 0.75), "box");
@@ -93,10 +96,14 @@ function update() {
     time = currentDate.getTime();
     lag_test();
 
-    mouseUpdates();
-    playerUpdates();
+    if(isPlayer){
+        mouseUpdates();
+        playerUpdates();
 
-    lab_boxes.runAll(positionboxes);
+        lab_boxes.runAll(positionboxes);
+    } else {
+        drawBackground();
+    }
 
     otherPlayers.createClones(otherUsers.length - otherPlayers.amount(), 0);
     otherPlayers.runAll(positionclones);
@@ -134,7 +141,7 @@ function playerUpdates() {
         mouseMovment = true;
     }
 
-    if(allowMovment && !freezeMovment){
+    if(allowMovment && !freezeMovment && isPlayer){
         let hasMoved = false;
         let overrideAutoMovement = game.isKeyDown('W') || game.isKeyDown('A') || game.isKeyDown('S') || game.isKeyDown('D') || game.isKeyDown('UP') || game.isKeyDown('LEFT') || game.isKeyDown('DOWN') || game.isKeyDown('RIGHT');
         if (game.isKeyDown('W') || game.isKeyDown('UP') || (pos.y - mouse.y > 0 && mouseMovment && !overrideAutoMovement)) {
@@ -271,6 +278,17 @@ function positionboxes(currentX, currentY) {
     }
     lab_boxes.plane[currentX][currentY].size = gameScale / 100;
     lab_boxes.plane[currentX][currentY].costume = wallType * 3 + 1;
+}
+
+function drawBackground() {
+    if (c === undefined) {
+        c = document.getElementById("backgroundCanvas");
+        ctx = c.getContext("2d");
+    } else {
+        ctx.fillStyle = BgColor;
+        ctx.fillRect(0, 0, 50000, 50000);
+    }
+
 }
 
 function positionclones(clone) {
