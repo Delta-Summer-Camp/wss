@@ -28,7 +28,7 @@
         <span class="hamburger-line"></span>
     </div>
 
-    <canvas id="backgroundCanvas" width="30000" height="30000">
+    <canvas id="backgroundCanvas" width="1" height="1">
         Your browser does not support the HTML5 canvas tag.
     </canvas>
 
@@ -61,7 +61,7 @@
         <button onclick="applySettings()" class="btn-submit btn">Apply</button>
         <button onclick="deactivateSettings()" class="btn-submit btn">Cancel</button>
     </div>
-
+ 
     <script src="js/gamemenu.js"></script>
 
 </body>

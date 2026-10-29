@@ -215,3 +215,10 @@
   outline: 2px solid #818cf8;
   outline-offset: 2px;
 }
+
+#backgroundCanvas {
+  display: block;
+  position: absolute;
+  border: none;
+  outline: none;
+}

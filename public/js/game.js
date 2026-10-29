@@ -18,7 +18,7 @@ let freezeMovment = false;
 const debugEnabled = false;
 
 let wallType = 0; // 0 to 7 black wall is 0
-let BgColor = "#00FFFF";
+let BgColor = "0x00ffff";
 const gameScale = 50;
 const serverUpdateFrequency = 0.05;
 const keepAliveFrequency = 5;
@@ -33,6 +33,12 @@ let mouse = {x:0, y:0};
 let isPlayer = window.location.pathname != "/screen.php";
 let c;
 let ctx;
+let drawScale;
+let isMazeDrawn = false;
+let mazeDrawDesync = {x:0, y:0};
+let notePlayerPos = [];
+const wallImg = new Image();
+wallImg.src = "/assets/wall.png";
 
 let lab;
 async function loadFile() {
@@ -50,7 +56,7 @@ game.create = create;
 game.update = update;
 
 function preload() {
-    game.loadSpritesheet('box', 'assets/wall.png', 200, 200);
+    game.loadSpritesheet('box', 'assets/wall.png', wallImg.height, wallImg.height);
     game.loadSpritesheet('player', 'assets/ballz.png', 200, 200);
 }
 
@@ -61,7 +67,9 @@ function create() {
     player.visible = isPlayer;
     player.size = gameScale / 200;
 
-    lab_boxes = initPlane(-10000, -10000, 40, 40, Math.ceil(currentSize.width / gameScale * 0.75), Math.ceil(currentSize.height / gameScale * 0.75), "box");
+    if(isPlayer){
+        lab_boxes = initPlane(-10000, -10000, 40, 40, Math.ceil(currentSize.width / gameScale * 0.75), Math.ceil(currentSize.height / gameScale * 0.75), "box");
+    }
 
     otherPlayers = initClones(-100, -1000, 'player');
     otherPlayers.clones[0].visible = false;
@@ -85,6 +93,7 @@ function create() {
     playerNickname.size = nickSize * gameScale;
     playerNickname.color = '#FF0000';
     playerNickname.bringToFront();
+    playerNickname.visible = isPlayer;
 
     wallDebug = initDebug(debugEnabled,debugEnabled,debugEnabled,debugEnabled);
     boxDebug = initDebug(debugEnabled,debugEnabled,debugEnabled,debugEnabled);
@@ -101,13 +110,13 @@ function update() {
         playerUpdates();
 
         lab_boxes.runAll(positionboxes);
+
+        otherPlayers.createClones(otherUsers.length - otherPlayers.amount(), 0);
+        otherPlayers.runAll(positionclones);
+        otherPlayers.runAll(positionnicks);
     } else {
         drawBackground();
     }
-
-    otherPlayers.createClones(otherUsers.length - otherPlayers.amount(), 0);
-    otherPlayers.runAll(positionclones);
-    otherPlayers.runAll(positionnicks);
 
     text.text = 'X: ' + pos.x + '\nY: ' + pos.y + '\nTPS: ' + tps;
     if(currentUser.playerStatus == "hunter"){
@@ -281,14 +290,57 @@ function positionboxes(currentX, currentY) {
 }
 
 function drawBackground() {
-    if (c === undefined) {
+    if (c === undefined  && document.getElementById("backgroundCanvas") !== undefined) {
         c = document.getElementById("backgroundCanvas");
         ctx = c.getContext("2d");
-    } else {
-        ctx.fillStyle = BgColor;
-        ctx.fillRect(0, 0, 50000, 50000);
+        c.width = currentSize.width;
+        c.height = currentSize.height;
+    } else if (c !== undefined && isMazeDrawn == false) {
+        ctx.fillStyle = "#" + parseInt(BgColor, 10).toString(16).padStart(6, "0");
+        ctx.fillRect(0, 0, c.width, c.height);
+        
+        drawScale = Math.floor(c.height / lab.length);
+        if (drawScale > Math.floor(c.width / lab[0].length)) {
+            drawScale = Math.floor(c.width / lab[0].length);
+        }
+
+        mazeDrawDesync.x = (c.width - lab[0].length * drawScale) / 2;
+        mazeDrawDesync.y = (c.height - lab.length * drawScale) / 2;
+
+        updateDrawnMaze();
+
+        isMazeDrawn = true;
+    } else if (isMazeDrawn == true) {
+        for (let i = 0; i < otherUsers.length; ++i) {
+            if (otherUsers[i] !== null && otherUsers[i].username !== undefined) {
+                if(notePlayerPos[i] !== undefined) {
+                    if (notePlayerPos[i].x !== undefined || notePlayerPos[i].y !== undefined) {
+                        ctx.fillStyle = "#" + parseInt(BgColor, 10).toString(16).padStart(6, "0");
+                        ctx.fillRect(Math.round(notePlayerPos[i].x / 2) * drawScale + mazeDrawDesync.x, Math.round(notePlayerPos[i].y / 2) * drawScale + mazeDrawDesync.y, drawScale, drawScale);
+                    }
+                }
+
+                notePlayerPos[i] = {x: otherUsers[i].x, y: otherUsers[i].y};
+                ctx.fillStyle = "#FF0000";
+                ctx.fillRect(otherUsers[i].x / 2 * drawScale + mazeDrawDesync.x, otherUsers[i].y / 2 * drawScale + mazeDrawDesync.y, drawScale, drawScale);
+            }
+        }
     }
 
+}
+
+function updateDrawnMaze () {
+    for (let y = 0; y < lab.length; y++) {
+        for (let x = 0; x < lab[y].length; x++) {
+            if (lab[y][x] == 0 || wallType == 5 || wallType == 6 || wallType == 7) {   
+                ctx.fillStyle = "#" + parseInt(BgColor, 10).toString(16).padStart(6, "0");
+                ctx.fillRect(x * drawScale + mazeDrawDesync.x, y * drawScale + mazeDrawDesync.y, drawScale, drawScale);
+            }
+            if (lab[y][x] == 1 || lab[y][x] == 2) {
+                ctx.drawImage(wallImg, wallImg.height * (wallType * 3 + 1), 0, 199, 199, x * drawScale + mazeDrawDesync.x, y * drawScale + mazeDrawDesync.y, drawScale + 1, drawScale + 1);
+            }
+        }
+    }
 }
 
 function positionclones(clone) {
