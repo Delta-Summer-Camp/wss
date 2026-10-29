@@ -10,7 +10,7 @@
 
 <head>
     <meta charset="UTF-8" />
-    <title>Саолчки Монитор</title>
+    <title>Салочки Монитор</title>
     <script src="js/lib/phaser.min.js"></script>
     <script src="js/lib/DebugSys.js"></script>
     <script src="js/lib/CloneSys.js"></script>

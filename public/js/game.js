@@ -300,9 +300,7 @@ function drawBackground() {
 
         c.width = currentSize.width;
         c.height = currentSize.height;
-        c.font = nickSize * drawScale + 'px Arial bold';
-        c.textAlign = 'center';
-        c.fillStyle = '#FF0000';
+        ctx.font = nickSize * drawScale + 'px Arial bold';
     } else if (c !== undefined && isMazeDrawn == false) {
         drawScale = Math.floor(c.height / lab.length);
         if (drawScale > Math.floor(c.width / lab[0].length)) {
@@ -330,7 +328,10 @@ function drawBackground() {
                 }
                 ctx.drawImage(playerImg, playerCostrume * playerImg.height, 0, playerImg.height, playerImg.height, otherUsers[i].x / 2 * drawScale + mazeDrawDesync.x, otherUsers[i].y / 2 * drawScale + mazeDrawDesync.y, drawScale / 2, drawScale / 2);
                 
-                ctx.fillText(otherUsers[i].username, otherUsers[i].x / 2 * drawScale + mazeDrawDesync.x, otherUsers[i].y / 2 * drawScale + mazeDrawDesync.y + nickDist * drawScale);
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillStyle = '#FF0000';
+                ctx.fillText(otherUsers[i].username, otherUsers[i].x / 2 * drawScale + mazeDrawDesync.x + drawScale / 4, otherUsers[i].y / 2 * drawScale + mazeDrawDesync.y + drawScale / 4 - nickDist * drawScale / 1.75);
             }
         }
     }
