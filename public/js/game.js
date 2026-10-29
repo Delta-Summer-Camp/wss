@@ -36,9 +36,10 @@ let ctx;
 let drawScale;
 let isMazeDrawn = false;
 let mazeDrawDesync = {x:0, y:0};
-let notePlayerPos = [];
 const wallImg = new Image();
 wallImg.src = "/assets/wall.png";
+const playerImg = new Image();
+playerImg.src = "/assets/ballz.png";
 
 let lab;
 async function loadFile() {
@@ -57,7 +58,7 @@ game.update = update;
 
 function preload() {
     game.loadSpritesheet('box', 'assets/wall.png', wallImg.height, wallImg.height);
-    game.loadSpritesheet('player', 'assets/ballz.png', 200, 200);
+    game.loadSpritesheet('player', 'assets/ballz.png', playerImg.height, playerImg.height);
 }
 
 function create() {
@@ -100,7 +101,10 @@ function create() {
     timeTest = initDebug(debugEnabled,debugEnabled,debugEnabled,debugEnabled);
     costumeDebug = initDebug(debugEnabled,debugEnabled,debugEnabled,debugEnabled);
 }
+
 function update() {
+    sizeUpdates();
+    
     currentDate = new Date;
     time = currentDate.getTime();
     lag_test();
@@ -293,12 +297,13 @@ function drawBackground() {
     if (c === undefined  && document.getElementById("backgroundCanvas") !== undefined) {
         c = document.getElementById("backgroundCanvas");
         ctx = c.getContext("2d");
+
         c.width = currentSize.width;
         c.height = currentSize.height;
+        c.font = nickSize * drawScale + 'px Arial bold';
+        c.textAlign = 'center';
+        c.fillStyle = '#FF0000';
     } else if (c !== undefined && isMazeDrawn == false) {
-        ctx.fillStyle = "#" + parseInt(BgColor, 10).toString(16).padStart(6, "0");
-        ctx.fillRect(0, 0, c.width, c.height);
-        
         drawScale = Math.floor(c.height / lab.length);
         if (drawScale > Math.floor(c.width / lab[0].length)) {
             drawScale = Math.floor(c.width / lab[0].length);
@@ -311,25 +316,31 @@ function drawBackground() {
 
         isMazeDrawn = true;
     } else if (isMazeDrawn == true) {
+        updateDrawnMaze();
+
         for (let i = 0; i < otherUsers.length; ++i) {
             if (otherUsers[i] !== null && otherUsers[i].username !== undefined) {
-                if(notePlayerPos[i] !== undefined) {
-                    if (notePlayerPos[i].x !== undefined || notePlayerPos[i].y !== undefined) {
-                        ctx.fillStyle = "#" + parseInt(BgColor, 10).toString(16).padStart(6, "0");
-                        ctx.fillRect(Math.round(notePlayerPos[i].x / 2) * drawScale + mazeDrawDesync.x, Math.round(notePlayerPos[i].y / 2) * drawScale + mazeDrawDesync.y, drawScale, drawScale);
-                    }
+                let playerCostrume = 0;
+                if (otherUsers[i].playerStatus == "hunter") {
+                    playerCostrume = 0;
+                } else if (otherUsers[i].playerStatus == "runner") {
+                    playerCostrume = 1;
+                } else if (otherUsers[i].playerStatus == "frozen") {
+                    playerCostrume = 3;
                 }
-
-                notePlayerPos[i] = {x: otherUsers[i].x, y: otherUsers[i].y};
-                ctx.fillStyle = "#FF0000";
-                ctx.fillRect(otherUsers[i].x / 2 * drawScale + mazeDrawDesync.x, otherUsers[i].y / 2 * drawScale + mazeDrawDesync.y, drawScale, drawScale);
+                ctx.drawImage(playerImg, playerCostrume * playerImg.height, 0, playerImg.height, playerImg.height, otherUsers[i].x / 2 * drawScale + mazeDrawDesync.x, otherUsers[i].y / 2 * drawScale + mazeDrawDesync.y, drawScale / 2, drawScale / 2);
+                
+                ctx.fillText(otherUsers[i].username, otherUsers[i].x / 2 * drawScale + mazeDrawDesync.x, otherUsers[i].y / 2 * drawScale + mazeDrawDesync.y + nickDist * drawScale);
             }
         }
     }
 
 }
 
-function updateDrawnMaze () {
+function updateDrawnMaze() {
+    ctx.fillStyle = "#" + parseInt(BgColor, 10).toString(16).padStart(6, "0");
+    ctx.fillRect(0, 0, c.width, c.height);
+
     for (let y = 0; y < lab.length; y++) {
         for (let x = 0; x < lab[y].length; x++) {
             if (lab[y][x] == 0 || wallType == 5 || wallType == 6 || wallType == 7) {   
@@ -379,6 +390,24 @@ function positionnicks(clone) {
     otherNicknames[clone].color = '#FF0000';
   }
 }
+
+function sizeUpdates() {
+    currentSize = {width:document.documentElement.clientWidth, height:document.documentElement.clientHeight};
+
+    if (isMazeDrawn) {
+        c.width = currentSize.width;
+        c.height = currentSize.height;
+
+        drawScale = Math.floor(c.height / lab.length);
+        if (drawScale > Math.floor(c.width / lab[0].length)) {
+            drawScale = Math.floor(c.width / lab[0].length);
+        }
+
+        mazeDrawDesync.x = (c.width - lab[0].length * drawScale) / 2;
+        mazeDrawDesync.y = (c.height - lab.length * drawScale) / 2;
+    }
+}
+
 let last_time = 0;
 let tick_time = [];
 let tick_avg = 0;

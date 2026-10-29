@@ -110,9 +110,6 @@ function applySettings() {
     // 2. Update active game wallType
     wallType = selectedWallType;
     localStorage.setItem("wallType", selectedWallType);
-    if (lab !== undefined) {
-        updateDrawnMaze(); 
-    }
     
     // 3. Close settings window
     deactivateSettings();
