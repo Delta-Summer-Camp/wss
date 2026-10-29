@@ -27,13 +27,13 @@ ws.onmessage = (event) => {
 ws.onerror = (error) => {
    console.log("Ws Error: ", error);
    wsConnected = false;
-   //allowMovment = false;
+   allowMovment = false;
 }
 
 ws.onclose = () => {
    wsConnected = false;
    onDisconnect();
-   //allowMovment = false;
+   allowMovment = false;
 }
 
 
@@ -105,5 +105,5 @@ function keepAlive() {
 
 //Removes the player from /game.php(.php) if they are not connected to the server
 function onDisconnect(){
-    //window.location.href = "/";
+    window.location.href = "/";
 }
