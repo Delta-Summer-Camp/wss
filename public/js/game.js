@@ -120,6 +120,12 @@ function update() {
         otherPlayers.runAll(positionnicks);
     } else {
         drawBackground();
+
+        if(time - lastServerUpdate > keepAliveFrequency * 1000) {
+            keepAlive();
+            lastServerUpdate = time;
+            sendData({x:-100,y:-100});
+        }
     }
 
     text.text = 'X: ' + pos.x + '\nY: ' + pos.y + '\nTPS: ' + tps;
