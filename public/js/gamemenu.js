@@ -110,7 +110,7 @@ function applySettings() {
     // 2. Update active game wallType
     wallType = selectedWallType;
     localStorage.setItem("wallType", selectedWallType);
-
+    
     // 3. Close settings window
     deactivateSettings();
 }

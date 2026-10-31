@@ -18,7 +18,7 @@ let freezeMovment = false;
 const debugEnabled = false;
 
 let wallType = 0; // 0 to 7 black wall is 0
-let BgColor = 0x00FFFF;
+let BgColor = "0x00ffff";
 const gameScale = 50;
 const serverUpdateFrequency = 0.05;
 const keepAliveFrequency = 5;
@@ -30,6 +30,17 @@ const renderDesync = {x:0.5, y:0.5};
 let currentScreenStartPos = {x:0, y:0};
 let mouse = {x:0, y:0};
 
+let isPlayer = window.location.pathname != "/screen.php";
+let c;
+let ctx;
+let drawScale;
+let isMazeDrawn = false;
+let mazeDrawDesync = {x:0, y:0};
+const wallImg = new Image();
+wallImg.src = "/assets/wall.png";
+const playerImg = new Image();
+playerImg.src = "/assets/ballz.png";
+
 let lab;
 async function loadFile() {
     const response = await fetch("../assets/lab.json");
@@ -40,25 +51,26 @@ loadFile();
 
 let currentSize = {width:document.documentElement.clientWidth, height:document.documentElement.clientHeight};
 
-
 let game = new ScratchGame(currentSize.width, currentSize.height);
 game.preload = preload;
 game.create = create;
 game.update = update;
 
 function preload() {
-    game.loadSpritesheet('box', 'assets/wall.png', 200, 200);
-    game.loadSpritesheet('player', 'assets/ballz.png', 200, 200);
+    game.loadSpritesheet('box', 'assets/wall.png', wallImg.height, wallImg.height);
+    game.loadSpritesheet('player', 'assets/ballz.png', playerImg.height, playerImg.height);
 }
 
 function create() {
     game.setBackgroundColor(BgColor);
     
     player = game.createSprite(currentSize.width / 2, currentSize.height / 2, 'player');
-    player.visible = true;
+    player.visible = isPlayer;
     player.size = gameScale / 200;
 
-    lab_boxes = initPlane(-10000, -10000, 40, 40, Math.ceil(currentSize.width / gameScale * 0.75), Math.ceil(currentSize.height / gameScale * 0.75), "box");
+    if(isPlayer){
+        lab_boxes = initPlane(-10000, -10000, 40, 40, Math.ceil(currentSize.width / gameScale * 0.75), Math.ceil(currentSize.height / gameScale * 0.75), "box");
+    }
 
     otherPlayers = initClones(-100, -1000, 'player');
     otherPlayers.clones[0].visible = false;
@@ -82,25 +94,39 @@ function create() {
     playerNickname.size = nickSize * gameScale;
     playerNickname.color = '#FF0000';
     playerNickname.bringToFront();
+    playerNickname.visible = isPlayer;
 
     wallDebug = initDebug(debugEnabled,debugEnabled,debugEnabled,debugEnabled);
     boxDebug = initDebug(debugEnabled,debugEnabled,debugEnabled,debugEnabled);
     timeTest = initDebug(debugEnabled,debugEnabled,debugEnabled,debugEnabled);
     costumeDebug = initDebug(debugEnabled,debugEnabled,debugEnabled,debugEnabled);
 }
+
 function update() {
+    sizeUpdates();
+    
     currentDate = new Date;
     time = currentDate.getTime();
     lag_test();
 
-    mouseUpdates();
-    playerUpdates();
+    if(isPlayer){
+        mouseUpdates();
+        playerUpdates();
 
-    lab_boxes.runAll(positionboxes);
+        lab_boxes.runAll(positionboxes);
 
-    otherPlayers.createClones(otherUsers.length - otherPlayers.amount(), 0);
-    otherPlayers.runAll(positionclones);
-    otherPlayers.runAll(positionnicks);
+        otherPlayers.createClones(otherUsers.length - otherPlayers.amount(), 0);
+        otherPlayers.runAll(positionclones);
+        otherPlayers.runAll(positionnicks);
+    } else {
+        drawBackground();
+
+        if(time - lastServerUpdate > keepAliveFrequency * 1000) {
+            keepAlive();
+            lastServerUpdate = time;
+            sendData({x:-100,y:-100});
+        }
+    }
 
     text.text = 'X: ' + pos.x + '\nY: ' + pos.y + '\nTPS: ' + tps;
     if(currentUser.playerStatus == "hunter"){
@@ -134,7 +160,7 @@ function playerUpdates() {
         mouseMovment = true;
     }
 
-    if(allowMovment && !freezeMovment){
+    if(allowMovment && !freezeMovment && isPlayer){
         let hasMoved = false;
         let overrideAutoMovement = game.isKeyDown('W') || game.isKeyDown('A') || game.isKeyDown('S') || game.isKeyDown('D') || game.isKeyDown('UP') || game.isKeyDown('LEFT') || game.isKeyDown('DOWN') || game.isKeyDown('RIGHT');
         if (game.isKeyDown('W') || game.isKeyDown('UP') || (pos.y - mouse.y > 0 && mouseMovment && !overrideAutoMovement)) {
@@ -225,11 +251,12 @@ function playerUpdates() {
             }
             lastTickMovment = true;
         } else {
-            lastServerUpdate = time;
             if(lastTickMovment){
                 sendData(pos);
+                lastServerUpdate = time;
             } else if(time - lastServerUpdate > keepAliveFrequency * 1000) {
                 keepAlive();
+                lastServerUpdate = time;
             }
             lastTickMovment = false;
 
@@ -238,6 +265,7 @@ function playerUpdates() {
     } else {
         if(time - lastServerUpdate > keepAliveFrequency * 1000) {
             keepAlive();
+            lastServerUpdate = time;
         }
     }
 
@@ -271,6 +299,68 @@ function positionboxes(currentX, currentY) {
     }
     lab_boxes.plane[currentX][currentY].size = gameScale / 100;
     lab_boxes.plane[currentX][currentY].costume = wallType * 3 + 1;
+}
+
+function drawBackground() {
+    if (c === undefined  && document.getElementById("backgroundCanvas") !== undefined) {
+        c = document.getElementById("backgroundCanvas");
+        ctx = c.getContext("2d");
+
+        c.width = currentSize.width;
+        c.height = currentSize.height;
+        ctx.font = nickSize * drawScale + 'px Arial bold';
+    } else if (c !== undefined && isMazeDrawn == false) {
+        drawScale = Math.floor(c.height / lab.length);
+        if (drawScale > Math.floor(c.width / lab[0].length)) {
+            drawScale = Math.floor(c.width / lab[0].length);
+        }
+
+        mazeDrawDesync.x = (c.width - lab[0].length * drawScale) / 2;
+        mazeDrawDesync.y = (c.height - lab.length * drawScale) / 2;
+
+        updateDrawnMaze();
+
+        isMazeDrawn = true;
+    } else if (isMazeDrawn == true) {
+        updateDrawnMaze();
+
+        for (let i = 0; i < otherUsers.length; ++i) {
+            if (otherUsers[i] !== null && otherUsers[i].username !== undefined) {
+                let playerCostrume = 0;
+                if (otherUsers[i].playerStatus == "hunter") {
+                    playerCostrume = 0;
+                } else if (otherUsers[i].playerStatus == "runner") {
+                    playerCostrume = 1;
+                } else if (otherUsers[i].playerStatus == "frozen") {
+                    playerCostrume = 3;
+                }
+                ctx.drawImage(playerImg, playerCostrume * playerImg.height, 0, playerImg.height, playerImg.height, otherUsers[i].x / 2 * drawScale + mazeDrawDesync.x, otherUsers[i].y / 2 * drawScale + mazeDrawDesync.y, drawScale / 2, drawScale / 2);
+                
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillStyle = '#FF0000';
+                ctx.fillText(otherUsers[i].username, otherUsers[i].x / 2 * drawScale + mazeDrawDesync.x + drawScale / 4, otherUsers[i].y / 2 * drawScale + mazeDrawDesync.y + drawScale / 4 - nickDist * drawScale / 1.75);
+            }
+        }
+    }
+
+}
+
+function updateDrawnMaze() {
+    ctx.fillStyle = "#" + parseInt(BgColor, 10).toString(16).padStart(6, "0");
+    ctx.fillRect(0, 0, c.width, c.height);
+
+    for (let y = 0; y < lab.length; y++) {
+        for (let x = 0; x < lab[y].length; x++) {
+            if (lab[y][x] == 0 || wallType == 5 || wallType == 6 || wallType == 7) {   
+                ctx.fillStyle = "#" + parseInt(BgColor, 10).toString(16).padStart(6, "0");
+                ctx.fillRect(x * drawScale + mazeDrawDesync.x, y * drawScale + mazeDrawDesync.y, drawScale, drawScale);
+            }
+            if (lab[y][x] == 1 || lab[y][x] == 2) {
+                ctx.drawImage(wallImg, wallImg.height * (wallType * 3 + 1), 0, 199, 199, x * drawScale + mazeDrawDesync.x, y * drawScale + mazeDrawDesync.y, drawScale + 1, drawScale + 1);
+            }
+        }
+    }
 }
 
 function positionclones(clone) {
@@ -309,6 +399,24 @@ function positionnicks(clone) {
     otherNicknames[clone].color = '#FF0000';
   }
 }
+
+function sizeUpdates() {
+    currentSize = {width:document.documentElement.clientWidth, height:document.documentElement.clientHeight};
+
+    if (isMazeDrawn) {
+        c.width = currentSize.width;
+        c.height = currentSize.height;
+
+        drawScale = Math.floor(c.height / lab.length);
+        if (drawScale > Math.floor(c.width / lab[0].length)) {
+            drawScale = Math.floor(c.width / lab[0].length);
+        }
+
+        mazeDrawDesync.x = (c.width - lab[0].length * drawScale) / 2;
+        mazeDrawDesync.y = (c.height - lab.length * drawScale) / 2;
+    }
+}
+
 let last_time = 0;
 let tick_time = [];
 let tick_avg = 0;

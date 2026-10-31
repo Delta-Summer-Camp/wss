@@ -1,0 +1,69 @@
+<!doctype html>
+<?php
+if (session_status() != PHP_SESSION_ACTIVE) session_start();
+if (!$_SESSION['signed_in']) {
+    header("Location: /index.php");
+exit;
+}
+?>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Салочки Монитор</title>
+    <script src="js/lib/phaser.min.js"></script>
+    <script src="js/lib/DebugSys.js"></script>
+    <script src="js/lib/CloneSys.js"></script>
+    <script src="js/lib/ScratchGame.js"></script>
+    <script src="js/connection.js"></script>
+    <script src="js/game.js"></script>
+
+    <link rel="stylesheet" href="css/game.css">
+</head>
+
+<body>
+    <div id="hamburger-btn" onclick="activateMenu()">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+    </div>
+
+    <canvas id="backgroundCanvas" width="1" height="1">
+        Your browser does not support the HTML5 canvas tag.
+    </canvas>
+
+
+    <div id="pause-menu" class="hidden">
+        <div id="options">
+            <h2 style="margin-top: 0;">Game Paused</h2>
+            <button class="btn btn-submit" onclick="deactivateMenu()">Resume</button>
+            <button class="btn btn-submit" onclick="activateSettings()">Settings</button>
+            <a href="index.php"><button class="btn btn-submit">Exit</button></a>
+        </div>
+
+    </div>
+    <div id="settings" class="pause-menu hidden">
+        <h2>Color</h2>
+        <input type="text" placeholder="hex eg. #00FFFF" class="form-input" name="" id="color-input">
+        <h2>Select Wall Type</h2>
+    <div id="wall-type-container" class="wall-selector">
+        <div class="wall-option active" data-wall-type="0">0</div>
+        <div class="wall-option" data-wall-type="1">1</div>
+        <div class="wall-option" data-wall-type="2">2</div>
+        <div class="wall-option" data-wall-type="3">3</div>
+        <div class="wall-option" data-wall-type="4">4</div>
+        <div class="wall-option" data-wall-type="5">5</div>
+        <div class="wall-option" data-wall-type="6">6</div>
+        <div class="wall-option" data-wall-type="7">7</div>
+    </div>
+    <h2>Phone Mode</h2>
+        <button id="phoneModeToggle" onclick="togglePhoneMode()"></button>
+        <button onclick="applySettings()" class="btn-submit btn">Apply</button>
+        <button onclick="deactivateSettings()" class="btn-submit btn">Cancel</button>
+    </div>
+ 
+    <script src="js/gamemenu.js"></script>
+
+</body>
+
+</html>
