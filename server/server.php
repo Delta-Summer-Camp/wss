@@ -71,123 +71,179 @@ class GameServer implements MessageComponentInterface
     {
         $this->players[$conn->resourceId] = new Client($conn);
         echo "new gamer";
-        //$this->redisData->set('username' . $this->gamers[$conn->resourceId]->username . ':conn', $conn);
-        //$this->redisData->set('username' . "player444" . ':conn', $conn);
     }
 
     public function onMessage(ConnectionInterface $from, $msg): void
     {
-        $data = json_decode($msg, true);
-        $player = $this->players[$from->resourceId] ?? null;
+        // Обернули в try-catch для безопасности
+        try {
+            $data = json_decode($msg, true);
+            $player = $this->players[$from->resourceId] ?? null;
 
-        if (!$player) return;
+            if (!$player) return;
 
-        if (isset($data['type']) && $data['type'] === 'auth') {
-            $username = $data['username'] ?? '';
-            $passwordHash = $data['passwordHash'] ?? '';
+            // --- БЛОК АВТОРИЗАЦИИ ---
+            if (isset($data['type']) && $data['type'] === 'auth') {
+                $username = $data['username'] ?? '';
+                $passwordHash = $data['passwordHash'] ?? '';
 
-            $userDoc = $this->users->findOne(['username' => $username]);
+                $userDoc = $this->users->findOne(['username' => $username]);
 
-            if ($userDoc && isset($userDoc['passwordHash']) && $userDoc['passwordHash'] === $passwordHash) {
-                $player->username = $username;
-                $player->x = (float)($userDoc['x'] ?? 49.5);
-                $player->y = (float)($userDoc['y'] ?? 48.5);
+                if ($userDoc && isset($userDoc['passwordHash']) && $userDoc['passwordHash'] === $passwordHash) {
+                    $player->username = $username;
+                    $player->x = (float)($userDoc['x'] ?? 49.5);
+                    $player->y = (float)($userDoc['y'] ?? 48.5);
 
-		if(!isset($userDoc['status'])) {
-			$totalGam = $this->users->countDocuments();
-			if($totalGam > 0 && $totalGam % 4 === 0) {
-				$player->playerStatus = "hunter";
-			}else{
-				$player->playerStatus = "runner";
-			}
+                    if (!isset($userDoc['status'])) {
 
-			$this->users->updateOne(
-			['username' => $username],
-			['$set' => ['status' => $player->playerStatus]]
-			);
-			}else{
-				$player->playerStatus = $userDoc['status'];
+                        $totalGam = count($this->players);
+                        if ($totalGam > 0 && $totalGam % 4 === 0) {
+                            $player->playerStatus = "hunter";
+                        } else {
+                            $player->playerStatus = "runner";
+                        }
 
+                        $this->users->updateOne(
+                            ['username' => $username],
+                            ['$set' => ['status' => $player->playerStatus]]
+                        );
+                    } else {
+                        // Если игрок зашел, а в БД у него статус "frozen", возвращаем ему "hunter"
+                        $statusFromDb = $userDoc['status'];
+                        $player->playerStatus = ($statusFromDb === 'frozen') ? 'hunter' : $statusFromDb;
+                    }
+                    $player->isTrusted = true;
+                    $this->publishState($player);
 
-}
-                $player->isTrusted = true;
+                } else {
+                    $player->getConn()->close();
+                }
+                return;
+            }
+
+            if (!$player->isTrusted) return;
+
+            // Если игрок заморожен, он не может двигаться и обрабатывать логику
+            if ($player->playerStatus === "frozen") return;
+
+            // --- БЛОК ДВИЖЕНИЯ И ОХОТЫ ---
+            if (isset($data['x'], $data['y'])) {
+                $player->x = (float)$data['x'];
+                $player->y = (float)$data['y'];
+                $player->messageCount++;
+
+                if ($player->playerStatus === "hunter") {
+                    $triggDist = 1.0;
+                    foreach ($this->players as $otherPlayer) {
+                        if ($otherPlayer->isTrusted && $otherPlayer->playerStatus === "runner") {
+                            $dx = abs($player->x - $otherPlayer->x);
+                            $dy = abs($player->y - $otherPlayer->y);
+
+                            if ($dx <= $triggDist && $dy <= $triggDist) {
+                                $player->playerStatus = "runner";
+                                $otherPlayer->playerStatus = "frozen"; // Выдаем статус заморозки
+
+                                echo "Игрок {$otherPlayer->username} осален и ЗАМОРОЖЕН на 10 секунд!\n";
+
+                                $this->publishState($player);
+                                $this->publishState($otherPlayer);
+
+                                // Сохраняем промежуточные статусы в MongoDB
+                                $this->users->updateOne(
+                                    ['username' => $player->username],
+                                    ['$set' => ['status' => $player->playerStatus]]
+                                );
+                                $this->users->updateOne(
+                                    ['username' => $otherPlayer->username],
+                                    ['$set' => ['status' => $otherPlayer->playerStatus]]
+                                );
+
+                                // Асинхронный таймер разморозки на 10 секунд
+                                Loop::addTimer(10.0, function () use ($otherPlayer) {
+                                    // Проверяем, что игрок всё еще в сети и всё еще заморожен
+                                    if ($otherPlayer && $otherPlayer->isTrusted && $otherPlayer->playerStatus === "frozen") {
+                                        $otherPlayer->playerStatus = "hunter"; // Меняем статус на охотника
+
+                                        echo "Игрок {$otherPlayer->username} РАЗМОРОЖЕН и стал охотником!\n";
+
+                                        $this->publishState($otherPlayer);
+
+                                        // Обновляем финальный статус в MongoDB
+                                        $this->users->updateOne(
+                                            ['username' => $otherPlayer->username],
+                                            ['$set' => ['status' => 'hunter']]
+                                        );
+                                    }
+                                });
+
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if ($player->messageCount % 100 === 0) {
+                    $this->users->updateOne(
+                        ['username' => $player->username],
+                        ['$set' => ['x' => $player->x, 'y' => $player->y, 'status' => $player->playerStatus]]
+                    );
+                    $player->messageCount = 0;
+                }
                 $this->publishState($player);
-
-            } else {
-                $player->getConn()->close();
             }
-            return;
-        }
-        //if (isset($data['type']) && $data['type'] === 'session_drop'){        }
-
-        if (!$player->isTrusted) return;
-
-        if (isset($data['x'], $data['y'])) {
-            $player->x = (float)$data['x'];
-            $player->y = (float)$data['y'];
-            $player->messageCount++;
-            if ($player->playerStatus === "hunter") {
-		$triggDist = 1.0;
-		foreach ($this->players as $otherPlayer) {
-		if ($otherPlayer->isTrusted && $otherPlayer->playerStatus === "runner") {
-			$dx = abs($player->x - $otherPlayer->x);
-            		$dy = abs($player->y - $otherPlayer->y);
-			if ($dx <= $triggDist && $dy <= $triggDist) {
-				$player->playerStatus = "runner";
-				$otherPlayer->playerStatus = "hunter";
-				echo  "ismemntnie";
-				$this->publishState($otherPlayer);
-				$this->users->updateOne(
-                    			['username' => $player->username],
-                    			['$set' => ['status' => $player->playerStatus]]
-                		);
-                		$this->users->updateOne(
-                    			['username' => $otherPlayer->username],
-                    			['$set' => ['status' => $otherPlayer->playerStatus]]
-               			 );
-				break;
-			}
-		}
-	}
-
-
-
-        }
-            if ($player->messageCount % 100 === 0) {
-                $this->users->updateOne(
-                    ['username' => $player->username],
-                    ['$set' => ['x' => $player->x, 'y' => $player->y,
-                        'status'=> $player->playerStatus]]
-                );
-                $player->messageCount = 0;
-            }
-            $this->publishState($player);
+        } catch (\Throwable $e) {
+            echo "Ошибка: " . $e->getMessage() . "\n";
         }
     }
 
     private function publishState($player): void
     {
         if ($player->isTrusted) {
-	    $plList = array_values($this->players);
-            $this->redisPub->publish("game_events", json_encode($plList));
-            $this->redisData->set($player->username, json_encode($player));
+            $cleanPlayersList = [];
+
+            // Защита JSON: вытаскиваем только безопасные свойства
+            foreach ($this->players as $p) {
+                if ($p->isTrusted) {
+                    $cleanPlayersList[] = [
+                        'username'     => $p->username,
+                        'playerStatus' => $p->playerStatus,
+                        'x'            => $p->x,
+                        'y'            => $p->y
+                    ];
+                }
+            }
+
+            $singlePlayer = [
+                'username'     => $player->username,
+                'playerStatus' => $player->playerStatus,
+                'x'            => $player->x,
+                'y'            => $player->y
+            ];
+
+            $this->redisPub->publish("game_events", json_encode($cleanPlayersList));
+            $this->redisData->set($player->username, json_encode($singlePlayer));
         }
     }
 
-
     public function onClose(ConnectionInterface $conn): void
     {
-        $player = $this->players[$conn->resourceId];
+        $player = $this->players[$conn->resourceId] ?? null;
 
         if ($player && $player->isTrusted && $player->username) {
+            // Если игрок выходит во время заморозки, сохраняем его как runner или hunter, чтобы сессия не сломалась
+            $finalStatus = ($player->playerStatus === 'frozen') ? 'hunter' : $player->playerStatus;
+
             $this->users->updateOne(
                 ['username' => $player->username],
-                ['$set' => ['x' => $player->x, 'y' => $player->y]]
+                ['$set' => ['x' => $player->x, 'y' => $player->y, 'status' => $finalStatus]]
             );
+
+            $player->playerStatus = "disconnected";
+            $this->publishState($player);
         }
-        $player->playerStatus="disconnected";
-        $this->publishState($player);
+
         unset($this->players[$conn->resourceId]);
+
         echo "Соединение закрыто.\n";
         $this->publishState($player);
 
