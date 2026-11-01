@@ -106,5 +106,5 @@ function keepAlive() {
 
 //Removes the player from /game.php(.php) if they are not connected to the server
 function onDisconnect(){
-    window.location.href = "/";
+    //window.location.href = "/";
 }
