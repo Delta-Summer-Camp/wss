@@ -64,7 +64,7 @@ class GameServer implements MessageComponentInterface
                 }
             }
         });
-        echo "Heelo Redis";
+        echo "Helo Redis";
     }
 
     public function onOpen(ConnectionInterface $conn): void
@@ -96,6 +96,9 @@ class GameServer implements MessageComponentInterface
 
                     if (!isset($userDoc['status'])) {
 
+                      // Мне кажется, прям сразу 1-й игрок должен становиться хантером
+                      // Сейчас же если у игрока нет статуса, то лишь каждый 4-й становится охотником
+                      // т.е. пока не соберётся 4 игрока все просто бегают
                         $totalGam = count($this->players);
                         if ($totalGam > 0 && $totalGam % 4 === 0) {
                             $player->playerStatus = "hunter";
@@ -196,6 +199,10 @@ class GameServer implements MessageComponentInterface
         }
     }
 
+    // Эта функция слишком сырая: на самом деле она делает сразу две вещи, не связанные друг с другом:
+    // делает рассылку по всем игрокам текущего состояния (в foreach блоке) и
+    // сохраняет в редис-базе состояние текущего игрока, которое потом нигде не используется, так мы
+    // состояния игроков храним в массиве players[]
     private function publishState($player): void
     {
         if ($player->isTrusted) {
@@ -238,13 +245,14 @@ class GameServer implements MessageComponentInterface
                 ['$set' => ['x' => $player->x, 'y' => $player->y, 'status' => $finalStatus]]
             );
 
-            $player->playerStatus = "disconnected";
-            $this->publishState($player);
+            $player->playerStatus = "disconnected"; // Мне кажется эта строка тут лишняя, она должна быть после блока if()
+            $this->publishState($player); // Эта строка не имеет особого смысла, так как потом мы ещё раз опубликуем в конце функции.
         }
 
         unset($this->players[$conn->resourceId]);
 
         echo "Соединение закрыто.\n";
+        // Вот тут разумно поставить $player->playerStatus = "disconnected";
         $this->publishState($player);
 
     }
