@@ -39,11 +39,11 @@ ws.onclose = () => {
 
 
 // Function that gets activated by ws.onmessage
-function arrangeData(inputDataObject) {
-    if(inputDataObject.length === undefined){
+function arrangeData(inputDataObject) { // Здесь надо отлавливать подтверждение ауторизации в ответ на ws.send(JSON.stringify(auth)); и один раз устанавливать начальные координаты currentUser
+    if(inputDataObject.length === undefined){ // Тут я не понял - ведь это значит, что никакого inputDataObject вообще нет?
         if (inputDataObject.username === currentUser.username) {
             currentUser.playerStatus = inputDataObject.playerStatus;
-            pos.x = inputDataObject.x;
+            pos.x = inputDataObject.x; // Позицию надо менять только у других игроков, но не у currentUser
             pos.y = inputDataObject.y;
         } else {
             let useId;
@@ -65,7 +65,7 @@ function arrangeData(inputDataObject) {
         for(let i = 0; i < inputDataObject.length; ++i){
             if (inputDataObject[i].username === currentUser.username) {
                 currentUser.playerStatus = inputDataObject[i].playerStatus;
-                pos.x = inputDataObject[i].x;
+                pos.x = inputDataObject[i].x; // Позицию надо менять только у других игроков, но не у currentUser
                 pos.y = inputDataObject[i].y;
             } else {
                 let useId;
